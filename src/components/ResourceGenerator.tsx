@@ -112,7 +112,8 @@ const createWavBlob = (pcmData: Uint8Array): Blob => {
     view.setUint16(34, bitsPerSample, true);
     view.setUint32(36, 0x64617461, false); // "data"
     view.setUint32(40, dataSize, true);
-    return new Blob([view, pcmData], { type: 'audio/wav' });
+    // @ts-ignore
+return new Blob([view, pcmData], { type: 'audio/wav' });
 };
 
 const downloadFile = (href: string, filename: string) => {
