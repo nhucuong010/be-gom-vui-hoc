@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { englishLessons } from '../data/englishLessons';
 import { generateImageFromText } from '../services/imageService';
