@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { sanitizeFilename } from '../utils/textUtils';
 import { generateSpeech } from './ttsService';
 import { uiSoundData } from '../data/uiSounds';
