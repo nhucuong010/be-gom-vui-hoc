@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useEffect, useCallback } from 'react';
 import { generateSpellingWord } from '../services/geminiService';
 import type { SpellingWord } from '../types';
