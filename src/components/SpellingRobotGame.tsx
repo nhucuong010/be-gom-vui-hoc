@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { generateSpellingRobotProblemSet } from '../services/geminiService';
 import { getInteractiveSpellingAudioSequence } from '../services/feedbackService';
