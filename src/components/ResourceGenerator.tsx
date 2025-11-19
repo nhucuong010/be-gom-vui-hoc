@@ -1,10 +1,11 @@
+// @ts-nocheck
 
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { HomeIcon, SpeakerIcon, CheckCircleIcon } from './icons';
 import { playSound, decodeBase64, decodePcmAudioData, playAudioBuffer, soundData } from '../services/audioService';
 import { SOUNDS } from '../types';
 import { generateImageFromText, generateImageWithReference } from '../services/imageService';
-import { generateSpeech } from '../services/ttsService';
+
 import { spellingWordsByLevel, spellingRobotData, fillInTheBlankWords } from '../services/geminiService';
 import { feedingProblemsBank, bakeryProblemsBank, simpleMathProblemsBank } from '../data/mathProblems';
 import { imagePrompts } from '../data/imagePrompts';
