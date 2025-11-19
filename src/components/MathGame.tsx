@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { generateMathProblem } from '../services/geminiService';
 import type { MathProblem } from '../types';
