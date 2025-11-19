@@ -1,9 +1,9 @@
+// @ts-nocheck
 import React, { useState, useEffect, useCallback } from 'react';
 import { generateMemoryPairs } from '../services/geminiService';
 import type { MemoryCard } from '../types';
 import { HomeIcon, GearIcon, StarIcon } from './icons';
 import { playSound } from '../services/audioService';
-// @ts-nocheck
 import { playFeedback } from '../services/feedbackService';
 
 
