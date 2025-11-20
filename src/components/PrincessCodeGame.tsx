@@ -61,7 +61,7 @@ const PrincessCodeGame: React.FC<PrincessCodeGameProps> = ({ onGoHome, onCorrect
         try {
             const newProblem = await generatePrincessCodeProblem(selectedLevel);
             setProblem(newProblem);
-            const chars = newProblem.code.split('').map(digit => 
+            const chars = newProblem.code.split('').map((digit: string) => 
                 numberCharacters.find(nc => nc.digit === parseInt(digit))!
             );
             setProblemCharacters(chars);
