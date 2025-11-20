@@ -60,3 +60,13 @@ export const generateMathProblem = async (level: number): Promise<{ question: st
   ];
   return problems[Math.floor(Math.random() * problems.length)];
 };
+
+
+export const generateSpellingWord = async (level: number): Promise<{ word: string; imageUrl: string }> => {
+  // Production mode: return static spelling word
+  const words = spellingWordsByLevel[level] || spellingWordsByLevel[1];
+  if (words && words.length > 0) {
+    return words[Math.floor(Math.random() * words.length)];
+  }
+  return { word: 'BA CUONG', imageUrl: `${ASSET_BASE_URL}/assets/images/ba-cuong.png` };
+};
