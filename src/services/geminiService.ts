@@ -64,8 +64,7 @@ export const generateMathProblem = async (level: number): Promise<{ question: st
 
 export const generateSpellingWord = async (level: number): Promise<{ word: string; imageUrl: string }> => {
   // Production mode: return static spelling word
-  const words = spellingWordsByLevel[level] || spellingWordsByLevel[1];
-  if (words && words.length > 0) {
+const words = spellingWordsByLevel[level as unknown as keyof typeof spellingWordsByLevel] || spellingWordsByLevel[1];  if (words && words.length > 0) {
     return words[Math.floor(Math.random() * words.length)];
   }
   return { word: 'BA CUONG', imageUrl: `${ASSET_BASE_URL}/assets/images/ba-cuong.png` };
