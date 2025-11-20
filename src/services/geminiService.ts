@@ -69,3 +69,15 @@ const words = spellingWordsByLevel[level as unknown as keyof typeof spellingWord
   }
   return { word: 'BA CUONG', imageUrl: `${ASSET_BASE_URL}/assets/images/ba-cuong.png` };
 };
+
+
+export const generateMemoryPairs = async (): Promise<Array<{ id: number; value: string; image: string }>> => {
+  // Production mode: return static memory pairs
+  const pairs = [
+    { id: 1, value: 'BA CUONG', image: `${ASSET_BASE_URL}/assets/images/ba-cuong.png` },
+    { id: 2, value: 'ME HUONG', image: `${ASSET_BASE_URL}/assets/images/me-huong.png` },
+    { id: 3, value: 'GOM', image: `${ASSET_BASE_URL}/assets/images/gom-sac.png` },
+    { id: 4, value: 'GAO', image: `${ASSET_BASE_URL}/assets/images/gao-nang.png` },
+  ];
+  return pairs.flatMap(p => [p, p]);
+};
