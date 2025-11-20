@@ -48,3 +48,15 @@ export const generatePrincessCodeProblem = async (level: number): Promise<Prince
   // Return a random problem for the level
   return problemsForLevel[Math.floor(Math.random() * problemsForLevel.length)];
 };
+
+
+export const generateMathProblem = async (level: number): Promise<{ question: string; answer: number }> => {
+  // Production mode: return static math problem
+  const problems = [
+    { question: '2 + 3 = ?', answer: 5 },
+    { question: '10 - 4 = ?', answer: 6 },
+    { question: '3 x 4 = ?', answer: 12 },
+    { question: '12 / 3 = ?', answer: 4 },
+  ];
+  return problems[Math.floor(Math.random() * problems.length)];
+};
