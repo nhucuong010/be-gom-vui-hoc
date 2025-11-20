@@ -32,3 +32,19 @@ export const generateImageDescription = async (imageUrl: string): Promise<string
   // Production mode: return static description
   return 'Hình ảnh đẹp lắm';
 };
+
+
+// Import Princess Code Data
+import { princessCodeProblemsBank } from '../data/princessCodeData';
+import type { PrincessCodeProblem } from '../types';
+
+export const generatePrincessCodeProblem = async (level: number): Promise<PrincessCodeProblem> => {
+  // Production mode: return static problem from data bank
+  const problemsForLevel = princessCodeProblemsBank.filter(p => p.level === level);
+  if (problemsForLevel.length === 0) {
+    // Fallback to first problem if no level found
+    return princessCodeProblemsBank[0];
+  }
+  // Return a random problem for the level
+  return problemsForLevel[Math.floor(Math.random() * problemsForLevel.length)];
+};
