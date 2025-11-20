@@ -81,3 +81,16 @@ export const generateMemoryPairs = async (): Promise<Array<{ id: number; value: 
   ];
   return pairs.flatMap(p => [p, p]);
 };
+
+
+export const generateFillInTheBlanking = async (level: number): Promise<{ question: string; answer: string }> => {
+  // Production mode: return static fill in the blank problem
+  const problems = [
+    { question: 'BA ___ (Mother)', answer: 'CUONG' },
+    { question: 'ME ___ (Father)', answer: 'HUONG' },
+    { question: '___ (Rice)', answer: 'GOM' },
+    { question: '___ NANG (Corn)', answer: 'GAO' },
+  ];
+  return problems[Math.floor(Math.random() * problems.length)];
+};
+
