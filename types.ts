@@ -11,11 +11,11 @@ export interface SpellingWord {
 }
 
 export interface MemoryCard {
-    id: number;
-    content: string;
-    matchId: number;
-    isFlipped: boolean;
-    isMatched: boolean;
+  id: number;
+  content: string;
+  matchId: number;
+  isFlipped: boolean;
+  isMatched: boolean;
 }
 
 export interface Sticker {
@@ -41,15 +41,15 @@ export interface EnglishLesson {
 }
 
 export interface ImagePromptItem {
-    word: string;
-    filename: string;
-    prompt: string;
-    referencePrompt?: string;
-    // ID of the character this prompt features (e.g., 'gom', 'ba_cuong').
-    // Used to map a single uploaded reference image to multiple prompts.
-    characterId?: string;
-    // The game this asset belongs to, used for categorization and directory structure.
-    game: 'common' | 'feeding' | 'bakery' | 'english' | 'sticker' | 'cover' | 'math_visual' | 'memory_math' | 'princess_code' | 'restaurant' | 'street_food' | 'bunny_rescue' | 'garden_memory' | 'capybara_rescue' | 'time_adventure' | 'online_shopping' | 'weather_explorer' | 'supermarket' | 'writing';
+  word: string;
+  filename: string;
+  prompt: string;
+  referencePrompt?: string;
+  // ID of the character this prompt features (e.g., 'gom', 'ba_cuong').
+  // Used to map a single uploaded reference image to multiple prompts.
+  characterId?: string;
+  // The game this asset belongs to, used for categorization and directory structure.
+  game: 'common' | 'feeding' | 'bakery' | 'english' | 'sticker' | 'cover' | 'math_visual' | 'memory_math' | 'princess_code' | 'restaurant' | 'street_food' | 'bunny_rescue' | 'garden_memory' | 'capybara_rescue' | 'time_adventure' | 'online_shopping' | 'weather_explorer' | 'supermarket' | 'writing';
 }
 
 export interface FillInTheBlankProblem {
@@ -206,53 +206,53 @@ export interface BunnyRescueLevel {
 
 // --- Garden Memory Game Types ---
 export interface GardenQuestion {
-    questionText: string;
-    options: (string | number)[];
-    answer: string | number;
+  questionText: string;
+  options: (string | number)[];
+  answer: string | number;
 }
 
 export interface GardenMemoryScene {
-    id: string;
-    imageUrl: string;
-    intro_sentence: string;
-    questions: GardenQuestion[];
+  id: string;
+  imageUrl: string;
+  intro_sentence: string;
+  questions: GardenQuestion[];
 }
 
 // --- Capybara Rescue Game Types ---
 export interface CapybaraQuestion {
-    num1: number;
-    num2: number;
-    answer: number;
-    options: number[];
-    questionText: string; // "2 cộng 3 bằng mấy?"
+  num1: number;
+  num2: number;
+  answer: number;
+  options: number[];
+  questionText: string; // "2 cộng 3 bằng mấy?"
 }
 
 // --- Time Adventure Game Types ---
 export interface TimeAdventureQuestion {
-    id: string;
-    type: 'season' | 'time' | 'action' | 'weather';
-    imageUrl: string;
-    questionText: string;
-    options: {
-        text: string;
-        english?: string; // Tên tiếng Anh
-        ipa?: string; // Phiên âm IPA
-        imageUrl?: string; // For image-based options
-        isCorrect: boolean;
-    }[];
+  id: string;
+  type: 'season' | 'time' | 'action' | 'weather';
+  imageUrl: string;
+  questionText: string;
+  options: {
+    text: string;
+    english?: string; // Tên tiếng Anh
+    ipa?: string; // Phiên âm IPA
+    imageUrl?: string; // For image-based options
+    isCorrect: boolean;
+  }[];
 }
 
 // --- Supermarket Game Types ---
 export interface SupermarketItem {
-    id: string;
-    name: string;
-    imageUrl: string;
-    price: number;
-    category: 'fruit' | 'vegetable' | 'animal_product' | 'prepared_food' | 'drink';
+  id: string;
+  name: string;
+  imageUrl: string;
+  price: number;
+  category: 'fruit' | 'vegetable' | 'animal_product' | 'prepared_food' | 'drink';
 }
 
 
-export type GameState = 'home' | 'math' | 'spelling' | 'memory' | 'english' | 'dice' | 'resource_generator' | 'fill_in_the_blank' | 'feeding' | 'spelling_robot' | 'bakery' | 'princess_code' | 'restaurant' | 'english_story' | 'street_food' | 'bunny_rescue' | 'garden_memory' | 'capybara_rescue' | 'time_adventure' | 'online_shopping' | 'weather_explorer' | 'supermarket' | 'catch_game';
+export type GameState = 'home' | 'math' | 'spelling' | 'memory' | 'english' | 'english_story' | 'dice' | 'fill_in_the_blank' | 'feeding' | 'spelling_robot' | 'bakery' | 'princess_code' | 'restaurant' | 'street_food' | 'bunny_rescue' | 'garden_memory' | 'capybara_rescue' | 'time_adventure' | 'online_shopping' | 'weather_explorer' | 'supermarket' | 'catch_game' | 'resource_generator' | 'piano';
 
 // ADD: Add sound types here to break circular dependency
 export const SOUNDS = ['click', 'correct', 'incorrect', 'dice-roll', 'card-flip', 'sticker-unlock', 'win', 'jump'] as const;

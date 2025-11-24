@@ -46,7 +46,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onSelectGame, isSoundOn }) => {
           onClick={() => onSelectGame('time_adventure')}
           isSoundOn={isSoundOn}
         />
-        
+
         {/* MATH & LOGIC */}
         <GameButton
           title="Giải Cứu Bóng Bay"
@@ -70,6 +70,12 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onSelectGame, isSoundOn }) => {
           title="Tung Xúc Xắc"
           imageUrl="https://be-gom-vui-hoc.vercel.app/assets/images/covers/dice_game_cover.jpeg"
           onClick={() => onSelectGame('dice')}
+          isSoundOn={isSoundOn}
+        />
+        <GameButton
+          title="Bé Làm Nhạc Sĩ"
+          imageUrl="/assets/images/covers/piano_game_cover.png"
+          onClick={() => onSelectGame('piano')}
           isSoundOn={isSoundOn}
         />
 
@@ -118,13 +124,13 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onSelectGame, isSoundOn }) => {
           onClick={() => onSelectGame('princess_code')}
           isSoundOn={isSoundOn}
         />
-         <GameButton
+        <GameButton
           title="Học Đánh Vần"
           imageUrl="https://be-gom-vui-hoc.vercel.app/assets/images/covers/spelling_robot_cover.png"
           onClick={() => onSelectGame('spelling_robot')}
           isSoundOn={isSoundOn}
         />
-         <GameButton
+        <GameButton
           title="Bé Ghép Chữ"
           imageUrl="https://be-gom-vui-hoc.vercel.app/assets/images/covers/spelling_game_cover.png"
           onClick={() => onSelectGame('spelling')}
@@ -148,20 +154,20 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onSelectGame, isSoundOn }) => {
           onClick={() => onSelectGame('english')}
           isSoundOn={isSoundOn}
         />
-        
+
       </div>
 
       {/* Resource Generator Button */}
       <div className="w-full max-w-md mt-12 sm:mt-16 pb-8">
         <button
-            onClick={() => {
-                playSound('click', isSoundOn);
-                onSelectGame('resource_generator');
-            }}
-            className="w-full flex items-center justify-center gap-3 bg-white/60 backdrop-blur-sm text-purple-800 font-bold py-3 px-6 rounded-2xl shadow-lg hover:bg-white transition-colors"
+          onClick={() => {
+            playSound('click', isSoundOn);
+            onSelectGame('resource_generator');
+          }}
+          className="w-full flex items-center justify-center gap-3 bg-white/60 backdrop-blur-sm text-purple-800 font-bold py-3 px-6 rounded-2xl shadow-lg hover:bg-white transition-colors"
         >
-            <WrenchScrewdriverIcon className="w-8 h-8" />
-            <span className="text-xl sm:text-2xl">Quản lý Tài nguyên</span>
+          <WrenchScrewdriverIcon className="w-8 h-8" />
+          <span className="text-xl sm:text-2xl">Quản lý Tài nguyên</span>
         </button>
       </div>
     </div>
@@ -169,33 +175,33 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onSelectGame, isSoundOn }) => {
 };
 
 interface GameButtonProps {
-    title: string;
-    imageUrl: string;
-    onClick: () => void;
-    className?: string;
-    isSoundOn: boolean;
-    isNew?: boolean;
+  title: string;
+  imageUrl: string;
+  onClick: () => void;
+  className?: string;
+  isSoundOn: boolean;
+  isNew?: boolean;
 }
 
 const GameButton: React.FC<GameButtonProps> = ({ title, imageUrl, onClick, isSoundOn, className = '', isNew }) => (
-    <button
-        onClick={() => {
-            playSound('click', isSoundOn);
-            onClick();
-        }}
-        className={`bg-white text-purple-800 rounded-3xl shadow-lg p-2 flex flex-col items-center justify-end transform hover:scale-105 transition-transform duration-300 ease-in-out focus:outline-none focus:ring-4 focus:ring-white/50 w-full aspect-square relative overflow-hidden group ${className}`}
-    >
-        <img src={imageUrl} alt={title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
-        
-        {isNew && (
-            <div className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full animate-pulse shadow-md z-10">
-                MỚI
-            </div>
-        )}
+  <button
+    onClick={() => {
+      playSound('click', isSoundOn);
+      onClick();
+    }}
+    className={`bg-white text-purple-800 rounded-3xl shadow-lg p-2 flex flex-col items-center justify-end transform hover:scale-105 transition-transform duration-300 ease-in-out focus:outline-none focus:ring-4 focus:ring-white/50 w-full aspect-square relative overflow-hidden group ${className}`}
+  >
+    <img src={imageUrl} alt={title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" />
+    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
 
-        <span className="relative text-xl sm:text-2xl md:text-3xl font-black text-white text-center drop-shadow-lg leading-tight p-2 w-full break-words">{title}</span>
-    </button>
+    {isNew && (
+      <div className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full animate-pulse shadow-md z-10">
+        MỚI
+      </div>
+    )}
+
+    <span className="relative text-xl sm:text-2xl md:text-3xl font-black text-white text-center drop-shadow-lg leading-tight p-2 w-full break-words">{title}</span>
+  </button>
 );
 
 export default HomeScreen;
