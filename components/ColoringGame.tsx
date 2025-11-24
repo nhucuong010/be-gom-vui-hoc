@@ -8,18 +8,18 @@ interface ColoringGameProps {
 }
 
 const COLORS = [
-    { name: 'Đỏ', value: '#FF0000' },
-    { name: 'Cam', value: '#FFA500' },
-    { name: 'Vàng', value: '#FFD700' },
-    { name: 'Xanh lá', value: '#00FF00' },
-    { name: 'Xanh dương', value: '#0000FF' },
-    { name: 'Tím', value: '#800080' },
-    { name: 'Hồng', value: '#FFC0CB' },
-    { name: 'Nâu', value: '#8B4513' },
-    { name: 'Đen', value: '#000000' },
-    { name: 'Xám', value: '#808080' },
-    { name: 'Xanh lam', value: '#00CED1' },
-    { name: 'Vàng Chanh', value: '#FFFF00' },
+    { name: 'Đỏ', value: '#FF3B3B', emoji: '❤️' },
+    { name: 'Cam', value: '#FF8C42', emoji: '🧡' },
+    { name: 'Vàng', value: '#FFD93D', emoji: '💛' },
+    { name: 'Xanh lá', value: '#6BCF7F', emoji: '💚' },
+    { name: 'Xanh dương', value: '#4D96FF', emoji: '💙' },
+    { name: 'Tím', value: '#9D4EDD', emoji: '💜' },
+    { name: 'Hồng', value: '#FF6AD5', emoji: '🩷' },
+    { name: 'Nâu', value: '#A0522D', emoji: '🤎' },
+    { name: 'Đen', value: '#2D2D2D', emoji: '🖤' },
+    { name: 'Trắng', value: '#FFFFFF', emoji: '🤍' },
+    { name: 'Xám', value: '#95A5A6', emoji: '🩶' },
+    { name: 'Xanh lam', value: '#1DD3B0', emoji: '💎' },
 ];
 
 // Coloring book templates
@@ -27,14 +27,12 @@ const TEMPLATES = [
     { id: 'flower', name: 'Hoa Cười 🌸', image: '/assets/images/coloring/flower.png' },
     { id: 'bunny', name: 'Thỏ Con 🐰', image: '/assets/images/coloring/bunny.png' },
     // Bạn có thể thêm nhiều tranh tô màu khác vào đây
-    // Ví dụ: { id: 'cat', name: 'Mèo Con 🐱', image: '/assets/images/coloring/cat.png' },
 ];
 
 const ColoringGame: React.FC<ColoringGameProps> = ({ onGoHome, isSoundOn }) => {
     const [selectedTemplate, setSelectedTemplate] = useState(0);
     const [selectedColor, setSelectedColor] = useState(COLORS[0].value);
     const [isEraser, setIsEraser] = useState(false);
-    const [brushSize, setBrushSize] = useState(20);
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const contextRef = useRef<CanvasRenderingContext2D | null>(null);
@@ -56,7 +54,6 @@ const ColoringGame: React.FC<ColoringGameProps> = ({ onGoHome, isSoundOn }) => {
         const img = new Image();
         img.crossOrigin = 'anonymous';
         img.onload = () => {
-            // Set canvas size to match image
             const maxWidth = 800;
             const maxHeight = 600;
             let width = img.width;
@@ -74,18 +71,15 @@ const ColoringGame: React.FC<ColoringGameProps> = ({ onGoHome, isSoundOn }) => {
             canvas.width = width;
             canvas.height = height;
 
-            // Draw image
             ctx.fillStyle = 'white';
             ctx.fillRect(0, 0, width, height);
             ctx.drawImage(img, 0, 0, width, height);
 
-            // Save original image data
             imageDataRef.current = ctx.getImageData(0, 0, width, height);
             originalImageRef.current = img;
         };
 
         img.onerror = () => {
-            // If image fails to load, create a simple placeholder
             canvas.width = 600;
             canvas.height = 600;
             ctx.fillStyle = 'white';
@@ -95,7 +89,7 @@ const ColoringGame: React.FC<ColoringGameProps> = ({ onGoHome, isSoundOn }) => {
             ctx.font = '24px Arial';
             ctx.fillStyle = 'black';
             ctx.textAlign = 'center';
-            ctx.fillText('Tranh tô màu sẽ được thêm sau', 300, 300);
+            ctx.fillText('Tranh tô màu đang được tải...', 300, 300);
 
             imageDataRef.current = ctx.getImageData(0, 0, 600, 600);
         };
@@ -112,7 +106,6 @@ const ColoringGame: React.FC<ColoringGameProps> = ({ onGoHome, isSoundOn }) => {
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         const pixels = imageData.data;
 
-        // Convert fill color to RGB
         const temp = document.createElement('canvas');
         const tempCtx = temp.getContext('2d');
         if (!tempCtx) return;
@@ -125,10 +118,7 @@ const ColoringGame: React.FC<ColoringGameProps> = ({ onGoHome, isSoundOn }) => {
         const startG = pixels[startPos + 1];
         const startB = pixels[startPos + 2];
 
-        // Don't fill if clicking on black outlines (tolerance for anti-aliasing)
         if (startR < 50 && startG < 50 && startB < 50) return;
-
-        // Don't fill if already the same color
         if (startR === fillRgb[0] && startG === fillRgb[1] && startB === fillRgb[2]) return;
 
         const pixelStack: [number, number][] = [[x, y]];
@@ -140,10 +130,8 @@ const ColoringGame: React.FC<ColoringGameProps> = ({ onGoHome, isSoundOn }) => {
             const g = pixels[pos + 1];
             const b = pixels[pos + 2];
 
-            // Check if it's black (outline) - don't fill outlines
             if (r < 50 && g < 50 && b < 50) return false;
 
-            // Check if it matches the starting color (with tolerance)
             return Math.abs(r - startR) < 30 &&
                 Math.abs(g - startG) < 30 &&
                 Math.abs(b - startB) < 30;
@@ -153,7 +141,6 @@ const ColoringGame: React.FC<ColoringGameProps> = ({ onGoHome, isSoundOn }) => {
             const [px, py] = pixelStack.pop()!;
             let currentPos = (py * width + px) * 4;
 
-            // Move up to find the top of this column
             while (py >= 0 && colorMatch(currentPos)) {
                 currentPos -= width * 4;
             }
@@ -164,7 +151,6 @@ const ColoringGame: React.FC<ColoringGameProps> = ({ onGoHome, isSoundOn }) => {
             let reachRight = false;
 
             while (ppy < height && colorMatch(currentPos)) {
-                // Color this pixel
                 pixels[currentPos] = fillRgb[0];
                 pixels[currentPos + 1] = fillRgb[1];
                 pixels[currentPos + 2] = fillRgb[2];
@@ -172,7 +158,6 @@ const ColoringGame: React.FC<ColoringGameProps> = ({ onGoHome, isSoundOn }) => {
 
                 const ppx = (currentPos / 4) % width;
 
-                // Check left
                 if (ppx > 0) {
                     const leftPos = currentPos - 4;
                     if (colorMatch(leftPos)) {
@@ -185,7 +170,6 @@ const ColoringGame: React.FC<ColoringGameProps> = ({ onGoHome, isSoundOn }) => {
                     }
                 }
 
-                // Check right
                 if (ppx < width - 1) {
                     const rightPos = currentPos + 4;
                     if (colorMatch(rightPos)) {
@@ -244,30 +228,30 @@ const ColoringGame: React.FC<ColoringGameProps> = ({ onGoHome, isSoundOn }) => {
     };
 
     return (
-        <div className="fixed inset-0 bg-gradient-to-br from-purple-100 via-pink-100 to-blue-100 flex flex-col overflow-hidden">
+        <div className="fixed inset-0 bg-gradient-to-br from-yellow-100 via-pink-100 to-purple-100 flex flex-col overflow-hidden">
             {/* Header */}
-            <div className="flex justify-between items-center p-4 bg-white/80 backdrop-blur shadow-md z-10">
+            <div className="flex justify-between items-center p-3 md:p-4 bg-white/90 backdrop-blur shadow-lg z-10">
                 <button
                     onClick={onGoHome}
-                    className="bg-purple-500 hover:bg-purple-600 text-white p-3 rounded-full shadow-lg transition-transform hover:scale-110"
+                    className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white p-3 rounded-2xl shadow-lg transition-all hover:scale-110 active:scale-95"
                 >
                     <HomeIcon className="w-6 h-6" />
                 </button>
 
-                <h1 className="text-2xl md:text-4xl font-black text-purple-600 drop-shadow">
+                <h1 className="text-2xl md:text-5xl font-black bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent drop-shadow-sm">
                     🎨 Họa Sĩ Tí Hon
                 </h1>
 
                 <button
                     onClick={handleClear}
-                    className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full font-bold shadow-lg transition-transform hover:scale-110"
+                    className="bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white px-4 py-3 rounded-2xl font-bold shadow-lg transition-all hover:scale-110 active:scale-95 text-sm md:text-base"
                 >
-                    Làm Lại
+                    🔄 Làm Lại
                 </button>
             </div>
 
             {/* Template Selector */}
-            <div className="flex gap-2 p-4 overflow-x-auto bg-white/60 backdrop-blur">
+            <div className="flex gap-2 p-3 overflow-x-auto bg-gradient-to-r from-purple-200/80 to-pink-200/80 backdrop-blur">
                 {TEMPLATES.map((template, idx) => (
                     <button
                         key={template.id}
@@ -275,9 +259,9 @@ const ColoringGame: React.FC<ColoringGameProps> = ({ onGoHome, isSoundOn }) => {
                             setSelectedTemplate(idx);
                             if (isSoundOn) playSound('click', isSoundOn);
                         }}
-                        className={`px-4 py-2 rounded-xl font-bold whitespace-nowrap transition-all ${selectedTemplate === idx
-                            ? 'bg-purple-500 text-white scale-110 shadow-lg'
-                            : 'bg-white text-purple-600 hover:bg-purple-100'
+                        className={`px-6 py-3 rounded-2xl font-bold whitespace-nowrap transition-all text-lg ${selectedTemplate === idx
+                                ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white scale-110 shadow-2xl ring-4 ring-white'
+                                : 'bg-white text-purple-600 hover:bg-purple-50 shadow-md hover:scale-105'
                             }`}
                     >
                         {template.name}
@@ -286,54 +270,58 @@ const ColoringGame: React.FC<ColoringGameProps> = ({ onGoHome, isSoundOn }) => {
             </div>
 
             {/* Main Content */}
-            <div className="flex-1 flex flex-col md:flex-row gap-4 p-4 overflow-hidden">
+            <div className="flex-1 flex flex-col lg:flex-row gap-4 p-4 overflow-hidden">
                 {/* Canvas */}
-                <div className="flex-1 flex items-center justify-center bg-white rounded-2xl shadow-2xl p-4 overflow-hidden">
+                <div className="flex-1 flex items-center justify-center bg-white rounded-3xl shadow-2xl p-4 overflow-hidden border-4 border-purple-200">
                     <canvas
                         ref={canvasRef}
                         onClick={handleCanvasClick}
-                        className="max-w-full max-h-full cursor-crosshair shadow-lg"
+                        className="max-w-full max-h-full cursor-pointer shadow-xl rounded-2xl"
                         style={{ imageRendering: 'pixelated' }}
                     />
                 </div>
 
-                {/* Color Palette & Tools */}
-                <div className="md:w-64 bg-white rounded-2xl shadow-2xl p-4 flex flex-col gap-4">
+                {/* Sidebar */}
+                <div className="lg:w-80 flex flex-col gap-4">
                     {/* Tools */}
-                    <div>
-                        <h3 className="text-lg font-bold text-purple-600 mb-2">Công Cụ</h3>
-                        <div className="flex gap-2">
+                    <div className="bg-white rounded-3xl shadow-2xl p-4 border-4 border-purple-200">
+                        <h3 className="text-2xl font-black text-purple-600 mb-3 text-center">🛠️ Công Cụ</h3>
+                        <div className="grid grid-cols-2 gap-3">
                             <button
                                 onClick={() => {
                                     setIsEraser(false);
                                     if (isSoundOn) playSound('click', isSoundOn);
                                 }}
-                                className={`flex-1 py-2 rounded-lg font-bold transition-all ${!isEraser
-                                    ? 'bg-purple-500 text-white shadow-lg scale-105'
-                                    : 'bg-gray-200 text-gray-600'
+                                className={`flex flex-col items-center gap-2 py-4 rounded-2xl font-bold transition-all ${!isEraser
+                                        ? 'bg-gradient-to-br from-purple-500 to-pink-500 text-white shadow-2xl scale-105 ring-4 ring-purple-300'
+                                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200 shadow-md'
                                     }`}
                             >
-                                🖌️ Cọ
+                                <span className="text-4xl">🖌️</span>
+                                <span className="text-sm">Bút Màu</span>
                             </button>
                             <button
                                 onClick={() => {
                                     setIsEraser(true);
                                     if (isSoundOn) playSound('click', isSoundOn);
                                 }}
-                                className={`flex-1 py-2 rounded-lg font-bold transition-all ${isEraser
-                                    ? 'bg-purple-500 text-white shadow-lg scale-105'
-                                    : 'bg-gray-200 text-gray-600'
+                                className={`flex flex-col items-center gap-2 py-4 rounded-2xl font-bold transition-all ${isEraser
+                                        ? 'bg-gradient-to-br from-purple-500 to-pink-500 text-white shadow-2xl scale-105 ring-4 ring-purple-300'
+                                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200 shadow-md'
                                     }`}
                             >
-                                🧹Tẩy
+                                <span className="text-4xl">🧹</span>
+                                <span className="text-sm">Tẩy</span>
                             </button>
                         </div>
                     </div>
 
                     {/* Color Palette */}
-                    <div className="flex-1 overflow-y-auto">
-                        <h3 className="text-lg font-bold text-purple-600 mb-2">Bảng Màu</h3>
-                        <div className="grid grid-cols-3 gap-2">
+                    <div className="flex-1 bg-white rounded-3xl shadow-2xl p-4 overflow-y-auto border-4 border-purple-200">
+                        <h3 className="text-2xl font-black text-purple-600 mb-3 text-center sticky top-0 bg-white z-10 pb-2">
+                            🎨 Bảng Màu
+                        </h3>
+                        <div className="grid grid-cols-3 gap-3">
                             {COLORS.map((color) => (
                                 <button
                                     key={color.value}
@@ -342,30 +330,40 @@ const ColoringGame: React.FC<ColoringGameProps> = ({ onGoHome, isSoundOn }) => {
                                         setIsEraser(false);
                                         if (isSoundOn) playSound('click', isSoundOn);
                                     }}
-                                    className={`aspect-square rounded-xl transition-all ${selectedColor === color.value && !isEraser
-                                        ? 'scale-110 ring-4 ring-purple-500 shadow-lg'
-                                        : 'hover:scale-105 shadow'
+                                    className={`relative aspect-square rounded-2xl transition-all flex flex-col items-center justify-center gap-1 ${selectedColor === color.value && !isEraser
+                                            ? 'scale-110 ring-6 ring-purple-500 shadow-2xl z-10'
+                                            : 'hover:scale-105 shadow-lg hover:shadow-xl'
                                         }`}
-                                    style={{ backgroundColor: color.value }}
+                                    style={{
+                                        backgroundColor: color.value,
+                                        border: color.value === '#FFFFFF' ? '3px solid #E5E7EB' : 'none'
+                                    }}
                                     title={color.name}
-                                />
+                                >
+                                    <span className="text-2xl drop-shadow">{color.emoji}</span>
+                                    {selectedColor === color.value && !isEraser && (
+                                        <div className="absolute -top-2 -right-2 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-lg">
+                                            <span className="text-xl">✓</span>
+                                        </div>
+                                    )}
+                                </button>
                             ))}
                         </div>
                     </div>
 
-                    {/* Current Color */}
-                    <div className="p-3 bg-purple-100 rounded-xl text-center">
-                        <p className="text-sm font-bold text-purple-700 mb-2">
-                            {isEraser ? 'Đang dùng Tẩy' : 'Màu đang chọn:'}
+                    {/* Current Selection Display */}
+                    <div className="bg-gradient-to-br from-purple-500 to-pink-500 rounded-3xl shadow-2xl p-4 text-white border-4 border-white">
+                        <p className="text-lg font-bold text-center mb-3">
+                            {isEraser ? '🧹 Đang Dùng Tẩy' : '🖌️ Màu Đang Chọn'}
                         </p>
                         {!isEraser && (
                             <div
-                                className="w-16 h-16 mx-auto rounded-full shadow-lg border-4 border-white"
+                                className="w-20 h-20 mx-auto rounded-2xl shadow-2xl border-4 border-white"
                                 style={{ backgroundColor: selectedColor }}
                             />
                         )}
                         {isEraser && (
-                            <div className="text-4xl">🧹</div>
+                            <div className="text-6xl text-center">🧹</div>
                         )}
                     </div>
                 </div>
