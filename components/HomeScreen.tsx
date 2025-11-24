@@ -78,6 +78,13 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onSelectGame, isSoundOn }) => {
           onClick={() => onSelectGame('piano')}
           isSoundOn={isSoundOn}
         />
+        <GameButton
+          title="Họa Sĩ Tí Hon"
+          imageUrl="/assets/images/covers/coloring_game_cover.png"
+          onClick={() => onSelectGame('coloring')}
+          isSoundOn={isSoundOn}
+          isNew
+        />
 
         {/* ROLE PLAY & MEMORY */}
         <GameButton
