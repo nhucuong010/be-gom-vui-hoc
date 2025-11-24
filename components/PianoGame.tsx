@@ -80,6 +80,25 @@ const SONGS = [
             'D4', 'E4', 'G4', 'G4', 'G4', 'G4', 'G4', 'G4', 'G4',
             'G4', 'G4', 'F#4'
         ]
+    },
+    {
+        id: 'mot_con_vit',
+        name: 'Một Con Vịt 🦆',
+        notes: [
+            'C4', 'D4', 'E4', 'F4', 'G4', 'G4',
+            'A4', 'A4', 'A4', 'A4', 'G4',
+            'A4', 'A4', 'A4', 'A4', 'G4',
+            'F4', 'F4', 'F4', 'F4', 'E4', 'E4',
+            'G4', 'G4', 'F4', 'E4', 'D4', 'C4'
+        ]
+    },
+    {
+        id: 'con_co',
+        name: 'Con Cò 🐦',
+        notes: [
+            'C4', 'C4', 'G4', 'G4', 'A4', 'G4', 'F4', 'E4',
+            'D4', 'D4', 'E4', 'E4', 'F4', 'F4', 'E4', 'D4', 'C4'
+        ]
     }
 ];
 
@@ -256,6 +275,19 @@ const PianoGame: React.FC<PianoGameProps> = ({ onGoHome, isSoundOn }) => {
                         const isActive = activeKeys.has(n.note);
                         const isTarget = mode === 'tutorial' && currentSong.notes[tutorialIndex] === n.note;
 
+                        // Calculate repeat count for consecutive notes
+                        let repeatCount = 0;
+                        if (isTarget) {
+                            const targetNote = currentSong.notes[tutorialIndex];
+                            for (let i = tutorialIndex; i < currentSong.notes.length; i++) {
+                                if (currentSong.notes[i] === targetNote) {
+                                    repeatCount++;
+                                } else {
+                                    break;
+                                }
+                            }
+                        }
+
                         if (isBlack) return null;
 
                         const nextNote = NOTES[idx + 1];
@@ -279,6 +311,11 @@ const PianoGame: React.FC<PianoGameProps> = ({ onGoHome, isSoundOn }) => {
                                     <span className="absolute bottom-4 left-1/2 -translate-x-1/2 text-gray-400 font-bold text-sm pointer-events-none">
                                         {n.note.replace(/\d/, '')}
                                     </span>
+                                    {isTarget && repeatCount > 1 && (
+                                        <div className="absolute top-2 left-1/2 -translate-x-1/2 bg-red-500 text-white font-black text-lg px-3 py-1 rounded-full shadow-lg animate-pulse z-30">
+                                            ×{repeatCount}
+                                        </div>
+                                    )}
                                 </button>
 
                                 {/* Black Key */}
