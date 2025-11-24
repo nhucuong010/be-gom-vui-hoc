@@ -24,12 +24,9 @@ const COLORS = [
 
 // Coloring book templates
 const TEMPLATES = [
-    { id: 'unicorn', name: 'Kỳ Lân 🦄', image: '/assets/images/coloring/unicorn.png' },
-    { id: 'princess', name: 'Công Chúa 👸', image: '/assets/images/coloring/princess.png' },
-    { id: 'dinosaur', name: 'Khủng Long 🦕', image: '/assets/images/coloring/dinosaur.png' },
-    { id: 'cat', name: 'Mèo Con 🐱', image: '/assets/images/coloring/cat.png' },
-    { id: 'butterfly', name: 'Bướm 🦋', image: '/assets/images/coloring/butterfly.png' },
-    { id: 'rocket', name: 'Tên Lửa 🚀', image: '/assets/images/coloring/rocket.png' },
+    { id: 'flower', name: 'Hoa Cười 🌸', image: '/assets/images/coloring/flower.png' },
+    // Bạn có thể thêm nhiều tranh tô màu khác vào đây
+    // Ví dụ: { id: 'cat', name: 'Mèo Con 🐱', image: '/assets/images/coloring/cat.png' },
 ];
 
 const ColoringGame: React.FC<ColoringGameProps> = ({ onGoHome, isSoundOn }) => {
@@ -278,8 +275,8 @@ const ColoringGame: React.FC<ColoringGameProps> = ({ onGoHome, isSoundOn }) => {
                             if (isSoundOn) playSound('click', isSoundOn);
                         }}
                         className={`px-4 py-2 rounded-xl font-bold whitespace-nowrap transition-all ${selectedTemplate === idx
-                                ? 'bg-purple-500 text-white scale-110 shadow-lg'
-                                : 'bg-white text-purple-600 hover:bg-purple-100'
+                            ? 'bg-purple-500 text-white scale-110 shadow-lg'
+                            : 'bg-white text-purple-600 hover:bg-purple-100'
                             }`}
                     >
                         {template.name}
@@ -311,8 +308,8 @@ const ColoringGame: React.FC<ColoringGameProps> = ({ onGoHome, isSoundOn }) => {
                                     if (isSoundOn) playSound('click', isSoundOn);
                                 }}
                                 className={`flex-1 py-2 rounded-lg font-bold transition-all ${!isEraser
-                                        ? 'bg-purple-500 text-white shadow-lg scale-105'
-                                        : 'bg-gray-200 text-gray-600'
+                                    ? 'bg-purple-500 text-white shadow-lg scale-105'
+                                    : 'bg-gray-200 text-gray-600'
                                     }`}
                             >
                                 🖌️ Cọ
@@ -323,8 +320,8 @@ const ColoringGame: React.FC<ColoringGameProps> = ({ onGoHome, isSoundOn }) => {
                                     if (isSoundOn) playSound('click', isSoundOn);
                                 }}
                                 className={`flex-1 py-2 rounded-lg font-bold transition-all ${isEraser
-                                        ? 'bg-purple-500 text-white shadow-lg scale-105'
-                                        : 'bg-gray-200 text-gray-600'
+                                    ? 'bg-purple-500 text-white shadow-lg scale-105'
+                                    : 'bg-gray-200 text-gray-600'
                                     }`}
                             >
                                 🧹Tẩy
@@ -345,8 +342,8 @@ const ColoringGame: React.FC<ColoringGameProps> = ({ onGoHome, isSoundOn }) => {
                                         if (isSoundOn) playSound('click', isSoundOn);
                                     }}
                                     className={`aspect-square rounded-xl transition-all ${selectedColor === color.value && !isEraser
-                                            ? 'scale-110 ring-4 ring-purple-500 shadow-lg'
-                                            : 'hover:scale-105 shadow'
+                                        ? 'scale-110 ring-4 ring-purple-500 shadow-lg'
+                                        : 'hover:scale-105 shadow'
                                         }`}
                                     style={{ backgroundColor: color.value }}
                                     title={color.name}
