@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { HomeIcon } from './icons';
 import { playSound } from '../services/audioService';
 
@@ -17,116 +17,231 @@ const COLORS = [
     { name: 'Hồng', value: '#FFC0CB' },
     { name: 'Nâu', value: '#8B4513' },
     { name: 'Đen', value: '#000000' },
-    { name: 'Trắng', value: '#FFFFFF' },
     { name: 'Xám', value: '#808080' },
     { name: 'Xanh lam', value: '#00CED1' },
+    { name: 'Vàng Chanh', value: '#FFFF00' },
 ];
 
-// Simple coloring templates as SVG paths
+// Coloring book templates
 const TEMPLATES = [
-    {
-        id: 'butterfly',
-        name: 'Bướm 🦋',
-        viewBox: '0 0 200 200',
-        paths: [
-            { id: 'wing1', d: 'M100,100 Q80,60 60,80 Q40,100 60,120 Q80,140 100,100 Z', fill: '#FFFFFF' },
-            { id: 'wing2', d: 'M100,100 Q120,60 140,80 Q160,100 140,120 Q120,140 100,100 Z', fill: '#FFFFFF' },
-            { id: 'wing3', d: 'M100,100 Q80,140 60,160 Q40,180 60,200 Q80,180 100,140 Z', fill: '#FFFFFF' },
-            { id: 'wing4', d: 'M100,100 Q120,140 140,160 Q160,180 140,200 Q120,180 100,140 Z', fill: '#FFFFFF' },
-            { id: 'body', d: 'M95,50 L105,50 L105,200 L95,200 Z', fill: '#FFFFFF' },
-            { id: 'head', d: 'M100,40 m-10,0 a10,10 0 1,0 20,0 a10,10 0 1,0 -20,0', fill: '#FFFFFF' },
-        ]
-    },
-    {
-        id: 'flower',
-        name: 'Hoa 🌸',
-        viewBox: '0 0 200 200',
-        paths: [
-            { id: 'petal1', d: 'M100,100 Q90,70 100,50 Q110,70 100,100 Z', fill: '#FFFFFF' },
-            { id: 'petal2', d: 'M100,100 Q130,90 150,100 Q130,110 100,100 Z', fill: '#FFFFFF' },
-            { id: 'petal3', d: 'M100,100 Q110,130 100,150 Q90,130 100,100 Z', fill: '#FFFFFF' },
-            { id: 'petal4', d: 'M100,100 Q70,110 50,100 Q70,90 100,100 Z', fill: '#FFFFFF' },
-            { id: 'petal5', d: 'M100,100 Q120,80 130,70 Q115,85 100,100 Z', fill: '#FFFFFF' },
-            { id: 'petal6', d: 'M100,100 Q120,120 130,130 Q115,115 100,100 Z', fill: '#FFFFFF' },
-            { id: 'petal7', d: 'M100,100 Q80,120 70,130 Q85,115 100,100 Z', fill: '#FFFFFF' },
-            { id: 'petal8', d: 'M100,100 Q80,80 70,70 Q85,85 100,100 Z', fill: '#FFFFFF' },
-            { id: 'center', d: 'M100,100 m-15,0 a15,15 0 1,0 30,0 a15,15 0 1,0 -30,0', fill: '#FFFFFF' },
-            { id: 'stem', d: 'M95,100 L105,100 L105,180 L95,180 Z', fill: '#FFFFFF' },
-        ]
-    },
-    {
-        id: 'fish',
-        name: 'Cá 🐟',
-        viewBox: '0 0 200 200',
-        paths: [
-            { id: 'body', d: 'M50,100 Q80,70 120,70 Q150,70 160,100 Q150,130 120,130 Q80,130 50,100 Z', fill: '#FFFFFF' },
-            { id: 'tail', d: 'M160,100 L180,80 L190,100 L180,120 Z', fill: '#FFFFFF' },
-            { id: 'fin_top', d: 'M100,70 L110,50 L120,70 Z', fill: '#FFFFFF' },
-            { id: 'fin_bottom', d: 'M100,130 L110,150 L120,130 Z', fill: '#FFFFFF' },
-            { id: 'eye', d: 'M130,90 m-8,0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0', fill: '#FFFFFF' },
-        ]
-    },
-    {
-        id: 'house',
-        name: 'Nhà 🏠',
-        viewBox: '0 0 200 200',
-        paths: [
-            { id: 'roof', d: 'M50,100 L100,50 L150,100 Z', fill: '#FFFFFF' },
-            { id: 'wall', d: 'M60,100 L140,100 L140,170 L60,170 Z', fill: '#FFFFFF' },
-            { id: 'door', d: 'M85,130 L115,130 L115,170 L85,170 Z', fill: '#FFFFFF' },
-            { id: 'window1', d: 'M70,110 L90,110 L90,130 L70,130 Z', fill: '#FFFFFF' },
-            { id: 'window2', d: 'M110,110 L130,110 L130,130 L110,130 Z', fill: '#FFFFFF' },
-            { id: 'chimney', d: 'M120,60 L135,60 L135,85 L120,85 Z', fill: '#FFFFFF' },
-        ]
-    },
-    {
-        id: 'tree',
-        name: 'Cây 🌳',
-        viewBox: '0 0 200 200',
-        paths: [
-            { id: 'trunk', d: 'M85,120 L115,120 L115,180 L85,180 Z', fill: '#FFFFFF' },
-            { id: 'leaves1', d: 'M100,40 m-40,0 a40,40 0 1,0 80,0 a40,40 0 1,0 -80,0', fill: '#FFFFFF' },
-            { id: 'leaves2', d: 'M70,80 m-30,0 a30,30 0 1,0 60,0 a30,30 0 1,0 -60,0', fill: '#FFFFFF' },
-            { id: 'leaves3', d: 'M130,80 m-30,0 a30,30 0 1,0 60,0 a30,30 0 1,0 -60,0', fill: '#FFFFFF' },
-        ]
-    },
-    {
-        id: 'car',
-        name: 'Xe 🚗',
-        viewBox: '0 0 200 200',
-        paths: [
-            { id: 'body', d: 'M40,120 L160,120 L160,150 L40,150 Z', fill: '#FFFFFF' },
-            { id: 'roof', d: 'M60,90 L140,90 L150,120 L50,120 Z', fill: '#FFFFFF' },
-            { id: 'window1', d: 'M65,95 L95,95 L100,115 L70,115 Z', fill: '#FFFFFF' },
-            { id: 'window2', d: 'M105,95 L135,95 L130,115 L100,115 Z', fill: '#FFFFFF' },
-            { id: 'wheel1', d: 'M60,150 m-15,0 a15,15 0 1,0 30,0 a15,15 0 1,0 -30,0', fill: '#FFFFFF' },
-            { id: 'wheel2', d: 'M140,150 m-15,0 a15,15 0 1,0 30,0 a15,15 0 1,0 -30,0', fill: '#FFFFFF' },
-        ]
-    },
+    { id: 'unicorn', name: 'Kỳ Lân 🦄', image: '/assets/images/coloring/unicorn.png' },
+    { id: 'princess', name: 'Công Chúa 👸', image: '/assets/images/coloring/princess.png' },
+    { id: 'dinosaur', name: 'Khủng Long 🦕', image: '/assets/images/coloring/dinosaur.png' },
+    { id: 'cat', name: 'Mèo Con 🐱', image: '/assets/images/coloring/cat.png' },
+    { id: 'butterfly', name: 'Bướm 🦋', image: '/assets/images/coloring/butterfly.png' },
+    { id: 'rocket', name: 'Tên Lửa 🚀', image: '/assets/images/coloring/rocket.png' },
 ];
 
 const ColoringGame: React.FC<ColoringGameProps> = ({ onGoHome, isSoundOn }) => {
     const [selectedTemplate, setSelectedTemplate] = useState(0);
     const [selectedColor, setSelectedColor] = useState(COLORS[0].value);
-    const [coloredPaths, setColoredPaths] = useState<Record<string, string>>({});
-    const svgRef = useRef<SVGSVGElement>(null);
+    const [isEraser, setIsEraser] = useState(false);
+    const [brushSize, setBrushSize] = useState(20);
+
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const contextRef = useRef<CanvasRenderingContext2D | null>(null);
+    const originalImageRef = useRef<HTMLImageElement | null>(null);
+    const imageDataRef = useRef<ImageData | null>(null);
 
     const currentTemplate = TEMPLATES[selectedTemplate];
 
-    const handlePathClick = (pathId: string) => {
-        setColoredPaths(prev => ({
-            ...prev,
-            [pathId]: selectedColor
-        }));
+    // Load image when template changes
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+        if (!ctx) return;
+
+        contextRef.current = ctx;
+
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => {
+            // Set canvas size to match image
+            const maxWidth = 800;
+            const maxHeight = 600;
+            let width = img.width;
+            let height = img.height;
+
+            if (width > maxWidth) {
+                height = (height * maxWidth) / width;
+                width = maxWidth;
+            }
+            if (height > maxHeight) {
+                width = (width * maxHeight) / height;
+                height = maxHeight;
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+
+            // Draw image
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, width, height);
+            ctx.drawImage(img, 0, 0, width, height);
+
+            // Save original image data
+            imageDataRef.current = ctx.getImageData(0, 0, width, height);
+            originalImageRef.current = img;
+        };
+
+        img.onerror = () => {
+            // If image fails to load, create a simple placeholder
+            canvas.width = 600;
+            canvas.height = 600;
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, 600, 600);
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = 3;
+            ctx.font = '24px Arial';
+            ctx.fillStyle = 'black';
+            ctx.textAlign = 'center';
+            ctx.fillText('Tranh tô màu sẽ được thêm sau', 300, 300);
+
+            imageDataRef.current = ctx.getImageData(0, 0, 600, 600);
+        };
+
+        img.src = currentTemplate.image;
+    }, [selectedTemplate]);
+
+    // Flood fill algorithm
+    const floodFill = (x: number, y: number, fillColor: string) => {
+        const canvas = canvasRef.current;
+        const ctx = contextRef.current;
+        if (!canvas || !ctx) return;
+
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const pixels = imageData.data;
+
+        // Convert fill color to RGB
+        const temp = document.createElement('canvas');
+        const tempCtx = temp.getContext('2d');
+        if (!tempCtx) return;
+        tempCtx.fillStyle = fillColor;
+        tempCtx.fillRect(0, 0, 1, 1);
+        const fillRgb = tempCtx.getImageData(0, 0, 1, 1).data;
+
+        const startPos = (y * canvas.width + x) * 4;
+        const startR = pixels[startPos];
+        const startG = pixels[startPos + 1];
+        const startB = pixels[startPos + 2];
+
+        // Don't fill if clicking on black outlines (tolerance for anti-aliasing)
+        if (startR < 50 && startG < 50 && startB < 50) return;
+
+        // Don't fill if already the same color
+        if (startR === fillRgb[0] && startG === fillRgb[1] && startB === fillRgb[2]) return;
+
+        const pixelStack: [number, number][] = [[x, y]];
+        const width = canvas.width;
+        const height = canvas.height;
+
+        const colorMatch = (pos: number): boolean => {
+            const r = pixels[pos];
+            const g = pixels[pos + 1];
+            const b = pixels[pos + 2];
+
+            // Check if it's black (outline) - don't fill outlines
+            if (r < 50 && g < 50 && b < 50) return false;
+
+            // Check if it matches the starting color (with tolerance)
+            return Math.abs(r - startR) < 30 &&
+                Math.abs(g - startG) < 30 &&
+                Math.abs(b - startB) < 30;
+        };
+
+        while (pixelStack.length > 0) {
+            const [px, py] = pixelStack.pop()!;
+            let currentPos = (py * width + px) * 4;
+
+            // Move up to find the top of this column
+            while (py >= 0 && colorMatch(currentPos)) {
+                currentPos -= width * 4;
+            }
+            currentPos += width * 4;
+            let ppy = Math.floor(currentPos / 4 / width);
+
+            let reachLeft = false;
+            let reachRight = false;
+
+            while (ppy < height && colorMatch(currentPos)) {
+                // Color this pixel
+                pixels[currentPos] = fillRgb[0];
+                pixels[currentPos + 1] = fillRgb[1];
+                pixels[currentPos + 2] = fillRgb[2];
+                pixels[currentPos + 3] = 255;
+
+                const ppx = (currentPos / 4) % width;
+
+                // Check left
+                if (ppx > 0) {
+                    const leftPos = currentPos - 4;
+                    if (colorMatch(leftPos)) {
+                        if (!reachLeft) {
+                            pixelStack.push([ppx - 1, ppy]);
+                            reachLeft = true;
+                        }
+                    } else {
+                        reachLeft = false;
+                    }
+                }
+
+                // Check right
+                if (ppx < width - 1) {
+                    const rightPos = currentPos + 4;
+                    if (colorMatch(rightPos)) {
+                        if (!reachRight) {
+                            pixelStack.push([ppx + 1, ppy]);
+                            reachRight = true;
+                        }
+                    } else {
+                        reachRight = false;
+                    }
+                }
+
+                currentPos += width * 4;
+                ppy++;
+            }
+        }
+
+        ctx.putImageData(imageData, 0, 0);
+    };
+
+    const handleCanvasClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        const x = Math.floor((e.clientX - rect.left) * scaleX);
+        const y = Math.floor((e.clientY - rect.top) * scaleY);
+
+        if (isEraser) {
+            floodFill(x, y, '#FFFFFF');
+        } else {
+            floodFill(x, y, selectedColor);
+        }
+
         if (isSoundOn) {
-            playSound('click');
+            playSound('click', isSoundOn);
         }
     };
 
     const handleClear = () => {
-        setColoredPaths({});
+        const canvas = canvasRef.current;
+        const ctx = contextRef.current;
+        const img = originalImageRef.current;
+
+        if (!canvas || !ctx || !img) return;
+
+        ctx.fillStyle = 'white';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
         if (isSoundOn) {
-            playSound('click');
+            playSound('click', isSoundOn);
         }
     };
 
@@ -149,7 +264,7 @@ const ColoringGame: React.FC<ColoringGameProps> = ({ onGoHome, isSoundOn }) => {
                     onClick={handleClear}
                     className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full font-bold shadow-lg transition-transform hover:scale-110"
                 >
-                    Xóa Hết
+                    Làm Lại
                 </button>
             </div>
 
@@ -160,12 +275,11 @@ const ColoringGame: React.FC<ColoringGameProps> = ({ onGoHome, isSoundOn }) => {
                         key={template.id}
                         onClick={() => {
                             setSelectedTemplate(idx);
-                            setColoredPaths({});
                             if (isSoundOn) playSound('click', isSoundOn);
                         }}
                         className={`px-4 py-2 rounded-xl font-bold whitespace-nowrap transition-all ${selectedTemplate === idx
-                            ? 'bg-purple-500 text-white scale-110 shadow-lg'
-                            : 'bg-white text-purple-600 hover:bg-purple-100'
+                                ? 'bg-purple-500 text-white scale-110 shadow-lg'
+                                : 'bg-white text-purple-600 hover:bg-purple-100'
                             }`}
                     >
                         {template.name}
@@ -177,56 +291,84 @@ const ColoringGame: React.FC<ColoringGameProps> = ({ onGoHome, isSoundOn }) => {
             <div className="flex-1 flex flex-col md:flex-row gap-4 p-4 overflow-hidden">
                 {/* Canvas */}
                 <div className="flex-1 flex items-center justify-center bg-white rounded-2xl shadow-2xl p-4 overflow-hidden">
-                    <svg
-                        ref={svgRef}
-                        viewBox={currentTemplate.viewBox}
-                        className="w-full h-full max-w-2xl max-h-[600px]"
-                        style={{ filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.1))' }}
-                    >
-                        {currentTemplate.paths.map((path) => (
-                            <path
-                                key={path.id}
-                                d={path.d}
-                                fill={coloredPaths[path.id] || path.fill}
-                                stroke="#000000"
-                                strokeWidth="2"
-                                onClick={() => handlePathClick(path.id)}
-                                className="cursor-pointer hover:opacity-80 transition-opacity"
-                            />
-                        ))}
-                    </svg>
+                    <canvas
+                        ref={canvasRef}
+                        onClick={handleCanvasClick}
+                        className="max-w-full max-h-full cursor-crosshair shadow-lg"
+                        style={{ imageRendering: 'pixelated' }}
+                    />
                 </div>
 
-                {/* Color Palette */}
-                <div className="md:w-48 bg-white rounded-2xl shadow-2xl p-4">
-                    <h3 className="text-xl font-bold text-purple-600 mb-4 text-center">Bảng Màu</h3>
-                    <div className="grid grid-cols-3 md:grid-cols-2 gap-3">
-                        {COLORS.map((color) => (
+                {/* Color Palette & Tools */}
+                <div className="md:w-64 bg-white rounded-2xl shadow-2xl p-4 flex flex-col gap-4">
+                    {/* Tools */}
+                    <div>
+                        <h3 className="text-lg font-bold text-purple-600 mb-2">Công Cụ</h3>
+                        <div className="flex gap-2">
                             <button
-                                key={color.value}
                                 onClick={() => {
-                                    setSelectedColor(color.value);
+                                    setIsEraser(false);
                                     if (isSoundOn) playSound('click', isSoundOn);
                                 }}
-                                className={`w-full aspect-square rounded-xl transition-all ${selectedColor === color.value
-                                    ? 'scale-110 ring-4 ring-purple-500 shadow-lg'
-                                    : 'hover:scale-105 shadow'
+                                className={`flex-1 py-2 rounded-lg font-bold transition-all ${!isEraser
+                                        ? 'bg-purple-500 text-white shadow-lg scale-105'
+                                        : 'bg-gray-200 text-gray-600'
                                     }`}
-                                style={{
-                                    backgroundColor: color.value,
-                                    border: color.value === '#FFFFFF' ? '2px solid #ccc' : 'none'
+                            >
+                                🖌️ Cọ
+                            </button>
+                            <button
+                                onClick={() => {
+                                    setIsEraser(true);
+                                    if (isSoundOn) playSound('click', isSoundOn);
                                 }}
-                                title={color.name}
-                            />
-                        ))}
+                                className={`flex-1 py-2 rounded-lg font-bold transition-all ${isEraser
+                                        ? 'bg-purple-500 text-white shadow-lg scale-105'
+                                        : 'bg-gray-200 text-gray-600'
+                                    }`}
+                            >
+                                🧹Tẩy
+                            </button>
+                        </div>
                     </div>
 
-                    <div className="mt-4 p-3 bg-purple-100 rounded-xl text-center">
-                        <p className="text-sm font-bold text-purple-700">Màu đang chọn:</p>
-                        <div
-                            className="w-16 h-16 mx-auto mt-2 rounded-full shadow-lg border-4 border-white"
-                            style={{ backgroundColor: selectedColor }}
-                        />
+                    {/* Color Palette */}
+                    <div className="flex-1 overflow-y-auto">
+                        <h3 className="text-lg font-bold text-purple-600 mb-2">Bảng Màu</h3>
+                        <div className="grid grid-cols-3 gap-2">
+                            {COLORS.map((color) => (
+                                <button
+                                    key={color.value}
+                                    onClick={() => {
+                                        setSelectedColor(color.value);
+                                        setIsEraser(false);
+                                        if (isSoundOn) playSound('click', isSoundOn);
+                                    }}
+                                    className={`aspect-square rounded-xl transition-all ${selectedColor === color.value && !isEraser
+                                            ? 'scale-110 ring-4 ring-purple-500 shadow-lg'
+                                            : 'hover:scale-105 shadow'
+                                        }`}
+                                    style={{ backgroundColor: color.value }}
+                                    title={color.name}
+                                />
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Current Color */}
+                    <div className="p-3 bg-purple-100 rounded-xl text-center">
+                        <p className="text-sm font-bold text-purple-700 mb-2">
+                            {isEraser ? 'Đang dùng Tẩy' : 'Màu đang chọn:'}
+                        </p>
+                        {!isEraser && (
+                            <div
+                                className="w-16 h-16 mx-auto rounded-full shadow-lg border-4 border-white"
+                                style={{ backgroundColor: selectedColor }}
+                            />
+                        )}
+                        {isEraser && (
+                            <div className="text-4xl">🧹</div>
+                        )}
                     </div>
                 </div>
             </div>
