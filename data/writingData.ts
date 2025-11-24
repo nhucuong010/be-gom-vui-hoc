@@ -46,170 +46,234 @@ const curvePoints = (x0: number, y0: number, x1: number, y1: number, x2: number,
 // --- CHARACTER DATA BANK ---
 export const WRITING_DATA: WritingCharacter[] = [
     // --- NUMBERS (0-9) ---
-    { id: 'num_0', char: '0', strokes: [{ path: "M 50 10 Q 90 10 90 50 Q 90 90 50 90 Q 10 90 10 50 Q 10 10 50 10", startPoint: { x: 50, y: 10 }, checkpoints: [...curvePoints(50,10,90,10,90,50,6), ...curvePoints(90,50,90,90,50,90,6), ...curvePoints(50,90,10,90,10,50,6), ...curvePoints(10,50,10,10,50,10,6)] }] },
-    { id: 'num_1', char: '1', strokes: [{ path: "M 40 30 L 50 10 L 50 90", startPoint: { x: 40, y: 30 }, checkpoints: [...linePoints(40,30,50,10,4), ...linePoints(50,10,50,90,10)] }] },
-    { id: 'num_2', char: '2', strokes: [{ path: "M 30 30 Q 50 0 70 30 Q 70 50 30 90 L 70 90", startPoint: { x: 30, y: 30 }, checkpoints: [...curvePoints(30,30,50,0,70,30,5), ...curvePoints(70,30,70,50,30,90,8), ...linePoints(30,90,70,90,5)] }] },
-    { id: 'num_3', char: '3', strokes: [{ path: "M 30 20 Q 80 10 50 50 Q 80 90 30 80", startPoint: { x: 30, y: 20 }, checkpoints: [...curvePoints(30,20,80,10,50,50,6), ...curvePoints(50,50,80,90,30,80,6)] }] },
-    { id: 'num_4', char: '4', strokes: [{ path: "M 60 10 L 20 60 L 80 60", startPoint: { x: 60, y: 10 }, checkpoints: [...linePoints(60,10,20,60,5), ...linePoints(20,60,80,60,5)] }, { path: "M 60 10 L 60 90", startPoint: { x: 60, y: 10 }, checkpoints: linePoints(60,10,60,90,8) }] },
-    { id: 'num_5', char: '5', strokes: [{ path: "M 70 10 L 30 10 L 30 40 Q 80 40 80 70 Q 80 90 30 90", startPoint: { x: 70, y: 10 }, checkpoints: [...linePoints(70,10,30,10,4), ...linePoints(30,10,30,40,4), ...curvePoints(30,40,80,40,80,70,5), ...curvePoints(80,70,80,90,30,90,5)] }] },
-    { id: 'num_6', char: '6', strokes: [{ path: "M 70 10 Q 20 10 20 50 Q 20 90 50 90 Q 80 90 80 60 Q 80 40 50 40 Q 25 40 25 60", startPoint: { x: 70, y: 10 }, checkpoints: [...curvePoints(70,10,20,10,20,50,6), ...curvePoints(20,50,20,90,50,90,6), ...curvePoints(50,90,80,90,80,60,5), ...curvePoints(80,60,80,40,50,40,4)] }] },
-    { id: 'num_7', char: '7', strokes: [{ path: "M 20 10 L 80 10 L 40 90", startPoint: { x: 20, y: 10 }, checkpoints: [...linePoints(20,10,80,10,6), ...linePoints(80,10,40,90,8)] }] },
-    { id: 'num_8', char: '8', strokes: [{ path: "M 50 50 Q 20 50 20 25 Q 20 0 50 0 Q 80 0 80 25 Q 80 50 50 50 Q 20 50 20 75 Q 20 100 50 100 Q 80 100 80 75 Q 80 50 50 50", startPoint: { x: 50, y: 50 }, checkpoints: [...curvePoints(50,50,20,50,20,25,4), ...curvePoints(20,25,20,0,50,0,4), ...curvePoints(50,0,80,0,80,25,4), ...curvePoints(80,25,80,50,50,50,4), ...curvePoints(50,50,20,50,20,75,4), ...curvePoints(20,75,20,100,50,100,4), ...curvePoints(50,100,80,100,80,75,4), ...curvePoints(80,75,80,50,50,50,4)] }] },
-    { id: 'num_9', char: '9', strokes: [{ path: "M 50 50 Q 20 50 20 25 Q 20 0 50 0 Q 80 0 80 25 Q 80 50 50 50 Q 80 50 80 90", startPoint: { x: 50, y: 50 }, checkpoints: [...curvePoints(50,50,20,50,20,25,5), ...curvePoints(20,25,20,0,50,0,5), ...curvePoints(50,0,80,0,80,25,5), ...curvePoints(80,25,80,50,50,50,5), ...curvePoints(50,50,80,50,80,90,6)] }] },
+    { id: 'num_0', char: '0', strokes: [{ path: "M 50 10 Q 90 10 90 50 Q 90 90 50 90 Q 10 90 10 50 Q 10 10 50 10", startPoint: { x: 50, y: 10 }, checkpoints: [...curvePoints(50, 10, 90, 10, 90, 50, 6), ...curvePoints(90, 50, 90, 90, 50, 90, 6), ...curvePoints(50, 90, 10, 90, 10, 50, 6), ...curvePoints(10, 50, 10, 10, 50, 10, 6)] }] },
+    { id: 'num_1', char: '1', strokes: [{ path: "M 40 30 L 50 10 L 50 90", startPoint: { x: 40, y: 30 }, checkpoints: [...linePoints(40, 30, 50, 10, 4), ...linePoints(50, 10, 50, 90, 10)] }] },
+    { id: 'num_2', char: '2', strokes: [{ path: "M 30 30 Q 50 0 70 30 Q 70 50 30 90 L 70 90", startPoint: { x: 30, y: 30 }, checkpoints: [...curvePoints(30, 30, 50, 0, 70, 30, 5), ...curvePoints(70, 30, 70, 50, 30, 90, 8), ...linePoints(30, 90, 70, 90, 5)] }] },
+    { id: 'num_3', char: '3', strokes: [{ path: "M 30 20 Q 80 10 50 50 Q 80 90 30 80", startPoint: { x: 30, y: 20 }, checkpoints: [...curvePoints(30, 20, 80, 10, 50, 50, 6), ...curvePoints(50, 50, 80, 90, 30, 80, 6)] }] },
+    { id: 'num_4', char: '4', strokes: [{ path: "M 60 10 L 20 60 L 80 60", startPoint: { x: 60, y: 10 }, checkpoints: [...linePoints(60, 10, 20, 60, 5), ...linePoints(20, 60, 80, 60, 5)] }, { path: "M 60 10 L 60 90", startPoint: { x: 60, y: 10 }, checkpoints: linePoints(60, 10, 60, 90, 8) }] },
+    { id: 'num_5', char: '5', strokes: [{ path: "M 70 10 L 30 10 L 30 40 Q 80 40 80 70 Q 80 90 30 90", startPoint: { x: 70, y: 10 }, checkpoints: [...linePoints(70, 10, 30, 10, 4), ...linePoints(30, 10, 30, 40, 4), ...curvePoints(30, 40, 80, 40, 80, 70, 5), ...curvePoints(80, 70, 80, 90, 30, 90, 5)] }] },
+    { id: 'num_6', char: '6', strokes: [{ path: "M 70 10 Q 20 10 20 50 Q 20 90 50 90 Q 80 90 80 60 Q 80 40 50 40 Q 25 40 25 60", startPoint: { x: 70, y: 10 }, checkpoints: [...curvePoints(70, 10, 20, 10, 20, 50, 6), ...curvePoints(20, 50, 20, 90, 50, 90, 6), ...curvePoints(50, 90, 80, 90, 80, 60, 5), ...curvePoints(80, 60, 80, 40, 50, 40, 4)] }] },
+    { id: 'num_7', char: '7', strokes: [{ path: "M 20 10 L 80 10 L 40 90", startPoint: { x: 20, y: 10 }, checkpoints: [...linePoints(20, 10, 80, 10, 6), ...linePoints(80, 10, 40, 90, 8)] }] },
+    { id: 'num_8', char: '8', strokes: [{ path: "M 50 50 Q 20 50 20 25 Q 20 0 50 0 Q 80 0 80 25 Q 80 50 50 50 Q 20 50 20 75 Q 20 100 50 100 Q 80 100 80 75 Q 80 50 50 50", startPoint: { x: 50, y: 50 }, checkpoints: [...curvePoints(50, 50, 20, 50, 20, 25, 4), ...curvePoints(20, 25, 20, 0, 50, 0, 4), ...curvePoints(50, 0, 80, 0, 80, 25, 4), ...curvePoints(80, 25, 80, 50, 50, 50, 4), ...curvePoints(50, 50, 20, 50, 20, 75, 4), ...curvePoints(20, 75, 20, 100, 50, 100, 4), ...curvePoints(50, 100, 80, 100, 80, 75, 4), ...curvePoints(80, 75, 80, 50, 50, 50, 4)] }] },
+    { id: 'num_9', char: '9', strokes: [{ path: "M 50 50 Q 20 50 20 25 Q 20 0 50 0 Q 80 0 80 25 Q 80 50 50 50 Q 80 50 80 90", startPoint: { x: 50, y: 50 }, checkpoints: [...curvePoints(50, 50, 20, 50, 20, 25, 5), ...curvePoints(20, 25, 20, 0, 50, 0, 5), ...curvePoints(50, 0, 80, 0, 80, 25, 5), ...curvePoints(80, 25, 80, 50, 50, 50, 5), ...curvePoints(50, 50, 80, 50, 80, 90, 6)] }] },
 
     // --- ALPHABET (A-Y) ---
-    { id: 'char_A', char: 'A', strokes: [
-        { path: "M 50 10 L 20 90", startPoint: { x: 50, y: 10 }, checkpoints: linePoints(50, 10, 20, 90, 8) },
-        { path: "M 50 10 L 80 90", startPoint: { x: 50, y: 10 }, checkpoints: linePoints(50, 10, 80, 90, 8) },
-        { path: "M 30 60 L 70 60", startPoint: { x: 30, y: 60 }, checkpoints: linePoints(30, 60, 70, 60, 5) }
-    ]},
-    { id: 'char_B', char: 'B', strokes: [
-        { path: "M 30 10 L 30 90", startPoint: { x: 30, y: 10 }, checkpoints: linePoints(30, 10, 30, 90, 10) },
-        { path: "M 30 10 Q 70 10 70 30 Q 70 50 30 50", startPoint: { x: 30, y: 10 }, checkpoints: [...curvePoints(30,10,70,10,70,30,5), ...curvePoints(70,30,70,50,30,50,5)] },
-        { path: "M 30 50 Q 80 50 80 70 Q 80 90 30 90", startPoint: { x: 30, y: 50 }, checkpoints: [...curvePoints(30,50,80,50,80,70,5), ...curvePoints(80,70,80,90,30,90,5)] }
-    ]},
-    { id: 'char_C', char: 'C', strokes: [
-        { path: "M 75 20 Q 20 20 20 50 Q 20 80 75 80", startPoint: { x: 75, y: 20 }, checkpoints: [...curvePoints(75,20,20,20,20,50,8), ...curvePoints(20,50,20,80,75,80,8)] }
-    ]},
-    { id: 'char_D', char: 'D', strokes: [
-        { path: "M 30 10 L 30 90", startPoint: { x: 30, y: 10 }, checkpoints: linePoints(30, 10, 30, 90, 10) },
-        { path: "M 30 10 Q 90 10 90 50 Q 90 90 30 90", startPoint: { x: 30, y: 10 }, checkpoints: [...curvePoints(30,10,90,10,90,50,8), ...curvePoints(90,50,90,90,30,90,8)] }
-    ]},
-    { id: 'char_DD', char: 'Đ', strokes: [
-        { path: "M 30 10 L 30 90", startPoint: { x: 30, y: 10 }, checkpoints: linePoints(30, 10, 30, 90, 10) },
-        { path: "M 30 10 Q 90 10 90 50 Q 90 90 30 90", startPoint: { x: 30, y: 10 }, checkpoints: [...curvePoints(30,10,90,10,90,50,8), ...curvePoints(90,50,90,90,30,90,8)] },
-        { path: "M 20 50 L 40 50", startPoint: { x: 20, y: 50 }, checkpoints: linePoints(20, 50, 40, 50, 3) }
-    ]},
-    { id: 'char_E', char: 'E', strokes: [
-        { path: "M 30 10 L 30 90", startPoint: { x: 30, y: 10 }, checkpoints: linePoints(30, 10, 30, 90, 10) },
-        { path: "M 30 10 L 80 10", startPoint: { x: 30, y: 10 }, checkpoints: linePoints(30, 10, 80, 10, 6) },
-        { path: "M 30 50 L 70 50", startPoint: { x: 30, y: 50 }, checkpoints: linePoints(30, 50, 70, 50, 5) },
-        { path: "M 30 90 L 80 90", startPoint: { x: 30, y: 90 }, checkpoints: linePoints(30, 90, 80, 90, 6) }
-    ]},
-    { id: 'char_G', char: 'G', strokes: [
-        { path: "M 75 20 Q 20 20 20 50 Q 20 80 75 80", startPoint: { x: 75, y: 20 }, checkpoints: [...curvePoints(75,20,20,20,20,50,8), ...curvePoints(20,50,20,80,75,80,8)] },
-        { path: "M 50 50 L 80 50", startPoint: { x: 50, y: 50 }, checkpoints: linePoints(50, 50, 80, 50, 4) },
-        { path: "M 80 50 L 80 80", startPoint: { x: 80, y: 50 }, checkpoints: linePoints(80, 50, 80, 80, 4) }
-    ]},
-    { id: 'char_H', char: 'H', strokes: [
-        { path: "M 30 10 L 30 90", startPoint: { x: 30, y: 10 }, checkpoints: linePoints(30, 10, 30, 90, 10) },
-        { path: "M 70 10 L 70 90", startPoint: { x: 70, y: 10 }, checkpoints: linePoints(70, 10, 70, 90, 10) },
-        { path: "M 30 50 L 70 50", startPoint: { x: 30, y: 50 }, checkpoints: linePoints(30, 50, 70, 50, 5) }
-    ]},
-    { id: 'char_I', char: 'I', strokes: [
-        { path: "M 50 15 L 50 85", startPoint: { x: 50, y: 15 }, checkpoints: linePoints(50, 15, 50, 85, 8) },
-        { path: "M 35 15 L 65 15", startPoint: { x: 35, y: 15 }, checkpoints: linePoints(35, 15, 65, 15, 4) },
-        { path: "M 35 85 L 65 85", startPoint: { x: 35, y: 85 }, checkpoints: linePoints(35, 85, 65, 85, 4) }
-    ]},
-    { id: 'char_K', char: 'K', strokes: [
-        { path: "M 30 10 L 30 90", startPoint: { x: 30, y: 10 }, checkpoints: linePoints(30, 10, 30, 90, 10) },
-        { path: "M 70 10 L 30 50", startPoint: { x: 70, y: 10 }, checkpoints: linePoints(70, 10, 30, 50, 6) },
-        { path: "M 30 50 L 70 90", startPoint: { x: 30, y: 50 }, checkpoints: linePoints(30, 50, 70, 90, 6) }
-    ]},
-    { id: 'char_L', char: 'L', strokes: [
-        { path: "M 30 10 L 30 90 L 80 90", startPoint: { x: 30, y: 10 }, checkpoints: [...linePoints(30, 10, 30, 90, 8), ...linePoints(30, 90, 80, 90, 6)] }
-    ]},
-    { id: 'char_M', char: 'M', strokes: [
-        { path: "M 20 90 L 20 10", startPoint: { x: 20, y: 90 }, checkpoints: linePoints(20, 90, 20, 10, 10) },
-        { path: "M 20 10 L 50 60", startPoint: { x: 20, y: 10 }, checkpoints: linePoints(20, 10, 50, 60, 6) },
-        { path: "M 50 60 L 80 10", startPoint: { x: 50, y: 60 }, checkpoints: linePoints(50, 60, 80, 10, 6) },
-        { path: "M 80 10 L 80 90", startPoint: { x: 80, y: 10 }, checkpoints: linePoints(80, 10, 80, 90, 10) }
-    ]},
-    { id: 'char_N', char: 'N', strokes: [
-        { path: "M 30 90 L 30 10", startPoint: { x: 30, y: 90 }, checkpoints: linePoints(30, 90, 30, 10, 10) },
-        { path: "M 30 10 L 70 90", startPoint: { x: 30, y: 10 }, checkpoints: linePoints(30, 10, 70, 90, 10) },
-        { path: "M 70 90 L 70 10", startPoint: { x: 70, y: 90 }, checkpoints: linePoints(70, 90, 70, 10, 10) }
-    ]},
-    { id: 'char_O', char: 'O', strokes: [
-        { path: "M 50 10 Q 10 10 10 50 Q 10 90 50 90 Q 90 90 90 50 Q 90 10 50 10", startPoint: { x: 50, y: 10 }, checkpoints: [...curvePoints(50,10,10,10,10,50,6), ...curvePoints(10,50,10,90,50,90,6), ...curvePoints(50,90,90,90,90,50,6), ...curvePoints(90,50,90,10,50,10,6)] }
-    ]},
-    { id: 'char_P', char: 'P', strokes: [
-        { path: "M 30 10 L 30 90", startPoint: { x: 30, y: 10 }, checkpoints: linePoints(30, 10, 30, 90, 10) },
-        { path: "M 30 10 Q 70 10 70 30 Q 70 50 30 50", startPoint: { x: 30, y: 10 }, checkpoints: [...curvePoints(30,10,70,10,70,30,5), ...curvePoints(70,30,70,50,30,50,5)] }
-    ]},
-    { id: 'char_Q', char: 'Q', strokes: [
-        { path: "M 50 10 Q 10 10 10 50 Q 10 90 50 90 Q 90 90 90 50 Q 90 10 50 10", startPoint: { x: 50, y: 10 }, checkpoints: [...curvePoints(50,10,10,10,10,50,6), ...curvePoints(10,50,10,90,50,90,6), ...curvePoints(50,90,90,90,90,50,6), ...curvePoints(90,50,90,10,50,10,6)] },
-        { path: "M 60 60 L 80 80", startPoint: { x: 60, y: 60 }, checkpoints: linePoints(60, 60, 80, 80, 4) }
-    ]},
-    { id: 'char_R', char: 'R', strokes: [
-        { path: "M 30 10 L 30 90", startPoint: { x: 30, y: 10 }, checkpoints: linePoints(30, 10, 30, 90, 10) },
-        { path: "M 30 10 Q 70 10 70 30 Q 70 50 30 50 L 30 50", startPoint: { x: 30, y: 10 }, checkpoints: [...curvePoints(30,10,70,10,70,30,5), ...curvePoints(70,30,70,50,30,50,5), ...linePoints(30,50,30,50,2)] },
-        { path: "M 50 50 L 80 90", startPoint: { x: 50, y: 50 }, checkpoints: linePoints(50, 50, 80, 90, 6) }
-    ]},
-    { id: 'char_S', char: 'S', strokes: [
-        { path: "M 80 20 Q 20 20 50 50 Q 80 80 20 80", startPoint: { x: 80, y: 20 }, checkpoints: [...curvePoints(80,20,20,20,50,50,6), ...curvePoints(50,50,80,80,20,80,6)] }
-    ]},
-    { id: 'char_T', char: 'T', strokes: [
-        { path: "M 20 10 L 80 10", startPoint: { x: 20, y: 10 }, checkpoints: linePoints(20, 10, 80, 10, 8) },
-        { path: "M 50 10 L 50 90", startPoint: { x: 50, y: 10 }, checkpoints: linePoints(50, 10, 50, 90, 8) }
-    ]},
-    { id: 'char_U', char: 'U', strokes: [
-        { path: "M 25 10 L 25 70 Q 25 90 50 90 Q 75 90 75 70 L 75 10", startPoint: { x: 25, y: 10 }, checkpoints: [...linePoints(25,10,25,70,6), ...curvePoints(25,70,25,90,50,90,4), ...curvePoints(50,90,75,90,75,70,4), ...linePoints(75,70,75,10,6)] }
-    ]},
-    { id: 'char_V', char: 'V', strokes: [
-        { path: "M 20 10 L 50 90 L 80 10", startPoint: { x: 20, y: 10 }, checkpoints: [...linePoints(20,10,50,90,6), ...linePoints(50,90,80,10,6)] }
-    ]},
-    { id: 'char_X', char: 'X', strokes: [
-        { path: "M 20 10 L 80 90", startPoint: { x: 20, y: 10 }, checkpoints: linePoints(20, 10, 80, 90, 8) },
-        { path: "M 80 10 L 20 90", startPoint: { x: 80, y: 10 }, checkpoints: linePoints(80, 10, 20, 90, 8) }
-    ]},
-    { id: 'char_Y', char: 'Y', strokes: [
-        { path: "M 20 10 L 50 50", startPoint: { x: 20, y: 10 }, checkpoints: linePoints(20, 10, 50, 50, 5) },
-        { path: "M 80 10 L 20 90", startPoint: { x: 80, y: 10 }, checkpoints: linePoints(80, 10, 20, 90, 8) }
-    ]},
+    {
+        id: 'char_A', char: 'A', strokes: [
+            { path: "M 50 10 L 20 90", startPoint: { x: 50, y: 10 }, checkpoints: linePoints(50, 10, 20, 90, 8) },
+            { path: "M 50 10 L 80 90", startPoint: { x: 50, y: 10 }, checkpoints: linePoints(50, 10, 80, 90, 8) },
+            { path: "M 30 60 L 70 60", startPoint: { x: 30, y: 60 }, checkpoints: linePoints(30, 60, 70, 60, 5) }
+        ]
+    },
+    {
+        id: 'char_B', char: 'B', strokes: [
+            { path: "M 30 10 L 30 90", startPoint: { x: 30, y: 10 }, checkpoints: linePoints(30, 10, 30, 90, 10) },
+            { path: "M 30 10 Q 70 10 70 30 Q 70 50 30 50", startPoint: { x: 30, y: 10 }, checkpoints: [...curvePoints(30, 10, 70, 10, 70, 30, 5), ...curvePoints(70, 30, 70, 50, 30, 50, 5)] },
+            { path: "M 30 50 Q 80 50 80 70 Q 80 90 30 90", startPoint: { x: 30, y: 50 }, checkpoints: [...curvePoints(30, 50, 80, 50, 80, 70, 5), ...curvePoints(80, 70, 80, 90, 30, 90, 5)] }
+        ]
+    },
+    {
+        id: 'char_C', char: 'C', strokes: [
+            { path: "M 75 20 Q 20 20 20 50 Q 20 80 75 80", startPoint: { x: 75, y: 20 }, checkpoints: [...curvePoints(75, 20, 20, 20, 20, 50, 8), ...curvePoints(20, 50, 20, 80, 75, 80, 8)] }
+        ]
+    },
+    {
+        id: 'char_D', char: 'D', strokes: [
+            { path: "M 30 10 L 30 90", startPoint: { x: 30, y: 10 }, checkpoints: linePoints(30, 10, 30, 90, 10) },
+            { path: "M 30 10 Q 90 10 90 50 Q 90 90 30 90", startPoint: { x: 30, y: 10 }, checkpoints: [...curvePoints(30, 10, 90, 10, 90, 50, 8), ...curvePoints(90, 50, 90, 90, 30, 90, 8)] }
+        ]
+    },
+    {
+        id: 'char_DD', char: 'Đ', strokes: [
+            { path: "M 30 10 L 30 90", startPoint: { x: 30, y: 10 }, checkpoints: linePoints(30, 10, 30, 90, 10) },
+            { path: "M 30 10 Q 90 10 90 50 Q 90 90 30 90", startPoint: { x: 30, y: 10 }, checkpoints: [...curvePoints(30, 10, 90, 10, 90, 50, 8), ...curvePoints(90, 50, 90, 90, 30, 90, 8)] },
+            { path: "M 20 50 L 40 50", startPoint: { x: 20, y: 50 }, checkpoints: linePoints(20, 50, 40, 50, 3) }
+        ]
+    },
+    {
+        id: 'char_E', char: 'E', strokes: [
+            { path: "M 30 10 L 30 90", startPoint: { x: 30, y: 10 }, checkpoints: linePoints(30, 10, 30, 90, 10) },
+            { path: "M 30 10 L 80 10", startPoint: { x: 30, y: 10 }, checkpoints: linePoints(30, 10, 80, 10, 6) },
+            { path: "M 30 50 L 70 50", startPoint: { x: 30, y: 50 }, checkpoints: linePoints(30, 50, 70, 50, 5) },
+            { path: "M 30 90 L 80 90", startPoint: { x: 30, y: 90 }, checkpoints: linePoints(30, 90, 80, 90, 6) }
+        ]
+    },
+    {
+        id: 'char_G', char: 'G', strokes: [
+            { path: "M 75 20 Q 20 20 20 50 Q 20 80 75 80", startPoint: { x: 75, y: 20 }, checkpoints: [...curvePoints(75, 20, 20, 20, 20, 50, 8), ...curvePoints(20, 50, 20, 80, 75, 80, 8)] },
+            { path: "M 50 50 L 80 50", startPoint: { x: 50, y: 50 }, checkpoints: linePoints(50, 50, 80, 50, 4) },
+            { path: "M 80 50 L 80 80", startPoint: { x: 80, y: 50 }, checkpoints: linePoints(80, 50, 80, 80, 4) }
+        ]
+    },
+    {
+        id: 'char_H', char: 'H', strokes: [
+            { path: "M 30 10 L 30 90", startPoint: { x: 30, y: 10 }, checkpoints: linePoints(30, 10, 30, 90, 10) },
+            { path: "M 70 10 L 70 90", startPoint: { x: 70, y: 10 }, checkpoints: linePoints(70, 10, 70, 90, 10) },
+            { path: "M 30 50 L 70 50", startPoint: { x: 30, y: 50 }, checkpoints: linePoints(30, 50, 70, 50, 5) }
+        ]
+    },
+    {
+        id: 'char_I', char: 'I', strokes: [
+            { path: "M 50 15 L 50 85", startPoint: { x: 50, y: 15 }, checkpoints: linePoints(50, 15, 50, 85, 8) },
+            { path: "M 35 15 L 65 15", startPoint: { x: 35, y: 15 }, checkpoints: linePoints(35, 15, 65, 15, 4) },
+            { path: "M 35 85 L 65 85", startPoint: { x: 35, y: 85 }, checkpoints: linePoints(35, 85, 65, 85, 4) }
+        ]
+    },
+    {
+        id: 'char_K', char: 'K', strokes: [
+            { path: "M 30 10 L 30 90", startPoint: { x: 30, y: 10 }, checkpoints: linePoints(30, 10, 30, 90, 10) },
+            { path: "M 70 10 L 30 50", startPoint: { x: 70, y: 10 }, checkpoints: linePoints(70, 10, 30, 50, 6) },
+            { path: "M 30 50 L 70 90", startPoint: { x: 30, y: 50 }, checkpoints: linePoints(30, 50, 70, 90, 6) }
+        ]
+    },
+    {
+        id: 'char_L', char: 'L', strokes: [
+            { path: "M 30 10 L 30 90 L 80 90", startPoint: { x: 30, y: 10 }, checkpoints: [...linePoints(30, 10, 30, 90, 8), ...linePoints(30, 90, 80, 90, 6)] }
+        ]
+    },
+    {
+        id: 'char_M', char: 'M', strokes: [
+            { path: "M 20 90 L 20 10", startPoint: { x: 20, y: 90 }, checkpoints: linePoints(20, 90, 20, 10, 10) },
+            { path: "M 20 10 L 50 60", startPoint: { x: 20, y: 10 }, checkpoints: linePoints(20, 10, 50, 60, 6) },
+            { path: "M 50 60 L 80 10", startPoint: { x: 50, y: 60 }, checkpoints: linePoints(50, 60, 80, 10, 6) },
+            { path: "M 80 10 L 80 90", startPoint: { x: 80, y: 10 }, checkpoints: linePoints(80, 10, 80, 90, 10) }
+        ]
+    },
+    {
+        id: 'char_N', char: 'N', strokes: [
+            { path: "M 30 90 L 30 10", startPoint: { x: 30, y: 90 }, checkpoints: linePoints(30, 90, 30, 10, 10) },
+            { path: "M 30 10 L 70 90", startPoint: { x: 30, y: 10 }, checkpoints: linePoints(30, 10, 70, 90, 10) },
+            { path: "M 70 90 L 70 10", startPoint: { x: 70, y: 90 }, checkpoints: linePoints(70, 90, 70, 10, 10) }
+        ]
+    },
+    {
+        id: 'char_O', char: 'O', strokes: [
+            { path: "M 50 10 Q 10 10 10 50 Q 10 90 50 90 Q 90 90 90 50 Q 90 10 50 10", startPoint: { x: 50, y: 10 }, checkpoints: [...curvePoints(50, 10, 10, 10, 10, 50, 6), ...curvePoints(10, 50, 10, 90, 50, 90, 6), ...curvePoints(50, 90, 90, 90, 90, 50, 6), ...curvePoints(90, 50, 90, 10, 50, 10, 6)] }
+        ]
+    },
+    {
+        id: 'char_P', char: 'P', strokes: [
+            { path: "M 30 10 L 30 90", startPoint: { x: 30, y: 10 }, checkpoints: linePoints(30, 10, 30, 90, 10) },
+            { path: "M 30 10 Q 70 10 70 30 Q 70 50 30 50", startPoint: { x: 30, y: 10 }, checkpoints: [...curvePoints(30, 10, 70, 10, 70, 30, 5), ...curvePoints(70, 30, 70, 50, 30, 50, 5)] }
+        ]
+    },
+    {
+        id: 'char_Q', char: 'Q', strokes: [
+            { path: "M 50 10 Q 10 10 10 50 Q 10 90 50 90 Q 90 90 90 50 Q 90 10 50 10", startPoint: { x: 50, y: 10 }, checkpoints: [...curvePoints(50, 10, 10, 10, 10, 50, 6), ...curvePoints(10, 50, 10, 90, 50, 90, 6), ...curvePoints(50, 90, 90, 90, 90, 50, 6), ...curvePoints(90, 50, 90, 10, 50, 10, 6)] },
+            { path: "M 60 60 L 80 80", startPoint: { x: 60, y: 60 }, checkpoints: linePoints(60, 60, 80, 80, 4) }
+        ]
+    },
+    {
+        id: 'char_R', char: 'R', strokes: [
+            { path: "M 30 10 L 30 90", startPoint: { x: 30, y: 10 }, checkpoints: linePoints(30, 10, 30, 90, 10) },
+            { path: "M 30 10 Q 70 10 70 30 Q 70 50 30 50 L 30 50", startPoint: { x: 30, y: 10 }, checkpoints: [...curvePoints(30, 10, 70, 10, 70, 30, 5), ...curvePoints(70, 30, 70, 50, 30, 50, 5), ...linePoints(30, 50, 30, 50, 2)] },
+            { path: "M 50 50 L 80 90", startPoint: { x: 50, y: 50 }, checkpoints: linePoints(50, 50, 80, 90, 6) }
+        ]
+    },
+    {
+        id: 'char_S', char: 'S', strokes: [
+            { path: "M 80 20 Q 20 20 50 50 Q 80 80 20 80", startPoint: { x: 80, y: 20 }, checkpoints: [...curvePoints(80, 20, 20, 20, 50, 50, 6), ...curvePoints(50, 50, 80, 80, 20, 80, 6)] }
+        ]
+    },
+    {
+        id: 'char_T', char: 'T', strokes: [
+            { path: "M 20 10 L 80 10", startPoint: { x: 20, y: 10 }, checkpoints: linePoints(20, 10, 80, 10, 8) },
+            { path: "M 50 10 L 50 90", startPoint: { x: 50, y: 10 }, checkpoints: linePoints(50, 10, 50, 90, 8) }
+        ]
+    },
+    {
+        id: 'char_U', char: 'U', strokes: [
+            { path: "M 25 10 L 25 70 Q 25 90 50 90 Q 75 90 75 70 L 75 10", startPoint: { x: 25, y: 10 }, checkpoints: [...linePoints(25, 10, 25, 70, 6), ...curvePoints(25, 70, 25, 90, 50, 90, 4), ...curvePoints(50, 90, 75, 90, 75, 70, 4), ...linePoints(75, 70, 75, 10, 6)] }
+        ]
+    },
+    {
+        id: 'char_V', char: 'V', strokes: [
+            { path: "M 20 10 L 50 90 L 80 10", startPoint: { x: 20, y: 10 }, checkpoints: [...linePoints(20, 10, 50, 90, 6), ...linePoints(50, 90, 80, 10, 6)] }
+        ]
+    },
+    {
+        id: 'char_X', char: 'X', strokes: [
+            { path: "M 20 10 L 80 90", startPoint: { x: 20, y: 10 }, checkpoints: linePoints(20, 10, 80, 90, 8) },
+            { path: "M 80 10 L 20 90", startPoint: { x: 80, y: 10 }, checkpoints: linePoints(80, 10, 20, 90, 8) }
+        ]
+    },
+    {
+        id: 'char_Y', char: 'Y', strokes: [
+            { path: "M 20 10 L 50 50", startPoint: { x: 20, y: 10 }, checkpoints: linePoints(20, 10, 50, 50, 5) },
+            { path: "M 80 10 L 20 90", startPoint: { x: 80, y: 10 }, checkpoints: linePoints(80, 10, 20, 90, 8) }
+        ]
+    },
 
     // --- SPECIAL ACCENTS & COMBOS ---
-    { id: 'char_OO', char: 'Ô', strokes: [
-        { path: "M 50 10 Q 10 10 10 50 Q 10 90 50 90 Q 90 90 90 50 Q 90 10 50 10", startPoint: { x: 50, y: 10 }, checkpoints: [...curvePoints(50,10,10,10,10,50,6), ...curvePoints(10,50,10,90,50,90,6), ...curvePoints(50,90,90,90,90,50,6), ...curvePoints(90,50,90,10,50,10,6)] },
-        { path: "M 35 5 L 50 0 L 65 5", startPoint: { x: 35, y: 5 }, checkpoints: [...linePoints(35,5,50,0,2), ...linePoints(50,0,65,5,2)] } // ^
-    ]},
-    { id: 'char_OO_SAC', char: 'Ố', strokes: [
-        { path: "M 50 25 Q 10 25 10 60 Q 10 95 50 95 Q 90 95 90 60 Q 90 25 50 25", startPoint: { x: 50, y: 25 }, checkpoints: [...curvePoints(50,25,10,25,10,60,6), ...curvePoints(10,60,10,95,50,95,6), ...curvePoints(50,95,90,95,90,60,6), ...curvePoints(90,60,90,25,50,25,6)] },
-        { path: "M 35 20 L 50 5", startPoint: { x: 35, y: 20 }, checkpoints: linePoints(35, 20, 50, 5, 3) }, // ^ up
-        { path: "M 50 5 L 65 20", startPoint: { x: 50, y: 5 }, checkpoints: linePoints(50, 5, 65, 20, 3) }, // ^ down
-        { path: "M 70 5 L 85 15", startPoint: { x: 70, y: 5 }, checkpoints: linePoints(70, 5, 85, 15, 3) }  // ' (sac)
-    ]},
-    { id: 'char_E_NANG', char: 'Ẹ', strokes: [
-        { path: "M 30 10 L 30 80", startPoint: { x: 30, y: 10 }, checkpoints: linePoints(30, 10, 30, 80, 8) },
-        { path: "M 30 10 L 80 10", startPoint: { x: 30, y: 10 }, checkpoints: linePoints(30, 10, 80, 10, 6) },
-        { path: "M 30 45 L 70 45", startPoint: { x: 30, y: 45 }, checkpoints: linePoints(30, 45, 70, 45, 5) },
-        { path: "M 30 80 L 80 80", startPoint: { x: 30, y: 80 }, checkpoints: linePoints(30, 80, 80, 80, 6) },
-        { path: "M 50 90 L 50 95", startPoint: { x: 50, y: 90 }, checkpoints: linePoints(50, 90, 50, 95, 2) }
-    ]},
-    { id: 'char_A_NANG', char: 'Ạ', strokes: [
-        { path: "M 50 10 L 20 80", startPoint: { x: 50, y: 10 }, checkpoints: linePoints(50, 10, 20, 80, 8) },
-        { path: "M 50 10 L 80 80", startPoint: { x: 50, y: 10 }, checkpoints: linePoints(50, 10, 80, 80, 8) },
-        { path: "M 30 55 L 70 55", startPoint: { x: 30, y: 55 }, checkpoints: linePoints(30, 55, 70, 55, 5) },
-        { path: "M 50 90 L 50 95", startPoint: { x: 50, y: 90 }, checkpoints: linePoints(50, 90, 50, 95, 2) }
-    ]},
-    { id: 'char_A_HOI', char: 'Ả', strokes: [
-        { path: "M 50 25 L 20 90", startPoint: { x: 50, y: 25 }, checkpoints: linePoints(50, 25, 20, 90, 8) },
-        { path: "M 50 25 L 80 90", startPoint: { x: 50, y: 25 }, checkpoints: linePoints(50, 25, 80, 90, 8) },
-        { path: "M 30 65 L 70 65", startPoint: { x: 30, y: 65 }, checkpoints: linePoints(30, 65, 70, 65, 5) },
-        { path: "M 45 10 Q 55 0 60 10 Q 55 15 50 10", startPoint: { x: 45, y: 10 }, checkpoints: [...curvePoints(45,10,55,0,60,10,4), ...curvePoints(60,10,55,15,50,10,4)] }
-    ]},
-    { id: 'char_A_HUYEN', char: 'À', strokes: [
-        { path: "M 50 25 L 20 90", startPoint: { x: 50, y: 25 }, checkpoints: linePoints(50, 25, 20, 90, 8) },
-        { path: "M 50 25 L 80 90", startPoint: { x: 50, y: 25 }, checkpoints: linePoints(50, 25, 80, 90, 8) },
-        { path: "M 30 65 L 70 65", startPoint: { x: 30, y: 65 }, checkpoints: linePoints(30, 65, 70, 65, 5) },
-        { path: "M 35 5 L 65 15", startPoint: { x: 35, y: 5 }, checkpoints: linePoints(35, 5, 65, 15, 3) } // `
-    ]},
-    { id: 'char_EE', char: 'Ê', strokes: [
-        { path: "M 30 25 L 30 90", startPoint: { x: 30, y: 25 }, checkpoints: linePoints(30, 25, 30, 90, 8) },
-        { path: "M 30 25 L 80 25", startPoint: { x: 30, y: 25 }, checkpoints: linePoints(30, 25, 80, 25, 6) },
-        { path: "M 30 55 L 70 55", startPoint: { x: 30, y: 55 }, checkpoints: linePoints(30, 55, 70, 55, 5) },
-        { path: "M 30 90 L 80 90", startPoint: { x: 30, y: 90 }, checkpoints: linePoints(30, 90, 80, 90, 6) },
-        { path: "M 35 15 L 50 5", startPoint: { x: 35, y: 15 }, checkpoints: linePoints(35, 15, 50, 5, 3) }, // ^
-        { path: "M 50 5 L 65 15", startPoint: { x: 50, y: 5 }, checkpoints: linePoints(50, 5, 65, 15, 3) }
-    ]},
-    { id: 'char_UW', char: 'Ư', strokes: [
-        { path: "M 25 10 L 25 70 Q 25 90 50 90 Q 75 90 75 70 L 75 10", startPoint: { x: 25, y: 10 }, checkpoints: [...linePoints(25,10,25,70,6), ...curvePoints(25,70,25,90,50,90,4), ...curvePoints(50,90,75,90,75,70,4), ...linePoints(75,70,75,10,6)] },
-        { path: "M 75 10 Q 85 10 80 25", startPoint: { x: 75, y: 10 }, checkpoints: curvePoints(75, 10, 85, 10, 80, 25, 4) }
-    ]},
-    { id: 'char_OW', char: 'Ơ', strokes: [
-        { path: "M 50 10 Q 10 10 10 50 Q 10 90 50 90 Q 90 90 90 50 Q 90 10 50 10", startPoint: { x: 50, y: 10 }, checkpoints: [...curvePoints(50,10,10,10,10,50,6), ...curvePoints(10,50,10,90,50,90,6), ...curvePoints(50,90,90,90,90,50,6), ...curvePoints(90,50,90,10,50,10,6)] },
-        { path: "M 80 15 Q 95 10 90 30", startPoint: { x: 80, y: 15 }, checkpoints: curvePoints(80, 15, 95, 10, 90, 30, 4) }
-    ]}
+    {
+        id: 'char_OO', char: 'Ô', strokes: [
+            { path: "M 50 10 Q 10 10 10 50 Q 10 90 50 90 Q 90 90 90 50 Q 90 10 50 10", startPoint: { x: 50, y: 10 }, checkpoints: [...curvePoints(50, 10, 10, 10, 10, 50, 6), ...curvePoints(10, 50, 10, 90, 50, 90, 6), ...curvePoints(50, 90, 90, 90, 90, 50, 6), ...curvePoints(90, 50, 90, 10, 50, 10, 6)] },
+            { path: "M 35 5 L 50 0 L 65 5", startPoint: { x: 35, y: 5 }, checkpoints: [...linePoints(35, 5, 50, 0, 2), ...linePoints(50, 0, 65, 5, 2)] } // ^
+        ]
+    },
+    {
+        id: 'char_OO_SAC', char: 'Ố', strokes: [
+            { path: "M 50 25 Q 10 25 10 60 Q 10 95 50 95 Q 90 95 90 60 Q 90 25 50 25", startPoint: { x: 50, y: 25 }, checkpoints: [...curvePoints(50, 25, 10, 25, 10, 60, 6), ...curvePoints(10, 60, 10, 95, 50, 95, 6), ...curvePoints(50, 95, 90, 95, 90, 60, 6), ...curvePoints(90, 60, 90, 25, 50, 25, 6)] },
+            { path: "M 35 20 L 50 5", startPoint: { x: 35, y: 20 }, checkpoints: linePoints(35, 20, 50, 5, 3) }, // ^ up
+            { path: "M 50 5 L 65 20", startPoint: { x: 50, y: 5 }, checkpoints: linePoints(50, 5, 65, 20, 3) }, // ^ down
+            { path: "M 70 5 L 85 15", startPoint: { x: 70, y: 5 }, checkpoints: linePoints(70, 5, 85, 15, 3) }  // ' (sac)
+        ]
+    },
+    {
+        id: 'char_E_NANG', char: 'Ẹ', strokes: [
+            { path: "M 30 10 L 30 80", startPoint: { x: 30, y: 10 }, checkpoints: linePoints(30, 10, 30, 80, 8) },
+            { path: "M 30 10 L 80 10", startPoint: { x: 30, y: 10 }, checkpoints: linePoints(30, 10, 80, 10, 6) },
+            { path: "M 30 45 L 70 45", startPoint: { x: 30, y: 45 }, checkpoints: linePoints(30, 45, 70, 45, 5) },
+            { path: "M 30 80 L 80 80", startPoint: { x: 30, y: 80 }, checkpoints: linePoints(30, 80, 80, 80, 6) },
+            { path: "M 50 90 L 50 95", startPoint: { x: 50, y: 90 }, checkpoints: linePoints(50, 90, 50, 95, 2) }
+        ]
+    },
+    {
+        id: 'char_A_NANG', char: 'Ạ', strokes: [
+            { path: "M 50 10 L 20 80", startPoint: { x: 50, y: 10 }, checkpoints: linePoints(50, 10, 20, 80, 8) },
+            { path: "M 50 10 L 80 80", startPoint: { x: 50, y: 10 }, checkpoints: linePoints(50, 10, 80, 80, 8) },
+            { path: "M 30 55 L 70 55", startPoint: { x: 30, y: 55 }, checkpoints: linePoints(30, 55, 70, 55, 5) },
+            { path: "M 50 90 L 50 95", startPoint: { x: 50, y: 90 }, checkpoints: linePoints(50, 90, 50, 95, 2) }
+        ]
+    },
+    {
+        id: 'char_A_HOI', char: 'Ả', strokes: [
+            { path: "M 50 25 L 20 90", startPoint: { x: 50, y: 25 }, checkpoints: linePoints(50, 25, 20, 90, 8) },
+            { path: "M 50 25 L 80 90", startPoint: { x: 50, y: 25 }, checkpoints: linePoints(50, 25, 80, 90, 8) },
+            { path: "M 30 65 L 70 65", startPoint: { x: 30, y: 65 }, checkpoints: linePoints(30, 65, 70, 65, 5) },
+            { path: "M 45 10 Q 55 0 60 10 Q 55 15 50 10", startPoint: { x: 45, y: 10 }, checkpoints: [...curvePoints(45, 10, 55, 0, 60, 10, 4), ...curvePoints(60, 10, 55, 15, 50, 10, 4)] }
+        ]
+    },
+    {
+        id: 'char_A_HUYEN', char: 'À', strokes: [
+            { path: "M 50 25 L 20 90", startPoint: { x: 50, y: 25 }, checkpoints: linePoints(50, 25, 20, 90, 8) },
+            { path: "M 50 25 L 80 90", startPoint: { x: 50, y: 25 }, checkpoints: linePoints(50, 25, 80, 90, 8) },
+            { path: "M 30 65 L 70 65", startPoint: { x: 30, y: 65 }, checkpoints: linePoints(30, 65, 70, 65, 5) },
+            { path: "M 35 5 L 65 15", startPoint: { x: 35, y: 5 }, checkpoints: linePoints(35, 5, 65, 15, 3) } // `
+        ]
+    },
+    {
+        id: 'char_EE', char: 'Ê', strokes: [
+            { path: "M 30 25 L 30 90", startPoint: { x: 30, y: 25 }, checkpoints: linePoints(30, 25, 30, 90, 8) },
+            { path: "M 30 25 L 80 25", startPoint: { x: 30, y: 25 }, checkpoints: linePoints(30, 25, 80, 25, 6) },
+            { path: "M 30 55 L 70 55", startPoint: { x: 30, y: 55 }, checkpoints: linePoints(30, 55, 70, 55, 5) },
+            { path: "M 30 90 L 80 90", startPoint: { x: 30, y: 90 }, checkpoints: linePoints(30, 90, 80, 90, 6) },
+            { path: "M 35 15 L 50 5", startPoint: { x: 35, y: 15 }, checkpoints: linePoints(35, 15, 50, 5, 3) }, // ^
+            { path: "M 50 5 L 65 15", startPoint: { x: 50, y: 5 }, checkpoints: linePoints(50, 5, 65, 15, 3) }
+        ]
+    },
+    {
+        id: 'char_UW', char: 'Ư', strokes: [
+            { path: "M 25 10 L 25 70 Q 25 90 50 90 Q 75 90 75 70 L 75 10", startPoint: { x: 25, y: 10 }, checkpoints: [...linePoints(25, 10, 25, 70, 6), ...curvePoints(25, 70, 25, 90, 50, 90, 4), ...curvePoints(50, 90, 75, 90, 75, 70, 4), ...linePoints(75, 70, 75, 10, 6)] },
+            { path: "M 75 10 Q 85 10 80 25", startPoint: { x: 75, y: 10 }, checkpoints: curvePoints(75, 10, 85, 10, 80, 25, 4) }
+        ]
+    },
+    {
+        id: 'char_OW', char: 'Ơ', strokes: [
+            { path: "M 50 10 Q 10 10 10 50 Q 10 90 50 90 Q 90 90 90 50 Q 90 10 50 10", startPoint: { x: 50, y: 10 }, checkpoints: [...curvePoints(50, 10, 10, 10, 10, 50, 6), ...curvePoints(10, 50, 10, 90, 50, 90, 6), ...curvePoints(50, 90, 90, 90, 90, 50, 6), ...curvePoints(90, 50, 90, 10, 50, 10, 6)] },
+            { path: "M 80 15 Q 95 10 90 30", startPoint: { x: 80, y: 15 }, checkpoints: curvePoints(80, 15, 95, 10, 90, 30, 4) }
+        ]
+    }
 ];
 
 const ASSET_BASE_URL = 'https://be-gom-vui-hoc.vercel.app/assets/images/chucai';
@@ -313,6 +377,15 @@ export const WRITING_WORDS: { category: string, words: WritingWord[] }[] = [
             { id: 'char_v', label: 'V', charIds: ['char_V'], image: `${ASSET_BASE_URL}/img_char_v.png` },
             { id: 'char_x', label: 'X', charIds: ['char_X'], image: `${ASSET_BASE_URL}/img_char_x.png` },
             { id: 'char_y', label: 'Y', charIds: ['char_Y'], image: `${ASSET_BASE_URL}/img_char_y.png` },
+
+            // Vietnamese Chars
+            { id: 'char_aw', label: 'Ă', charIds: ['char_A'], image: `${ASSET_BASE_URL}/img_char_aw.png` },
+            { id: 'char_aa', label: 'Â', charIds: ['char_A'], image: `${ASSET_BASE_URL}/img_char_aa.png` },
+            { id: 'char_dd', label: 'Đ', charIds: ['char_DD'], image: `${ASSET_BASE_URL}/img_char_dd.png` },
+            { id: 'char_ee', label: 'Ê', charIds: ['char_EE'], image: `${ASSET_BASE_URL}/img_char_ee.png` },
+            { id: 'char_oo', label: 'Ô', charIds: ['char_OO'], image: `${ASSET_BASE_URL}/img_char_oo.png` },
+            { id: 'char_ow', label: 'Ơ', charIds: ['char_OW'], image: `${ASSET_BASE_URL}/img_char_ow.png` },
+            { id: 'char_uw', label: 'Ư', charIds: ['char_UW'], image: `${ASSET_BASE_URL}/img_char_uw.png` },
         ]
     }
 ];

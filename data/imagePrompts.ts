@@ -7,7 +7,7 @@ export const imagePrompts: ImagePromptItem[] = [
 
     // --- Writing Game Assets (/chucai/) ---
     { word: 'Chỉ Tay', filename: 'hand_cursor.png', prompt: 'A cute cartoon hand pointing with index finger, white glove, yellow sleeve, 3D icon style, white background', game: 'writing' },
-    
+
     // --- Numbers (UPDATED: Clearer, Bolder, Sticker Style) ---
     { word: 'Số 0', filename: 'img_num_0.png', prompt: 'A large, bold number 0, glossy red texture, 3D render, white background, high contrast, isolated, sticker style.', game: 'writing' },
     { word: 'Số 1', filename: 'img_num_1.png', prompt: 'A large, bold number 1, glossy blue texture, 3D render, white background, high contrast, isolated, sticker style.', game: 'writing' },
@@ -59,6 +59,15 @@ export const imagePrompts: ImagePromptItem[] = [
     { word: 'Chữ X', filename: 'img_char_x.png', prompt: 'A large, glossy letter X, bright lime color, 3D typography, white background, high contrast, isolated, sticker style.', game: 'writing' },
     { word: 'Chữ Y', filename: 'img_char_y.png', prompt: 'A large, glossy letter Y, bright cyan color, 3D typography, white background, high contrast, isolated, sticker style.', game: 'writing' },
 
+    // --- Vietnamese Characters (New) ---
+    { word: 'Chữ Ă', filename: 'img_char_aw.png', prompt: 'A large, glossy letter Ă (A with a breve accent), bright red color, 3D typography, white background, high contrast, isolated, sticker style.', game: 'writing' },
+    { word: 'Chữ Â', filename: 'img_char_aa.png', prompt: 'A large, glossy letter Â (A with a circumflex accent), bright red color, 3D typography, white background, high contrast, isolated, sticker style.', game: 'writing' },
+    { word: 'Chữ Đ', filename: 'img_char_dd.png', prompt: 'A large, glossy letter Đ (D with a stroke), bright orange color, 3D typography, white background, high contrast, isolated, sticker style.', game: 'writing' },
+    { word: 'Chữ Ê', filename: 'img_char_ee.png', prompt: 'A large, glossy letter Ê (E with a circumflex accent), bright purple color, 3D typography, white background, high contrast, isolated, sticker style.', game: 'writing' },
+    { word: 'Chữ Ô', filename: 'img_char_oo.png', prompt: 'A large, glossy letter Ô (O with a circumflex accent), bright red color, 3D typography, white background, high contrast, isolated, sticker style.', game: 'writing' },
+    { word: 'Chữ Ơ', filename: 'img_char_ow.png', prompt: 'A large, glossy letter Ơ (O with a horn), bright red color, 3D typography, white background, high contrast, isolated, sticker style.', game: 'writing' },
+    { word: 'Chữ Ư', filename: 'img_char_uw.png', prompt: 'A large, glossy letter Ư (U with a horn), bright pink color, 3D typography, white background, high contrast, isolated, sticker style.', game: 'writing' },
+
     // --- Family & Common ---
     { word: 'BA CƯƠNG', filename: 'ba-cuong.png', prompt: 'A warm and friendly Vietnamese father named Cương, with a gentle smile, 3D cartoon style.', characterId: 'ba_cuong', game: 'common' },
     { word: 'MẸ HƯƠNG', filename: 'me-huong.png', prompt: 'A loving Vietnamese mother named Hương, warm smile, 3D cartoon style.', characterId: 'me_huong', game: 'common' },
@@ -70,7 +79,7 @@ export const imagePrompts: ImagePromptItem[] = [
     { word: 'ANH XOÀI', filename: 'anh-xoai.png', prompt: 'Cousin boy Xoài, friendly, 3D cartoon style.', characterId: 'anh_xoai', game: 'common' },
     { word: 'CHỊ NA', filename: 'chi-na.png', prompt: 'Cousin girl Na, cute, 3D cartoon style.', characterId: 'chi_na', game: 'common' },
     { word: 'EM GẤM', filename: 'em-gam.png', prompt: 'Little cousin girl Gấm, adorable, 3D cartoon style.', characterId: 'em_gam', game: 'common' },
-    
+
     // --- Basic Spelling Words ---
     { word: 'BÉ', filename: 'be-sac.png', prompt: 'A cute baby playing, 3D cartoon style.', game: 'common' },
     { word: 'XE', filename: 'xe-ngang.png', prompt: 'A red toy car, 3D cartoon style.', game: 'common' },
