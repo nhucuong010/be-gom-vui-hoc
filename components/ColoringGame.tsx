@@ -32,7 +32,9 @@ const TEMPLATES = [
 const ColoringGame: React.FC<ColoringGameProps> = ({ onGoHome, isSoundOn }) => {
     const [selectedTemplate, setSelectedTemplate] = useState(0);
     const [selectedColor, setSelectedColor] = useState(COLORS[0].value);
-    const [isEraser, setIsEraser] = useState(false);
+    const [toolMode, setToolMode] = useState<'fill' | 'brush' | 'eraser'>('fill');
+    const [brushSize, setBrushSize] = useState(20);
+    const [isDrawing, setIsDrawing] = useState(false);
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const contextRef = useRef<CanvasRenderingContext2D | null>(null);
@@ -190,25 +192,112 @@ const ColoringGame: React.FC<ColoringGameProps> = ({ onGoHome, isSoundOn }) => {
         ctx.putImageData(imageData, 0, 0);
     };
 
-    const handleCanvasClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    const getCoordinates = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
         const canvas = canvasRef.current;
-        if (!canvas) return;
+        if (!canvas) return null;
 
         const rect = canvas.getBoundingClientRect();
         const scaleX = canvas.width / rect.width;
         const scaleY = canvas.height / rect.height;
-        const x = Math.floor((e.clientX - rect.left) * scaleX);
-        const y = Math.floor((e.clientY - rect.top) * scaleY);
 
-        if (isEraser) {
-            floodFill(x, y, '#FFFFFF');
+        let clientX, clientY;
+        if ('touches' in e) {
+            clientX = e.touches[0].clientX;
+            clientY = e.touches[0].clientY;
         } else {
-            floodFill(x, y, selectedColor);
+            clientX = e.clientX;
+            clientY = e.clientY;
         }
 
-        if (isSoundOn) {
-            playSound('click', isSoundOn);
+        const x = Math.floor((clientX - rect.left) * scaleX);
+        const y = Math.floor((clientY - rect.top) * scaleY);
+        return { x, y };
+    };
+
+    const draw = (x: number, y: number) => {
+        const ctx = contextRef.current;
+        if (!ctx) return;
+
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.strokeStyle = toolMode === 'eraser' ? '#FFFFFF' : selectedColor;
+        ctx.lineWidth = brushSize;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+
+        ctx.lineTo(x, y);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+    };
+
+    const handleCanvasMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
+        if (toolMode === 'fill') {
+            const coords = getCoordinates(e);
+            if (!coords) return;
+            floodFill(coords.x, coords.y, selectedColor);
+            if (isSoundOn) playSound('click', isSoundOn);
+            return;
         }
+
+        const ctx = contextRef.current;
+        if (!ctx) return;
+
+        setIsDrawing(true);
+        const coords = getCoordinates(e);
+        if (!coords) return;
+
+        ctx.beginPath();
+        ctx.moveTo(coords.x, coords.y);
+    };
+
+    const handleCanvasMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
+        if (!isDrawing || toolMode === 'fill') return;
+        e.preventDefault();
+        const coords = getCoordinates(e);
+        if (!coords) return;
+        draw(coords.x, coords.y);
+    };
+
+    const handleCanvasMouseUp = () => {
+        setIsDrawing(false);
+        const ctx = contextRef.current;
+        if (ctx) ctx.beginPath();
+    };
+
+    const handleCanvasTouchStart = (e: React.TouchEvent<HTMLCanvasElement>) => {
+        e.preventDefault();
+        if (toolMode === 'fill') {
+            const coords = getCoordinates(e);
+            if (!coords) return;
+            floodFill(coords.x, coords.y, selectedColor);
+            if (isSoundOn) playSound('click', isSoundOn);
+            return;
+        }
+
+        const ctx = contextRef.current;
+        if (!ctx) return;
+
+        setIsDrawing(true);
+        const coords = getCoordinates(e);
+        if (!coords) return;
+
+        ctx.beginPath();
+        ctx.moveTo(coords.x, coords.y);
+    };
+
+    const handleCanvasTouchMove = (e: React.TouchEvent<HTMLCanvasElement>) => {
+        if (!isDrawing || toolMode === 'fill') return;
+        e.preventDefault();
+        const coords = getCoordinates(e);
+        if (!coords) return;
+        draw(coords.x, coords.y);
+    };
+
+    const handleCanvasTouchEnd = (e: React.TouchEvent<HTMLCanvasElement>) => {
+        e.preventDefault();
+        setIsDrawing(false);
+        const ctx = contextRef.current;
+        if (ctx) ctx.beginPath();
     };
 
     const handleClear = () => {
@@ -275,8 +364,14 @@ const ColoringGame: React.FC<ColoringGameProps> = ({ onGoHome, isSoundOn }) => {
                 <div className="flex-1 flex items-center justify-center bg-white rounded-3xl shadow-2xl p-6 overflow-hidden border-4 border-purple-200">
                     <canvas
                         ref={canvasRef}
-                        onClick={handleCanvasClick}
-                        className="max-w-full max-h-full cursor-pointer shadow-xl rounded-2xl"
+                        onMouseDown={handleCanvasMouseDown}
+                        onMouseMove={handleCanvasMouseMove}
+                        onMouseUp={handleCanvasMouseUp}
+                        onMouseLeave={handleCanvasMouseUp}
+                        onTouchStart={handleCanvasTouchStart}
+                        onTouchMove={handleCanvasTouchMove}
+                        onTouchEnd={handleCanvasTouchEnd}
+                        className="max-w-full max-h-full cursor-crosshair shadow-xl rounded-2xl"
                         style={{ imageRendering: 'pixelated' }}
                     />
                 </div>
@@ -286,34 +381,63 @@ const ColoringGame: React.FC<ColoringGameProps> = ({ onGoHome, isSoundOn }) => {
                     {/* Tools */}
                     <div className="bg-white rounded-3xl shadow-2xl p-4 border-4 border-purple-200">
                         <h3 className="text-2xl font-black text-purple-600 mb-3 text-center">🛠️ Công Cụ</h3>
-                        <div className="grid grid-cols-2 gap-3">
+                        <div className="grid grid-cols-3 gap-2">
                             <button
                                 onClick={() => {
-                                    setIsEraser(false);
+                                    setToolMode('fill');
                                     if (isSoundOn) playSound('click', isSoundOn);
                                 }}
-                                className={`flex flex-col items-center gap-2 py-4 rounded-2xl font-bold transition-all ${!isEraser
+                                className={`flex flex-col items-center gap-1 py-3 rounded-2xl font-bold transition-all ${toolMode === 'fill'
                                         ? 'bg-gradient-to-br from-purple-500 to-pink-500 text-white shadow-2xl scale-105 ring-4 ring-purple-300'
                                         : 'bg-gray-100 text-gray-600 hover:bg-gray-200 shadow-md'
                                     }`}
                             >
-                                <span className="text-4xl">🖌️</span>
-                                <span className="text-sm">Bút Màu</span>
+                                <span className="text-3xl">🪣</span>
+                                <span className="text-xs">Đổ Màu</span>
                             </button>
                             <button
                                 onClick={() => {
-                                    setIsEraser(true);
+                                    setToolMode('brush');
                                     if (isSoundOn) playSound('click', isSoundOn);
                                 }}
-                                className={`flex flex-col items-center gap-2 py-4 rounded-2xl font-bold transition-all ${isEraser
+                                className={`flex flex-col items-center gap-1 py-3 rounded-2xl font-bold transition-all ${toolMode === 'brush'
                                         ? 'bg-gradient-to-br from-purple-500 to-pink-500 text-white shadow-2xl scale-105 ring-4 ring-purple-300'
                                         : 'bg-gray-100 text-gray-600 hover:bg-gray-200 shadow-md'
                                     }`}
                             >
-                                <span className="text-4xl">🧹</span>
-                                <span className="text-sm">Tẩy</span>
+                                <span className="text-3xl">🖌️</span>
+                                <span className="text-xs">Cọ Vẽ</span>
+                            </button>
+                            <button
+                                onClick={() => {
+                                    setToolMode('eraser');
+                                    if (isSoundOn) playSound('click', isSoundOn);
+                                }}
+                                className={`flex flex-col items-center gap-1 py-3 rounded-2xl font-bold transition-all ${toolMode === 'eraser'
+                                        ? 'bg-gradient-to-br from-purple-500 to-pink-500 text-white shadow-2xl scale-105 ring-4 ring-purple-300'
+                                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200 shadow-md'
+                                    }`}
+                            >
+                                <span className="text-3xl">🧹</span>
+                                <span className="text-xs">Tẩy</span>
                             </button>
                         </div>
+                        {toolMode === 'brush' && (
+                            <div className="mt-3">
+                                <label className="text-sm font-bold text-purple-600 block mb-2">Kích thước cọ: {brushSize}px</label>
+                                <input
+                                    type="range"
+                                    min="5"
+                                    max="50"
+                                    value={brushSize}
+                                    onChange={(e) => setBrushSize(Number(e.target.value))}
+                                    className="w-full h-3 bg-gradient-to-r from-purple-200 to-pink-200 rounded-full appearance-none cursor-pointer"
+                                    style={{
+                                        accentColor: '#9D4EDD'
+                                    }}
+                                />
+                            </div>
+                        )}
                     </div>
 
                     {/* Color Palette */}
@@ -327,12 +451,12 @@ const ColoringGame: React.FC<ColoringGameProps> = ({ onGoHome, isSoundOn }) => {
                                     key={color.value}
                                     onClick={() => {
                                         setSelectedColor(color.value);
-                                        setIsEraser(false);
+                                        setToolMode('brush'); // Auto switch to brush when selecting color
                                         if (isSoundOn) playSound('click', isSoundOn);
                                     }}
-                                    className={`relative aspect-square rounded-2xl transition-all flex flex-col items-center justify-center gap-1 ${selectedColor === color.value && !isEraser
-                                            ? 'scale-110 ring-6 ring-purple-500 shadow-2xl z-10'
-                                            : 'hover:scale-105 shadow-lg hover:shadow-xl'
+                                    className={`relative aspect-square rounded-2xl transition-all flex flex-col items-center justify-center gap-1 ${selectedColor === color.value && (toolMode === 'brush' || toolMode === 'fill')
+                                        ? 'scale-110 ring-6 ring-purple-500 shadow-2xl z-10'
+                                        : 'hover:scale-105 shadow-lg hover:shadow-xl'
                                         }`}
                                     style={{
                                         backgroundColor: color.value,
@@ -341,7 +465,7 @@ const ColoringGame: React.FC<ColoringGameProps> = ({ onGoHome, isSoundOn }) => {
                                     title={color.name}
                                 >
                                     <span className="text-2xl drop-shadow">{color.emoji}</span>
-                                    {selectedColor === color.value && !isEraser && (
+                                    {selectedColor === color.value && (toolMode === 'brush' || toolMode === 'fill') && (
                                         <div className="absolute -top-2 -right-2 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-lg">
                                             <span className="text-xl">✓</span>
                                         </div>
@@ -354,15 +478,15 @@ const ColoringGame: React.FC<ColoringGameProps> = ({ onGoHome, isSoundOn }) => {
                     {/* Current Selection Display */}
                     <div className="bg-gradient-to-br from-purple-500 to-pink-500 rounded-3xl shadow-2xl p-4 text-white border-4 border-white">
                         <p className="text-lg font-bold text-center mb-3">
-                            {isEraser ? '🧹 Đang Dùng Tẩy' : '🖌️ Màu Đang Chọn'}
+                            {toolMode === 'eraser' ? '🧹 Đang Dùng Tẩy' : toolMode === 'fill' ? '🪣 Đang Đổ Màu' : '🖌️ Đang Vẽ'}
                         </p>
-                        {!isEraser && (
+                        {toolMode !== 'eraser' && (
                             <div
                                 className="w-20 h-20 mx-auto rounded-2xl shadow-2xl border-4 border-white"
                                 style={{ backgroundColor: selectedColor }}
                             />
                         )}
-                        {isEraser && (
+                        {toolMode === 'eraser' && (
                             <div className="text-6xl text-center">🧹</div>
                         )}
                     </div>
