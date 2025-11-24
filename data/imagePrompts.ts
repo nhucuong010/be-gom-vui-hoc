@@ -214,4 +214,3 @@ export const imagePrompts: ImagePromptItem[] = [
     { word: 'Đồ Chơi Hỏng', filename: 'we_broken_toy.png', prompt: 'A broken toy robot. Cartoon style.', game: 'weather_explorer' },
     { word: 'Cái Giường', filename: 'we_bed.png', prompt: 'A cozy bed with pillow and blanket. Cartoon style.', game: 'weather_explorer' },
 ];
-]]

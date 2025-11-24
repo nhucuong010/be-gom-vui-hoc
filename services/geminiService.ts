@@ -1,4 +1,3 @@
-import { GoogleGenAI, Type } from "@google/genai";
 import type { MathProblem, SpellingWord, FillInTheBlankProblem, FeedingProblem, SpellingRobotProblem, BakeryProblem, PrincessCodeProblem, RestaurantProblem, RestaurantOrder, RestaurantCustomer } from '../types';
 import { imagePrompts } from '../data/imagePrompts';
 import { generateImageFromText } from './imageService';
@@ -10,108 +9,101 @@ import { princessCodeProblemsBank } from '../data/princessCodeData';
 import { restaurantCustomers, restaurantMenuItems, restaurantOrdersBank } from '../data/restaurantData';
 
 
-const API_KEY = process.env.API_KEY;
-
-if (!API_KEY) {
-    throw new Error("API_KEY is not set in environment variables.");
-}
-
-const ai = new GoogleGenAI({ apiKey: API_KEY });
 const ASSET_BASE_URL = 'https://be-gom-vui-hoc.vercel.app';
 
 
 export const spellingWordsByLevel = {
-  1: [ // Từ đơn giản 3 chữ cái, có chủ đề
-    // Gia đình & người thân
-    { word: 'BA CƯƠNG', imageUrl: `${ASSET_BASE_URL}/assets/images/ba-cuong.png` },
-    { word: 'MẸ HƯƠNG', imageUrl: `${ASSET_BASE_URL}/assets/images/me-huong.png` },
-    { word: 'GỐM', imageUrl: `${ASSET_BASE_URL}/assets/images/gom-sac.png` },
-    { word: 'GẠO', imageUrl: `${ASSET_BASE_URL}/assets/images/gao-nang.png` },
-    { word: 'BÀ THƠM', imageUrl: `${ASSET_BASE_URL}/assets/images/ba-thom.png` },
-    { word: 'ÔNG KHOA', imageUrl: `${ASSET_BASE_URL}/assets/images/ong-khoa.png` },
-    { word: 'BÉ', imageUrl: `${ASSET_BASE_URL}/assets/images/be-sac.png` },
-    // Động vật
-    { word: 'CHÓ', imageUrl: `${ASSET_BASE_URL}/assets/images/cho-sac.png` },
-    { word: 'MÈO', imageUrl: `${ASSET_BASE_URL}/assets/images/meo-huyen.png` },
-    { word: 'CÁ', imageUrl: `${ASSET_BASE_URL}/assets/images/ca-sac.png` },
-    { word: 'BÒ', imageUrl: `${ASSET_BASE_URL}/assets/images/bo-huyen.png` },
-    { word: 'GÀ', imageUrl: `${ASSET_BASE_URL}/assets/images/ga-huyen.png` },
-    { word: 'CUA', imageUrl: `${ASSET_BASE_URL}/assets/images/cua-ngang.png` },
-    { word: 'TÔM', imageUrl: `${ASSET_BASE_URL}/assets/images/tom-ngang.png` },
-    { word: 'VỊT', imageUrl: `${ASSET_BASE_URL}/assets/images/vit-nang.png` },
-    // Đồ vật & Thức ăn
-    { word: 'NHÀ', imageUrl: `${ASSET_BASE_URL}/assets/images/nha-huyen.png` },
-    { word: 'XE', imageUrl: `${ASSET_BASE_URL}/assets/images/xe-ngang.png` },
-    { word: 'KEM', imageUrl: `${ASSET_BASE_URL}/assets/images/kem-ngang.png` },
-    { word: 'TÁO', imageUrl: `${ASSET_BASE_URL}/assets/images/tao-sac.png` },
-    { word: 'BÓNG', imageUrl: `${ASSET_BASE_URL}/assets/images/bong-sac.png` },
-    { word: 'HOA', imageUrl: `${ASSET_BASE_URL}/assets/images/hoa-ngang.png` },
-    { word: 'NÓN', imageUrl: `${ASSET_BASE_URL}/assets/images/non-sac.png` },
-    { word: 'SAO', imageUrl: `${ASSET_BASE_URL}/assets/images/sao-ngang.png` },
-    { word: 'CƠM', imageUrl: `${ASSET_BASE_URL}/assets/images/com-ngang.png` },
-    { word: 'CANH', imageUrl: `${ASSET_BASE_URL}/assets/images/canh-ngang.png` },
-    { word: 'BÚT', imageUrl: `${ASSET_BASE_URL}/assets/images/but-sac.png` },
-    { word: 'SÁCH', imageUrl: `${ASSET_BASE_URL}/assets/images/sach-sac.png` },
-  ],
-  2: [ // Từ có 4 chữ cái
-    { word: 'BÀN', imageUrl: `${ASSET_BASE_URL}/assets/images/ban-huyen.png` },
-    { word: 'GHẾ', imageUrl: `${ASSET_BASE_URL}/assets/images/ghe-sac.png` },
-    { word: 'CỬA', imageUrl: `${ASSET_BASE_URL}/assets/images/cua-hoi.png` },
-    { word: 'BÁNH', imageUrl: `${ASSET_BASE_URL}/assets/images/banh-sac.png` },
-    { word: 'CÂY', imageUrl: `${ASSET_BASE_URL}/assets/images/cay-ngang.png` },
-    { word: 'MÂY', imageUrl: `${ASSET_BASE_URL}/assets/images/may-ngang.png` },
-    { word: 'MƯA', imageUrl: `${ASSET_BASE_URL}/assets/images/mua-ngang.png` },
-    { word: 'QUẢ', imageUrl: `${ASSET_BASE_URL}/assets/images/qua-hoi.png` },
-    { word: 'TRĂNG', imageUrl: `${ASSET_BASE_URL}/assets/images/trang-ngang.png` },
-    { word: 'BẢNG', imageUrl: `${ASSET_BASE_URL}/assets/images/bang-hoi.png` },
-    { word: 'PHẤN', imageUrl: `${ASSET_BASE_URL}/assets/images/phan-sac.png` },
-    { word: 'VỞ', imageUrl: `${ASSET_BASE_URL}/assets/images/vo-hoi.png` },
-    { word: 'THƯỚC', imageUrl: `${ASSET_BASE_URL}/assets/images/thuoc-sac.png` },
-    { word: 'MŨ', imageUrl: `${ASSET_BASE_URL}/assets/images/mu-nga.png` },
-    { word: 'ÁO', imageUrl: `${ASSET_BASE_URL}/assets/images/ao-sac.png` },
-    { word: 'QUẦN', imageUrl: `${ASSET_BASE_URL}/assets/images/quan-huyen.png` },
-  ],
-  3: [ // Từ có 5 chữ cái & tên riêng
-    { word: 'NHO', imageUrl: `${ASSET_BASE_URL}/assets/images/nho-ngang.png` },
-    { word: 'DÂU', imageUrl: `${ASSET_BASE_URL}/assets/images/dau-ngang.png` },
-    { word: 'CHUỐI', imageUrl: `${ASSET_BASE_URL}/assets/images/chuoi-sac.png` },
-    { word: 'QUẠT', imageUrl: `${ASSET_BASE_URL}/assets/images/quat-nang.png` },
-    { word: 'ĐÈN', imageUrl: `${ASSET_BASE_URL}/assets/images/den-huyen.png` },
-    { word: 'TRỜI', imageUrl: `${ASSET_BASE_URL}/assets/images/troi-huyen.png` },
-    { word: 'THUYỀN', imageUrl: `${ASSET_BASE_URL}/assets/images/thuyen-huyen.png` },
-    { word: 'GƯƠM', imageUrl: `${ASSET_BASE_URL}/assets/images/guom-ngang.png` },
-    { word: 'VIỆT', imageUrl: `${ASSET_BASE_URL}/assets/images/viet-nang.png` },
-    { word: 'NAM', imageUrl: `${ASSET_BASE_URL}/assets/images/nam-ngang.png` },
-    { word: 'GIÀY', imageUrl: `${ASSET_BASE_URL}/assets/images/giay-huyen.png` },
-    { word: 'DÉP', imageUrl: `${ASSET_BASE_URL}/assets/images/dep-sac.png` },
-    { word: 'NƯỚC', imageUrl: `${ASSET_BASE_URL}/assets/images/nuoc-sac.png` },
-    { word: 'LỬA', imageUrl: `${ASSET_BASE_URL}/assets/images/lua-hoi.png` },
-  ],
-  4: [ // Từ ghép hoặc từ dài hơn
-    { word: 'BÀ BÚP', imageUrl: `${ASSET_BASE_URL}/assets/images/ba-bup.png` },
-    { word: 'ANH XOÀI', imageUrl: `${ASSET_BASE_URL}/assets/images/anh-xoai.png` },
-    { word: 'CHỊ NA', imageUrl: `${ASSET_BASE_URL}/assets/images/chi-na.png` },
-    { word: 'EM GẤM', imageUrl: `${ASSET_BASE_URL}/assets/images/em-gam.png` },
-    { word: 'XE ĐẠP', imageUrl: `${ASSET_BASE_URL}/assets/images/xe-dap.png` },
-    { word: 'MÁY BAY', imageUrl: `${ASSET_BASE_URL}/assets/images/may-bay.png` },
-    { word: 'BỆNH VIỆN', imageUrl: `${ASSET_BASE_URL}/assets/images/benh-vien.png` },
-    { word: 'CÔNG VIÊN', imageUrl: `${ASSET_BASE_URL}/assets/images/cong-vien.png` },
-    { word: 'TRƯỜNG HỌC', imageUrl: `${ASSET_BASE_URL}/assets/images/truong-hoc.png` },
-    { word: 'SIÊU THỊ', imageUrl: `${ASSET_BASE_URL}/assets/images/sieu-thi.png` },
-    { word: 'HOA HỒNG', imageUrl: `${ASSET_BASE_URL}/assets/images/hoa-hong.png` },
-    { word: 'MẶT TRỜI', imageUrl: `${ASSET_BASE_URL}/assets/images/mat-troi.png` },
-    { word: 'XE CỨU HỎA', imageUrl: `${ASSET_BASE_URL}/assets/images/xe-cuu-hoa.png` },
-    { word: 'MÁY TÍNH', imageUrl: `${ASSET_BASE_URL}/assets/images/may-tinh.png` },
-    { word: 'CÁI KÉO', imageUrl: `${ASSET_BASE_URL}/assets/images/cai-keo.png` },
-    { word: 'BÔNG CẢI', imageUrl: `${ASSET_BASE_URL}/assets/images/bong-cai.png` },
-    { word: 'XE MÁY', imageUrl: `${ASSET_BASE_URL}/assets/images/xe-may.png` },
-    { word: 'Ô TÔ', imageUrl: `${ASSET_BASE_URL}/assets/images/o-to.png` },
-    { word: 'TÀU HỎA', imageUrl: `${ASSET_BASE_URL}/assets/images/tau-hoa.png` },
-    { word: 'CON VOI', imageUrl: `${ASSET_BASE_URL}/assets/images/con-voi.png` },
-    { word: 'CON HỔ', imageUrl: `${ASSET_BASE_URL}/assets/images/con-ho.png` },
-    { word: 'QUẢ CAM', imageUrl: `${ASSET_BASE_URL}/assets/images/qua-cam.png` },
-    { word: 'QUẢ DỨA', imageUrl: `${ASSET_BASE_URL}/assets/images/qua-dua.png` },
-  ],
+    1: [ // Từ đơn giản 3 chữ cái, có chủ đề
+        // Gia đình & người thân
+        { word: 'BA CƯƠNG', imageUrl: `${ASSET_BASE_URL}/assets/images/ba-cuong.png` },
+        { word: 'MẸ HƯƠNG', imageUrl: `${ASSET_BASE_URL}/assets/images/me-huong.png` },
+        { word: 'GỐM', imageUrl: `${ASSET_BASE_URL}/assets/images/gom-sac.png` },
+        { word: 'GẠO', imageUrl: `${ASSET_BASE_URL}/assets/images/gao-nang.png` },
+        { word: 'BÀ THƠM', imageUrl: `${ASSET_BASE_URL}/assets/images/ba-thom.png` },
+        { word: 'ÔNG KHOA', imageUrl: `${ASSET_BASE_URL}/assets/images/ong-khoa.png` },
+        { word: 'BÉ', imageUrl: `${ASSET_BASE_URL}/assets/images/be-sac.png` },
+        // Động vật
+        { word: 'CHÓ', imageUrl: `${ASSET_BASE_URL}/assets/images/cho-sac.png` },
+        { word: 'MÈO', imageUrl: `${ASSET_BASE_URL}/assets/images/meo-huyen.png` },
+        { word: 'CÁ', imageUrl: `${ASSET_BASE_URL}/assets/images/ca-sac.png` },
+        { word: 'BÒ', imageUrl: `${ASSET_BASE_URL}/assets/images/bo-huyen.png` },
+        { word: 'GÀ', imageUrl: `${ASSET_BASE_URL}/assets/images/ga-huyen.png` },
+        { word: 'CUA', imageUrl: `${ASSET_BASE_URL}/assets/images/cua-ngang.png` },
+        { word: 'TÔM', imageUrl: `${ASSET_BASE_URL}/assets/images/tom-ngang.png` },
+        { word: 'VỊT', imageUrl: `${ASSET_BASE_URL}/assets/images/vit-nang.png` },
+        // Đồ vật & Thức ăn
+        { word: 'NHÀ', imageUrl: `${ASSET_BASE_URL}/assets/images/nha-huyen.png` },
+        { word: 'XE', imageUrl: `${ASSET_BASE_URL}/assets/images/xe-ngang.png` },
+        { word: 'KEM', imageUrl: `${ASSET_BASE_URL}/assets/images/kem-ngang.png` },
+        { word: 'TÁO', imageUrl: `${ASSET_BASE_URL}/assets/images/tao-sac.png` },
+        { word: 'BÓNG', imageUrl: `${ASSET_BASE_URL}/assets/images/bong-sac.png` },
+        { word: 'HOA', imageUrl: `${ASSET_BASE_URL}/assets/images/hoa-ngang.png` },
+        { word: 'NÓN', imageUrl: `${ASSET_BASE_URL}/assets/images/non-sac.png` },
+        { word: 'SAO', imageUrl: `${ASSET_BASE_URL}/assets/images/sao-ngang.png` },
+        { word: 'CƠM', imageUrl: `${ASSET_BASE_URL}/assets/images/com-ngang.png` },
+        { word: 'CANH', imageUrl: `${ASSET_BASE_URL}/assets/images/canh-ngang.png` },
+        { word: 'BÚT', imageUrl: `${ASSET_BASE_URL}/assets/images/but-sac.png` },
+        { word: 'SÁCH', imageUrl: `${ASSET_BASE_URL}/assets/images/sach-sac.png` },
+    ],
+    2: [ // Từ có 4 chữ cái
+        { word: 'BÀN', imageUrl: `${ASSET_BASE_URL}/assets/images/ban-huyen.png` },
+        { word: 'GHẾ', imageUrl: `${ASSET_BASE_URL}/assets/images/ghe-sac.png` },
+        { word: 'CỬA', imageUrl: `${ASSET_BASE_URL}/assets/images/cua-hoi.png` },
+        { word: 'BÁNH', imageUrl: `${ASSET_BASE_URL}/assets/images/banh-sac.png` },
+        { word: 'CÂY', imageUrl: `${ASSET_BASE_URL}/assets/images/cay-ngang.png` },
+        { word: 'MÂY', imageUrl: `${ASSET_BASE_URL}/assets/images/may-ngang.png` },
+        { word: 'MƯA', imageUrl: `${ASSET_BASE_URL}/assets/images/mua-ngang.png` },
+        { word: 'QUẢ', imageUrl: `${ASSET_BASE_URL}/assets/images/qua-hoi.png` },
+        { word: 'TRĂNG', imageUrl: `${ASSET_BASE_URL}/assets/images/trang-ngang.png` },
+        { word: 'BẢNG', imageUrl: `${ASSET_BASE_URL}/assets/images/bang-hoi.png` },
+        { word: 'PHẤN', imageUrl: `${ASSET_BASE_URL}/assets/images/phan-sac.png` },
+        { word: 'VỞ', imageUrl: `${ASSET_BASE_URL}/assets/images/vo-hoi.png` },
+        { word: 'THƯỚC', imageUrl: `${ASSET_BASE_URL}/assets/images/thuoc-sac.png` },
+        { word: 'MŨ', imageUrl: `${ASSET_BASE_URL}/assets/images/mu-nga.png` },
+        { word: 'ÁO', imageUrl: `${ASSET_BASE_URL}/assets/images/ao-sac.png` },
+        { word: 'QUẦN', imageUrl: `${ASSET_BASE_URL}/assets/images/quan-huyen.png` },
+    ],
+    3: [ // Từ có 5 chữ cái & tên riêng
+        { word: 'NHO', imageUrl: `${ASSET_BASE_URL}/assets/images/nho-ngang.png` },
+        { word: 'DÂU', imageUrl: `${ASSET_BASE_URL}/assets/images/dau-ngang.png` },
+        { word: 'CHUỐI', imageUrl: `${ASSET_BASE_URL}/assets/images/chuoi-sac.png` },
+        { word: 'QUẠT', imageUrl: `${ASSET_BASE_URL}/assets/images/quat-nang.png` },
+        { word: 'ĐÈN', imageUrl: `${ASSET_BASE_URL}/assets/images/den-huyen.png` },
+        { word: 'TRỜI', imageUrl: `${ASSET_BASE_URL}/assets/images/troi-huyen.png` },
+        { word: 'THUYỀN', imageUrl: `${ASSET_BASE_URL}/assets/images/thuyen-huyen.png` },
+        { word: 'GƯƠM', imageUrl: `${ASSET_BASE_URL}/assets/images/guom-ngang.png` },
+        { word: 'VIỆT', imageUrl: `${ASSET_BASE_URL}/assets/images/viet-nang.png` },
+        { word: 'NAM', imageUrl: `${ASSET_BASE_URL}/assets/images/nam-ngang.png` },
+        { word: 'GIÀY', imageUrl: `${ASSET_BASE_URL}/assets/images/giay-huyen.png` },
+        { word: 'DÉP', imageUrl: `${ASSET_BASE_URL}/assets/images/dep-sac.png` },
+        { word: 'NƯỚC', imageUrl: `${ASSET_BASE_URL}/assets/images/nuoc-sac.png` },
+        { word: 'LỬA', imageUrl: `${ASSET_BASE_URL}/assets/images/lua-hoi.png` },
+    ],
+    4: [ // Từ ghép hoặc từ dài hơn
+        { word: 'BÀ BÚP', imageUrl: `${ASSET_BASE_URL}/assets/images/ba-bup.png` },
+        { word: 'ANH XOÀI', imageUrl: `${ASSET_BASE_URL}/assets/images/anh-xoai.png` },
+        { word: 'CHỊ NA', imageUrl: `${ASSET_BASE_URL}/assets/images/chi-na.png` },
+        { word: 'EM GẤM', imageUrl: `${ASSET_BASE_URL}/assets/images/em-gam.png` },
+        { word: 'XE ĐẠP', imageUrl: `${ASSET_BASE_URL}/assets/images/xe-dap.png` },
+        { word: 'MÁY BAY', imageUrl: `${ASSET_BASE_URL}/assets/images/may-bay.png` },
+        { word: 'BỆNH VIỆN', imageUrl: `${ASSET_BASE_URL}/assets/images/benh-vien.png` },
+        { word: 'CÔNG VIÊN', imageUrl: `${ASSET_BASE_URL}/assets/images/cong-vien.png` },
+        { word: 'TRƯỜNG HỌC', imageUrl: `${ASSET_BASE_URL}/assets/images/truong-hoc.png` },
+        { word: 'SIÊU THỊ', imageUrl: `${ASSET_BASE_URL}/assets/images/sieu-thi.png` },
+        { word: 'HOA HỒNG', imageUrl: `${ASSET_BASE_URL}/assets/images/hoa-hong.png` },
+        { word: 'MẶT TRỜI', imageUrl: `${ASSET_BASE_URL}/assets/images/mat-troi.png` },
+        { word: 'XE CỨU HỎA', imageUrl: `${ASSET_BASE_URL}/assets/images/xe-cuu-hoa.png` },
+        { word: 'MÁY TÍNH', imageUrl: `${ASSET_BASE_URL}/assets/images/may-tinh.png` },
+        { word: 'CÁI KÉO', imageUrl: `${ASSET_BASE_URL}/assets/images/cai-keo.png` },
+        { word: 'BÔNG CẢI', imageUrl: `${ASSET_BASE_URL}/assets/images/bong-cai.png` },
+        { word: 'XE MÁY', imageUrl: `${ASSET_BASE_URL}/assets/images/xe-may.png` },
+        { word: 'Ô TÔ', imageUrl: `${ASSET_BASE_URL}/assets/images/o-to.png` },
+        { word: 'TÀU HỎA', imageUrl: `${ASSET_BASE_URL}/assets/images/tau-hoa.png` },
+        { word: 'CON VOI', imageUrl: `${ASSET_BASE_URL}/assets/images/con-voi.png` },
+        { word: 'CON HỔ', imageUrl: `${ASSET_BASE_URL}/assets/images/con-ho.png` },
+        { word: 'QUẢ CAM', imageUrl: `${ASSET_BASE_URL}/assets/images/qua-cam.png` },
+        { word: 'QUẢ DỨA', imageUrl: `${ASSET_BASE_URL}/assets/images/qua-dua.png` },
+    ],
 };
 
 
@@ -130,8 +122,8 @@ export const generateMathProblem = async (level: number, type?: 'addition' | 'su
 
         // Ensure numbers are not equal for a more interesting comparison, if possible
         if (num1 === num2 && maxNum > 1) {
-             num2 = num1 + (Math.random() > 0.5 ? 1 : -1);
-             if (num2 < 1) num2 = num1 + 1;
+            num2 = num1 + (Math.random() > 0.5 ? 1 : -1);
+            if (num2 < 1) num2 = num1 + 1;
         }
 
         if (Math.random() > 0.5) {
@@ -141,13 +133,13 @@ export const generateMathProblem = async (level: number, type?: 'addition' | 'su
         if (num1 < num2) answer = '<';
         else if (num1 > num2) answer = '>';
         else answer = '=';
-        
+
         return Promise.resolve({ problem: `${num1} _ ${num2}`, answer, type: 'comparison' });
-    } 
-    
+    }
+
     // Handle Calculation problems (addition or subtraction)
     let num1: number, num2: number, answer: number, problemString: string;
-    
+
     if (effectiveType === 'addition') {
         const maxResult = Math.min(20, 5 + level * 2);
         num1 = Math.floor(Math.random() * (maxResult - 1)) + 1;
@@ -169,7 +161,7 @@ export const generateMathProblem = async (level: number, type?: 'addition' | 'su
 export const generateSpellingWord = async (level: number): Promise<SpellingWord> => {
     const effectiveLevel = Math.min(level, Object.keys(spellingWordsByLevel).length);
     const wordList = spellingWordsByLevel[effectiveLevel as keyof typeof spellingWordsByLevel];
-    
+
     if (!wordList || wordList.length === 0) {
         // Fallback word in case something goes wrong
         return Promise.resolve({ word: 'MÈO', imageUrl: `${ASSET_BASE_URL}/assets/images/meo-huyen.png` });
@@ -265,10 +257,10 @@ export const fillInTheBlankWords = [
 ];
 
 export const generateFillInTheBlankProblem = async (level: number): Promise<FillInTheBlankProblem> => {
-    const wordPool = level < 3 
-        ? fillInTheBlankWords.filter(w => w.word.length <= 4) 
+    const wordPool = level < 3
+        ? fillInTheBlankWords.filter(w => w.word.length <= 4)
         : fillInTheBlankWords;
-    
+
     const selectedWord = wordPool[Math.floor(Math.random() * wordPool.length)];
     const word = selectedWord.word;
 
@@ -289,7 +281,7 @@ export const generateFillInTheBlankProblem = async (level: number): Promise<Fill
             spacelessCount++;
         }
     }
-    
+
     const problemFormat = word.split('').map((char, i) => {
         if (i === hiddenIndex) return '_';
         if (char === ' ') return ' '; // Giữ lại khoảng trắng
@@ -304,7 +296,7 @@ export const generateFillInTheBlankProblem = async (level: number): Promise<Fill
             distractors.add(randomVowel);
         }
     }
-    
+
     const options = Array.from(distractors);
     options.push(correctLetter);
     const shuffledOptions = options.sort(() => Math.random() - 0.5);
@@ -398,7 +390,7 @@ export const generateSpellingRobotProblemSet = async (count = 3): Promise<Spelli
 export const generateBakeryProblem = async (level: number, operation: 'add' | 'subtract'): Promise<BakeryProblem> => {
     // Filter problems that are appropriate for the current level and selected operation.
     const relevantProblems = bakeryProblemsBank.filter(p => p.operation === operation);
-     if (relevantProblems.length === 0) {
+    if (relevantProblems.length === 0) {
         // Fallback to the full bank if no problems match.
         console.warn(`No bakery problems found for operation: ${operation}. Using the full bank.`);
         const problem = bakeryProblemsBank[Math.floor(Math.random() * bakeryProblemsBank.length)];
@@ -430,7 +422,7 @@ export const generateRestaurantProblem = async (level: number): Promise<Restaura
     };
 
     const currentConfig = config[level as keyof typeof config] || config[1];
-    
+
     // Select unique orders from the bank
     const shuffledOrders = [...restaurantOrdersBank].sort(() => 0.5 - Math.random());
     const selectedBankOrders: typeof restaurantOrdersBank = [];
@@ -445,7 +437,7 @@ export const generateRestaurantProblem = async (level: number): Promise<Restaura
             usedCustomerIds.add(order.customerId);
         }
     }
-    
+
     // Fallback if not enough unique customer orders are found (unlikely with a good bank)
     if (selectedBankOrders.length < currentConfig.numCustomers) {
         console.warn("Not enough unique customer orders in bank, may have duplicate customers.");

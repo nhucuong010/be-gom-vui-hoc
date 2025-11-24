@@ -66,17 +66,17 @@ const WeatherExplorerGame: React.FC<WeatherExplorerGameProps> = ({ onGoHome, onC
         setVisualState('initial');
         setFeedback(null);
         setIsLevelFinished(false);
-        
+
         const level = scienceLevels[index];
         if (!level) return;
 
         // --- LOGICAL DISTRACTOR SELECTION ---
         const correctItem = scienceItems.find(i => i.id === level.correctItemId);
-        
+
         let distractors: string[] = [];
         if (correctItem) {
             // 1. Filter items from the SAME category
-            const sameCategoryItems = scienceItems.filter(i => 
+            const sameCategoryItems = scienceItems.filter(i =>
                 i.category === correctItem.category && i.id !== correctItem.id
             );
 
@@ -95,22 +95,22 @@ const WeatherExplorerGame: React.FC<WeatherExplorerGameProps> = ({ onGoHome, onC
                     .map(item => item.id);
             }
         } else {
-             distractors = scienceItems
+            distractors = scienceItems
                 .filter(item => item.id !== level.correctItemId)
                 .sort(() => 0.5 - Math.random())
                 .slice(0, 2)
                 .map(item => item.id);
         }
-        
+
         const newOptions = [level.correctItemId, ...distractors].sort(() => 0.5 - Math.random());
         setOptions(newOptions);
 
         // Play Audio Sequence & Update Text
         setDisplayedText(level.introAudio);
         await playDynamicSentence(level.introAudio, 'vi', isSoundOn, 'weather_explorer');
-        
+
         await new Promise(r => setTimeout(r, 500));
-        
+
         setDisplayedText(level.questionAudio);
         await playDynamicSentence(level.questionAudio, 'vi', isSoundOn, 'weather_explorer');
     };
@@ -125,11 +125,11 @@ const WeatherExplorerGame: React.FC<WeatherExplorerGameProps> = ({ onGoHome, onC
             setFeedback({ isCorrect: true, message: "Đúng rồi!" });
             onCorrectAnswer();
             setScore(s => s + 1);
-            
+
             // Show and play success audio
             setDisplayedText(currentLevel.successAudio);
             await playDynamicSentence(currentLevel.successAudio, 'vi', isSoundOn, 'weather_explorer');
-            
+
             setTimeout(() => {
                 if (currentLevelIndex < scienceLevels.length - 1) {
                     setCurrentLevelIndex(prev => prev + 1);
@@ -141,7 +141,7 @@ const WeatherExplorerGame: React.FC<WeatherExplorerGameProps> = ({ onGoHome, onC
         } else {
             playSound('incorrect', isSoundOn);
             setFeedback({ isCorrect: false, message: "Chưa đúng!" });
-            
+
             const failText = "Chưa đúng rồi, bé chọn lại nhé!";
             setDisplayedText(failText);
             playDynamicSentence(failText, 'vi', isSoundOn, 'weather_explorer');
@@ -168,12 +168,12 @@ const WeatherExplorerGame: React.FC<WeatherExplorerGameProps> = ({ onGoHome, onC
 
     const getLevelImage = () => {
         const imageId = visualState === 'initial' ? currentLevel.centralImageId : currentLevel.successImageId;
-        
+
         // Exception handling for specific visual states if they aren't generic items
         if (imageId === 'flower_wilted') return `${ASSET_BASE_URL}/we_flower_wilted.png`;
         if (imageId === 'clothes_wet') return `${ASSET_BASE_URL}/we_clothes_wet.png`;
         if (imageId === 'clothes_dry') return `${ASSET_BASE_URL}/we_clothes_dry.png`;
-        
+
         return getImageUrl(imageId);
     };
 
@@ -185,7 +185,7 @@ const WeatherExplorerGame: React.FC<WeatherExplorerGameProps> = ({ onGoHome, onC
                     <button onClick={onGoHome} className="absolute top-4 left-4 sm:top-6 sm:left-6 bg-white p-2 sm:p-3 rounded-full shadow-lg text-purple-500 hover:scale-110 transition-transform z-10">
                         <HomeIcon className="w-6 h-6 sm:w-8 sm:h-8" />
                     </button>
-                    
+
                     <h2 className="text-3xl sm:text-5xl md:text-6xl font-black text-center text-purple-800 mb-2 mt-8 sm:mt-4">Bé Khám Phá</h2>
                     <p className="text-center text-lg sm:text-2xl text-gray-600 mb-6 sm:mb-10">Con muốn khám phá chủ đề nào?</p>
 
@@ -230,7 +230,7 @@ const WeatherExplorerGame: React.FC<WeatherExplorerGameProps> = ({ onGoHome, onC
         );
     }
 
-    if (!currentLevel) return <div>Loading...</div>;
+    if (!currentLevel) return <div>Đang tải...</div>;
 
     // --- RENDER: Playing Game ---
     return (
@@ -242,13 +242,13 @@ const WeatherExplorerGame: React.FC<WeatherExplorerGameProps> = ({ onGoHome, onC
                         <BookOpenIcon className="w-6 h-6 sm:w-8 sm:h-8" />
                         <span className="hidden sm:inline">Menu</span>
                     </button>
-                    
+
                     <div className="flex items-center bg-yellow-400 text-white px-4 sm:px-6 py-1 sm:py-2 rounded-full shadow-lg border-2 border-white">
                         <StarIcon className="w-5 h-5 sm:w-6 sm:h-6 mr-2" />
                         <span className="text-xl sm:text-2xl font-black">{score}</span>
                     </div>
                 </div>
-                
+
                 {/* Title - Margin top to avoid overlap with header */}
                 <div className="mt-14 sm:mt-16 bg-white/80 px-6 sm:px-8 py-1 sm:py-2 rounded-full shadow-sm z-10">
                     <h2 className="text-xl sm:text-3xl font-bold text-purple-800 uppercase">{currentLevel.title}</h2>
@@ -259,21 +259,21 @@ const WeatherExplorerGame: React.FC<WeatherExplorerGameProps> = ({ onGoHome, onC
                     {/* Visual Effects based on correct item */}
                     {visualState === 'success' && currentLevel.correctItemId === 'rain' && (
                         <div className="absolute inset-0 w-full h-full pointer-events-none z-10">
-                             {Array.from({ length: 20 }).map((_, i) => (
+                            {Array.from({ length: 20 }).map((_, i) => (
                                 <div key={i} className="absolute text-blue-500 text-2xl sm:text-4xl animate-drop" style={{ left: `${Math.random() * 100}%`, animationDelay: `${Math.random()}s` }}>💧</div>
                             ))}
                         </div>
                     )}
                     {visualState === 'success' && currentLevel.correctItemId === 'sun' && (
                         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
-                             <div className="w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] bg-yellow-300 rounded-full opacity-20 animate-pulse"></div>
+                            <div className="w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] bg-yellow-300 rounded-full opacity-20 animate-pulse"></div>
                         </div>
                     )}
 
                     <div className={`z-20 relative transition-all duration-500 transform hover:scale-105 flex items-center justify-center w-full h-full`}>
-                        <img 
-                            src={getLevelImage()} 
-                            alt="Scene" 
+                        <img
+                            src={getLevelImage()}
+                            alt="Scene"
                             className={`object-contain drop-shadow-2xl transition-all duration-700 ${visualState === 'success' ? 'scale-110' : 'scale-100'}`}
                             style={{ maxHeight: '35vh', maxWidth: '90vw' }} // Reduced max-height to allow room below
                         />
@@ -286,7 +286,7 @@ const WeatherExplorerGame: React.FC<WeatherExplorerGameProps> = ({ onGoHome, onC
                         <p className="text-sm sm:text-base md:text-lg text-center text-purple-900 font-bold leading-snug">
                             {displayedText}
                         </p>
-                        <button 
+                        <button
                             onClick={handleReplayAudio}
                             className="p-1 hover:bg-white rounded-full transition-colors text-pink-500"
                             title="Nghe lại"

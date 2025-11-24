@@ -122,7 +122,7 @@ const createWavBlob = (pcmData: Uint8Array): Blob => {
     view.setUint16(34, bitsPerSample, true);
     view.setUint32(36, 0x64617461, false); // "data"
     view.setUint32(40, dataSize, true);
-    return new Blob([view, pcmData], { type: 'audio/wav' });
+    return new Blob([view, pcmData as any], { type: 'audio/wav' });
 };
 
 const downloadFile = (href: string, filename: string) => {
@@ -200,22 +200,22 @@ const CHAR_NAMES: Record<string, string> = {
 
 // --- Audio Categorization Sets ---
 const onsetPronunciations: Record<string, string> = { 'B': 'bờ', 'C': 'cờ', 'CH': 'chờ', 'D': 'dờ', 'Đ': 'đờ', 'G': 'gờ', 'GH': 'gờ', 'H': 'hờ', 'K': 'ca', 'KH': 'khờ', 'L': 'lờ', 'M': 'mờ', 'N': 'nờ', 'NG': 'ngờ', 'NGH': 'ngờ', 'NH': 'nhờ', 'P': 'pờ', 'PH': 'phờ', 'QU': 'quờ', 'R': 'rờ', 'S': 'sờ', 'T': 'tờ', 'TH': 'thờ', 'TR': 'trờ', 'V': 'vờ', 'X': 'xờ', 'GI': 'giờ' };
-const feedingAudioTexts = new Set([ ...feedingProblemsBank.flatMap(p => [p.question, p.animal]), "Cảm ơn Gốm! Tớ no rồi!" ]);
-const bakeryAudioTexts = new Set([ ...bakeryProblemsBank.flatMap(p => [p.question, p.customerName]), "Hôm nay tiệm bánh thật đông khách! Con giỏi quá!" ]);
-const spellingRobotAudioTexts = new Set([ ...Object.values(onsetPronunciations), 'ô', 'sắc', 'huyền', 'hỏi', 'ngã', 'nặng', ...spellingRobotData.flatMap(p => [ `Bây giờ mình ráp tiếng ${p.targetWord} nhé!`, p.syllable.rime.toLowerCase(), p.syllable.onset ? (p.syllable.onset + p.syllable.rime).toLowerCase() : '' ]).filter(Boolean) ]);
+const feedingAudioTexts = new Set([...feedingProblemsBank.flatMap(p => [p.question, p.animal]), "Cảm ơn Gốm! Tớ no rồi!"]);
+const bakeryAudioTexts = new Set([...bakeryProblemsBank.flatMap(p => [p.question, p.customerName]), "Hôm nay tiệm bánh thật đông khách! Con giỏi quá!"]);
+const spellingRobotAudioTexts = new Set([...Object.values(onsetPronunciations), 'ô', 'sắc', 'huyền', 'hỏi', 'ngã', 'nặng', ...spellingRobotData.flatMap(p => [`Bây giờ mình ráp tiếng ${p.targetWord} nhé!`, p.syllable.rime.toLowerCase(), p.syllable.onset ? (p.syllable.onset + p.syllable.rime).toLowerCase() : '']).filter(Boolean)]);
 const fillBlankAudioTexts = new Set(fillInTheBlankWords.map(p => `Con ơi, thiếu chữ nào để được từ ${p.word}?`));
 const commonVnWordsAudioTexts = new Set(Object.values(spellingWordsByLevel).flat().map(w => w.word));
 const mathFullAudioTexts = new Set(simpleMathProblemsBank.map(p => getEquationText(p.problem, p.answer, p.type, true)).filter(Boolean));
-const mathWordsAudioTexts = new Set((() => { const set = new Set<string>(); for (let i = 0; i <= 50; i++) set.add(String(i)); ['cộng', 'trừ', 'bằng', 'mấy', 'lớn hơn', 'bé hơn'].forEach(w => set.add(w)); return Array.from(set); })());
+const mathWordsAudioTexts = new Set((() => { const set = new Set<string>(); for (let i = 0; i <= 50; i++) set.add(String(i));['cộng', 'trừ', 'bằng', 'mấy', 'lớn hơn', 'bé hơn'].forEach(w => set.add(w)); return Array.from(set); })());
 const feedbackAudioTexts = new Set(['Đúng rồi!', 'Tuyệt vời!', 'Con giỏi quá!', 'Chính xác!', 'Sai rồi, thử lại nhé!', 'Thử lại nhé!', 'Lỗi rồi!', 'Sai rồi!', 'Chưa đúng rồi! Thử lại nhé!', 'Chưa đúng', 'Con thử lại nhé']);
 const englishAudioTexts = new Set(englishLessons.flatMap(l => l.vocabulary).flatMap(v => [v.word, v.sentence]));
-const newEnglishAudioTexts = new Set([ ...englishLessons.flatMap(l => l.vocabulary).flatMap(v => [v.word, v.sentence]), "A big dinosaur.", "A big hippo.", "A big stone castle.", "A big trophy.", "A big truck.", "A blue shirt.", "A blue square.", "A boat on water.", "A brave prince.", "A brown bear.", "A colorful butterfly.", "A colorful planet.", "A colorful rainbow.", "A cute baby.", "A diamond shape." ]);
-const princessCodeAudioTexts = new Set([ ...princessCodeProblemsBank.flatMap(p => p.storySteps.flatMap(s => [s.question, ...s.choices.map(c => c.storySegment)])), ...numberCharacters.map(c => c.description), ...numberCharacters.flatMap(c => [`Chưa đúng rồi. Con nhớ lại xem, ${c.description} nhé.`, c.name]), 'Nhiệm vụ của bé!', 'Kho báu hôm nay có mật mã 3 số. Các bạn số này sẽ giúp chúng ta nhớ nhé:', 'Kho báu hôm nay có mật mã 4 số. Các bạn số này sẽ giúp chúng ta nhớ nhé:', 'Các bạn số này sẽ giúp chúng ta nhớ nhé:', 'Bắt đầu kể chuyện!', 'Câu chuyện của chúng ta là...', 'Nhân vật thứ 1 trong câu chuyện là ai?', 'Nhân vật thứ 2 trong câu chuyện là ai?', 'Nhân vật thứ 3 trong câu chuyện là ai?', 'Nhân vật thứ 4 trong câu chuyện là ai?', 'Nhân vật thứ 5 trong câu chuyện là ai?', ]);
-const allRestaurantAudioTexts = new Set([ ...restaurantMenuItems.map(i => i.name), 'Khách đang gọi món...', 'Bé phục vụ món nào!', 'Ai là người đã gọi...', 'Con giỏi quá! Bé đã phục vụ đúng hết tất cả các món!', 'Chưa đúng rồi, con nhớ lại xem!', ...restaurantOrdersBank.map(o => o.orderSentence) ]);
-const allStreetFoodAudioTexts = new Set([ ...streetFoodProblemBank.map(p => p.order.orderText), ...streetFoodProblemBank.map(p => `${p.order.payment} xu trừ ${p.order.total} xu bằng mấy xu?`), "Tổng cộng là bao nhiêu xu?", "Vừa đủ rồi, không cần thối tiền.", "Đồ ăn nóng hổi đây ạ! Chúc quý khách ngon miệng!", "Ngon quá! Hết bao nhiêu tiền vậy Gốm?", ...Object.values(STREET_FOOD_MENU).flatMap(item => item.steps.map(s => s.instruction)) ]);
-const allBunnyRescueAudioTexts = new Set([ "Bạn Thỏ Bông đang đợi ở cuối đường. Gốm ơi cứu tớ với!", "Bạn Thỏ Bông đang đợi ở cuối đường. Mỗi lần con tính đúng, con sẽ đặt thêm một viên đá để đi gần tới bạn Thỏ hơn nhé.", "Mình cùng đếm lại nhé!", "Hay quá! Nhảy một bước nào.", "Chưa đúng rồi, bạn Thỏ đang đợi, thử lại nhé.", "Tuyệt vời! Gốm đã cứu được Thỏ rồi.", "Cảm ơn Gốm đã cứu tớ nhé! Bạn thật tốt bụng." ]);
-const allGardenMemoryAudioTexts = new Set([ ...gardenMemoryScenes.map(s => s.intro_sentence), 'Hãy xem lại nhé!', ...gardenMemoryScenes.flatMap(s => s.questions.map(q => q.questionText)) ]);
-const allCapybaraRescueAudioTexts = new Set([ ...capybaraAudioTexts, "Cảm ơn Gốm đã lấy bóng giúp tớ! Gốm giỏi quá!" ]);
+const newEnglishAudioTexts = new Set([...englishLessons.flatMap(l => l.vocabulary).flatMap(v => [v.word, v.sentence]), "A big dinosaur.", "A big hippo.", "A big stone castle.", "A big trophy.", "A big truck.", "A blue shirt.", "A blue square.", "A boat on water.", "A brave prince.", "A brown bear.", "A colorful butterfly.", "A colorful planet.", "A colorful rainbow.", "A cute baby.", "A diamond shape."]);
+const princessCodeAudioTexts = new Set([...princessCodeProblemsBank.flatMap(p => p.storySteps.flatMap(s => [s.question, ...s.choices.map(c => c.storySegment)])), ...numberCharacters.map(c => c.description), ...numberCharacters.flatMap(c => [`Chưa đúng rồi. Con nhớ lại xem, ${c.description} nhé.`, c.name]), 'Nhiệm vụ của bé!', 'Kho báu hôm nay có mật mã 3 số. Các bạn số này sẽ giúp chúng ta nhớ nhé:', 'Kho báu hôm nay có mật mã 4 số. Các bạn số này sẽ giúp chúng ta nhớ nhé:', 'Các bạn số này sẽ giúp chúng ta nhớ nhé:', 'Bắt đầu kể chuyện!', 'Câu chuyện của chúng ta là...', 'Nhân vật thứ 1 trong câu chuyện là ai?', 'Nhân vật thứ 2 trong câu chuyện là ai?', 'Nhân vật thứ 3 trong câu chuyện là ai?', 'Nhân vật thứ 4 trong câu chuyện là ai?', 'Nhân vật thứ 5 trong câu chuyện là ai?',]);
+const allRestaurantAudioTexts = new Set([...restaurantMenuItems.map(i => i.name), 'Khách đang gọi món...', 'Bé phục vụ món nào!', 'Ai là người đã gọi...', 'Con giỏi quá! Bé đã phục vụ đúng hết tất cả các món!', 'Chưa đúng rồi, con nhớ lại xem!', ...restaurantOrdersBank.map(o => o.orderSentence)]);
+const allStreetFoodAudioTexts = new Set([...streetFoodProblemBank.map(p => p.order.orderText), ...streetFoodProblemBank.map(p => `${p.order.payment} xu trừ ${p.order.total} xu bằng mấy xu?`), "Tổng cộng là bao nhiêu xu?", "Vừa đủ rồi, không cần thối tiền.", "Đồ ăn nóng hổi đây ạ! Chúc quý khách ngon miệng!", "Ngon quá! Hết bao nhiêu tiền vậy Gốm?", ...Object.values(STREET_FOOD_MENU).flatMap(item => item.steps.map(s => s.instruction))]);
+const allBunnyRescueAudioTexts = new Set(["Bạn Thỏ Bông đang đợi ở cuối đường. Gốm ơi cứu tớ với!", "Bạn Thỏ Bông đang đợi ở cuối đường. Mỗi lần con tính đúng, con sẽ đặt thêm một viên đá để đi gần tới bạn Thỏ hơn nhé.", "Mình cùng đếm lại nhé!", "Hay quá! Nhảy một bước nào.", "Chưa đúng rồi, bạn Thỏ đang đợi, thử lại nhé.", "Tuyệt vời! Gốm đã cứu được Thỏ rồi.", "Cảm ơn Gốm đã cứu tớ nhé! Bạn thật tốt bụng."]);
+const allGardenMemoryAudioTexts = new Set([...gardenMemoryScenes.map(s => s.intro_sentence), 'Hãy xem lại nhé!', ...gardenMemoryScenes.flatMap(s => s.questions.map(q => q.questionText))]);
+const allCapybaraRescueAudioTexts = new Set([...capybaraAudioTexts, "Cảm ơn Gốm đã lấy bóng giúp tớ! Gốm giỏi quá!"]);
 const timeAdventureAllAudioTexts = new Set(timeAdventureQuestions.map(q => q.questionText));
 const weatherExplorerAudioTexts = new Set(weatherAudioTexts);
 const writingGameAudioTexts = new Set([
@@ -228,7 +228,7 @@ const writingGameAudioTexts = new Set([
     "115",
     ...WRITING_WORDS.flatMap(c => c.words.map(w => w.label)),
     ...WRITING_WORDS.flatMap(c => c.words.flatMap(w => w.charIds.map(id => {
-        const charCode = id.startsWith('num') ? `Số ${id.split('_')[1]}` : `Chữ ${id.split('_')[1]}`; 
+        const charCode = id.startsWith('num') ? `Số ${id.split('_')[1]}` : `Chữ ${id.split('_')[1]}`;
         return charCode;
     })))
 ]);
@@ -282,7 +282,7 @@ const initializeAssets = (): Record<string, AssetItem> => {
     const addAudio = (name: string, language: 'vi' | 'en') => {
         const key = `${language}-${name.toLowerCase()}`;
         if (name && !audioCollection.has(key)) {
-             audioCollection.set(key, { name, language });
+            audioCollection.set(key, { name, language });
         }
     };
 
@@ -321,7 +321,7 @@ const initializeAssets = (): Record<string, AssetItem> => {
         else if (allGardenMemoryAudioTexts.has(name)) subfolder = 'khuvuon';
         else if (allBunnyRescueAudioTexts.has(name)) subfolder = 'bantho';
         else if (allCapybaraRescueAudioTexts.has(name)) subfolder = 'bongbay';
-        else if (timeAdventureAllAudioTexts.has(name)) subfolder = 'thoitiet'; 
+        else if (timeAdventureAllAudioTexts.has(name)) subfolder = 'thoitiet';
         else if (onlineShoppingAudioTexts.has(name)) subfolder = 'muasam';
         else if (newEnglishAudioTexts.has(name)) subfolder = 'english';
         else if (weatherExplorerAudioTexts.has(name)) subfolder = 'khampha';
@@ -415,7 +415,7 @@ const categorizeAssets = (assetList: AssetItem[]): Record<GameCategoryKey, { tit
                 case 'common': categories.images_vn_common.assets.push(asset); break;
             }
         } else if (asset.type === 'audio') {
-            switch(asset.subfolder) {
+            switch (asset.subfolder) {
                 case 'giadinhgom': categories.audio_english_story.assets.push(asset); return;
                 case 'nhahang': categories.audio_restaurant.assets.push(asset); return;
                 case 'nauan': categories.audio_street_food.assets.push(asset); return;
@@ -426,7 +426,7 @@ const categorizeAssets = (assetList: AssetItem[]): Record<GameCategoryKey, { tit
                 case 'english': categories.audio_english_words.assets.push(asset); return;
                 case 'muasam': categories.audio_online_shopping.assets.push(asset); return;
                 case 'khampha': categories.audio_weather_explorer.assets.push(asset); return;
-                case 'chucai': 
+                case 'chucai':
                     if (catchGameAudioTexts.has(asset.name)) {
                         categories.audio_catch_game.assets.push(asset);
                     } else {
@@ -499,7 +499,7 @@ const ResourceGenerator: React.FC<{ onGoHome: () => void; isSoundOn: boolean; }>
                 for (let j = i + 1; j < familyVocab.length; j++) {
                     const char1 = familyVocab[i]; const char2 = familyVocab[j];
                     for (const actionKey in pairActions) {
-                         getStorySentences('pair', char1, char2, pairActions[actionKey], null).forEach(s => sentenceSet.add(s));
+                        getStorySentences('pair', char1, char2, pairActions[actionKey], null).forEach(s => sentenceSet.add(s));
                     }
                 }
             }
@@ -522,9 +522,9 @@ const ResourceGenerator: React.FC<{ onGoHome: () => void; isSoundOn: boolean; }>
             const dynamicAudioAssets: AudioAsset[] = Array.from(sentenceSet).map(sentence => {
                 const filename = sanitizeFilename(sentence, 'wav');
                 const key = `audio_en_story_${filename}`;
-                return { type: 'audio', key, name: sentence, language: 'en', filename, status: 'checking', data: null, error: null, subfolder: 'giadinhgom', url: `${ASSET_BASE_URL}/audio/giadinhgom/${filename}`};
+                return { type: 'audio', key, name: sentence, language: 'en', filename, status: 'checking', data: null, error: null, subfolder: 'giadinhgom', url: `${ASSET_BASE_URL}/audio/giadinhgom/${filename}` };
             });
-            
+
             const assetsToCheck: AssetItem[] = [...(Object.values(assets) as AssetItem[]).filter(a => a.status === 'checking'), ...dynamicAudioAssets];
             const checks = assetsToCheck.map(asset =>
                 fetch(asset.url, { method: 'HEAD', cache: 'no-store' })
@@ -534,7 +534,7 @@ const ResourceGenerator: React.FC<{ onGoHome: () => void; isSoundOn: boolean; }>
 
             const results = await Promise.all(checks);
             const statusMap: Map<string, AssetStatus> = new Map(results.map(r => [r.key, r.exists ? 'exists' : 'pending']));
-            
+
             setAssets(prev => {
                 const newAssets = { ...prev };
                 Object.keys(newAssets).forEach(key => {
@@ -544,8 +544,8 @@ const ResourceGenerator: React.FC<{ onGoHome: () => void; isSoundOn: boolean; }>
                 });
                 return newAssets;
             });
-            
-            const finalDynamicAssets = dynamicAudioAssets.map(asset => ({...asset, status: statusMap.get(asset.key) || 'pending' }));
+
+            const finalDynamicAssets = dynamicAudioAssets.map(asset => ({ ...asset, status: statusMap.get(asset.key) || 'pending' }));
             setEnglishStoryAudioAssets(finalDynamicAssets);
 
             setIsCheckingFiles(false);
@@ -556,13 +556,13 @@ const ResourceGenerator: React.FC<{ onGoHome: () => void; isSoundOn: boolean; }>
 
     const assetList = useMemo<AssetItem[]>(() => [...(Object.values(assets) as AssetItem[]), ...englishStoryAudioAssets], [assets, englishStoryAudioAssets]);
     const assetsByCategory = useMemo(() => categorizeAssets(assetList), [assetList]);
-    
+
     const updateAssetState = (key: string, updates: Partial<AssetItem>) => {
         const isDynamic = key.startsWith('audio_en_story_');
         if (isDynamic) {
-             setEnglishStoryAudioAssets(prev => prev.map(a => a.key === key ? { ...a, ...updates } as AudioAsset : a));
+            setEnglishStoryAudioAssets(prev => prev.map(a => a.key === key ? { ...a, ...updates } as AudioAsset : a));
         } else {
-             setAssets(prev => ({ ...prev, [key]: { ...prev[key], ...updates } as AssetItem }));
+            setAssets(prev => ({ ...prev, [key]: { ...prev[key], ...updates } as AssetItem }));
         }
     };
 
@@ -594,7 +594,7 @@ const ResourceGenerator: React.FC<{ onGoHome: () => void; isSoundOn: boolean; }>
                 if (refImage) {
                     // If using reference image, we MUST use referencePrompt if available, otherwise prompt
                     const promptText = asset.promptItem.referencePrompt || finalPrompt;
-                    
+
                     const [header, data] = refImage.split(',');
                     const mimeType = header.match(/:(.*?);/)?.[1] || 'image/png';
                     base64Data = await generateImageWithReference(promptText, data, mimeType);
@@ -607,11 +607,11 @@ const ResourceGenerator: React.FC<{ onGoHome: () => void; isSoundOn: boolean; }>
             }
             updateAssetState(asset.key, { status: 'generated', data: base64Data });
         } catch (err) {
-            updateAssetState(asset.key, { status: 'error', error: err instanceof Error ? err.message : 'Unknown error' });
+            updateAssetState(asset.key, { status: 'error', error: err instanceof Error ? err.message : 'Lỗi không xác định' });
             throw err;
         }
     };
-    
+
     const handlePlayAudio = async (base64Data: string) => {
         if (!isSoundOn || !base64Data) return;
         try {
@@ -629,13 +629,13 @@ const ResourceGenerator: React.FC<{ onGoHome: () => void; isSoundOn: boolean; }>
         } else { // Audio or UI Sound
             const isPcm = asset.type === 'audio';
             const bytes = decodeBase64(asset.data);
-            const blob = isPcm ? createWavBlob(bytes) : new Blob([bytes], { type: 'audio/wav' });
+            const blob = isPcm ? createWavBlob(bytes) : new Blob([bytes as any], { type: 'audio/wav' });
             const url = URL.createObjectURL(blob);
             downloadFile(url, filename);
             URL.revokeObjectURL(url);
         }
     };
-    
+
     const handleBulkGenerate = async (key: GameCategoryKey | 'all_images' | 'all_audio', assetsToProcess: AssetItem[]) => {
         playSound('click', isSoundOn);
         const pendingAssets = assetsToProcess.filter((a): a is (ImageAsset | AudioAsset) => {
@@ -645,10 +645,10 @@ const ResourceGenerator: React.FC<{ onGoHome: () => void; isSoundOn: boolean; }>
 
         setGeneratingCategoryKey(key);
         setGenerationProgress({ current: 0, total: pendingAssets.length });
-        
+
         for (const asset of pendingAssets) {
             try {
-                 await handleGenerate(asset, false);
+                await handleGenerate(asset, false);
             } catch (e) {
                 console.error(`Lỗi hàng loạt cho ${asset.key}:`, e);
             } finally {
@@ -668,7 +668,7 @@ const ResourceGenerator: React.FC<{ onGoHome: () => void; isSoundOn: boolean; }>
             await new Promise(resolve => setTimeout(resolve, 300));
         }
     };
-    
+
     const handleFileChange = (key: string, e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
@@ -679,7 +679,7 @@ const ResourceGenerator: React.FC<{ onGoHome: () => void; isSoundOn: boolean; }>
             reader.readAsDataURL(file);
         }
     };
-    
+
     const handleUploadFile = (key: string, file: File) => {
         playSound('click', isSoundOn);
         const reader = new FileReader();
@@ -717,16 +717,14 @@ const ResourceGenerator: React.FC<{ onGoHome: () => void; isSoundOn: boolean; }>
                     <button
                         id="hide-completed-toggle"
                         onClick={() => setHideCompletedCategories(prev => !prev)}
-                        className={`relative inline-flex items-center h-8 rounded-full w-16 transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 ${
-                            hideCompletedCategories ? 'bg-green-500' : 'bg-gray-300'
-                        }`}
+                        className={`relative inline-flex items-center h-8 rounded-full w-16 transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 ${hideCompletedCategories ? 'bg-green-500' : 'bg-gray-300'
+                            }`}
                         aria-pressed={hideCompletedCategories}
                     >
                         <span className="sr-only">Ẩn các mục đã hoàn thành</span>
                         <span
-                            className={`inline-block w-6 h-6 transform bg-white rounded-full transition-transform duration-300 ease-in-out ${
-                                hideCompletedCategories ? 'translate-x-9' : 'translate-x-1'
-                            }`}
+                            className={`inline-block w-6 h-6 transform bg-white rounded-full transition-transform duration-300 ease-in-out ${hideCompletedCategories ? 'translate-x-9' : 'translate-x-1'
+                                }`}
                         />
                     </button>
                 </div>
@@ -763,39 +761,39 @@ const ResourceGenerator: React.FC<{ onGoHome: () => void; isSoundOn: boolean; }>
                             {generatingCategoryKey === 'all_images' ? `Đang tạo... (${generationProgress.current}/${generationProgress.total})` : 'Tạo tất cả Hình ảnh'}
                         </button>
                         <button onClick={() => handleBulkGenerate('all_audio', allAudios)} disabled={!!generatingCategoryKey || showLoading} className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-lg transition-colors disabled:bg-gray-400">
-                             {generatingCategoryKey === 'all_audio' ? `Đang tạo... (${generationProgress.current}/${generationProgress.total})` : 'Tạo tất cả Âm thanh'}
+                            {generatingCategoryKey === 'all_audio' ? `Đang tạo... (${generationProgress.current}/${generationProgress.total})` : 'Tạo tất cả Âm thanh'}
                         </button>
-                         <button onClick={() => handleBulkDownload(assetList)} className="bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 px-6 rounded-lg">
+                        <button onClick={() => handleBulkDownload(assetList)} className="bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 px-6 rounded-lg">
                             Tải về tất cả file mới
                         </button>
                     </div>
                 </div>
 
                 <div className="space-y-8 mt-4">
-                     {(Object.keys(assetsByCategory) as GameCategoryKey[]).map(categoryKey => {
+                    {(Object.keys(assetsByCategory) as GameCategoryKey[]).map(categoryKey => {
                         const { title, assets: categoryAssets } = assetsByCategory[categoryKey];
                         if (!categoryAssets || categoryAssets.length === 0) return null;
-                        
+
                         const isCompleted = categoryAssets.every(asset => asset.status === 'exists' || asset.type === 'ui_sound');
                         if (hideCompletedCategories && isCompleted) {
                             return null;
                         }
-                        
+
                         const isGeneratingThisCategory = generatingCategoryKey === categoryKey;
 
                         return (
                             <div key={categoryKey} className="border-t-2 pt-6">
                                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
-                                     <h3 className="text-3xl font-bold text-pink-600 flex items-center gap-3">
+                                    <h3 className="text-3xl font-bold text-pink-600 flex items-center gap-3">
                                         {title}
                                         {isCompleted && !showLoading && <CheckCircleIcon className="w-8 h-8 text-green-500" />}
-                                     </h3>
-                                     <div className="flex gap-2 mt-2 sm:mt-0">
+                                    </h3>
+                                    <div className="flex gap-2 mt-2 sm:mt-0">
                                         <button onClick={() => handleBulkGenerate(categoryKey, categoryAssets)} disabled={!!generatingCategoryKey || showLoading || categoryKey === 'audio_common_effects'} className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg text-sm transition-colors disabled:bg-gray-400">
                                             {isGeneratingThisCategory ? `Đang tạo... (${generationProgress.current}/${generationProgress.total})` : 'Tạo mục này'}
                                         </button>
                                         <button onClick={() => handleBulkDownload(categoryAssets)} className="bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-lg text-sm">Tải file mới tạo</button>
-                                     </div>
+                                    </div>
                                 </div>
                                 {categoryAssets.map(asset => (
                                     <div key={asset.key} className="grid grid-cols-1 md:grid-cols-5 gap-4 items-center bg-gray-50 p-3 rounded-lg shadow-sm mb-2">
@@ -822,7 +820,7 @@ const ResourceGenerator: React.FC<{ onGoHome: () => void; isSoundOn: boolean; }>
                                                             {asset.referenceImage ? "Ảnh riêng (Override):" : "Tải ảnh riêng (nếu cần):"}
                                                             <input type="file" accept="image/*" onChange={(e) => handleFileChange(asset.key, e)} className="text-xs ml-2" />
                                                         </label>
-                                                         <div className="flex flex-wrap gap-1">
+                                                        <div className="flex flex-wrap gap-1">
                                                             {imageEffects.map(effect => (
                                                                 <button key={effect} onClick={() => updateAssetState(asset.key, { selectedEffect: asset.selectedEffect === effect ? null : effect })} className={`px-2 py-1 text-xs rounded-full ${asset.selectedEffect === effect ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-gray-700'}`}>
                                                                     {effect.split(',')[0]}
@@ -832,7 +830,7 @@ const ResourceGenerator: React.FC<{ onGoHome: () => void; isSoundOn: boolean; }>
                                                     </div>
                                                 )}
                                                 {(asset.type === 'image' || asset.type === 'audio') && (
-                                                   <>
+                                                    <>
                                                         <input
                                                             type="file"
                                                             id={`upload-${asset.key}`}
@@ -861,7 +859,7 @@ const ResourceGenerator: React.FC<{ onGoHome: () => void; isSoundOn: boolean; }>
                                                 )}
                                                 {(asset.type === 'audio' || asset.type === 'ui_sound') && asset.data && (
                                                     <button onClick={() => handlePlayAudio(asset.data!)} className="w-full bg-sky-500 hover:bg-sky-600 text-white font-bold py-2 px-4 rounded-lg flex items-center justify-center gap-2">
-                                                        <SpeakerIcon className="w-5 h-5"/> Nghe
+                                                        <SpeakerIcon className="w-5 h-5" /> Nghe
                                                     </button>
                                                 )}
                                             </div>
