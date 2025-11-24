@@ -26,7 +26,7 @@ const COLORS = [
 const TEMPLATES = [
     { id: 'flower', name: 'Hoa Cười 🌸', image: '/assets/images/coloring/flower.png' },
     { id: 'bunny', name: 'Thỏ Con 🐰', image: '/assets/images/coloring/bunny.png' },
-    // Bạn có thể thêm nhiều tranh tô màu khác vào đây
+    { id: 'doraemon', name: 'Doraemon ⚽', image: '/assets/images/coloring/doraemon.png' },
 ];
 
 const ColoringGame: React.FC<ColoringGameProps> = ({ onGoHome, isSoundOn }) => {
@@ -260,8 +260,8 @@ const ColoringGame: React.FC<ColoringGameProps> = ({ onGoHome, isSoundOn }) => {
                             if (isSoundOn) playSound('click', isSoundOn);
                         }}
                         className={`px-6 py-3 rounded-2xl font-bold whitespace-nowrap transition-all text-lg ${selectedTemplate === idx
-                                ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white scale-110 shadow-2xl ring-4 ring-white'
-                                : 'bg-white text-purple-600 hover:bg-purple-50 shadow-md hover:scale-105'
+                            ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white scale-110 shadow-2xl ring-4 ring-white'
+                            : 'bg-white text-purple-600 hover:bg-purple-50 shadow-md hover:scale-105'
                             }`}
                     >
                         {template.name}
@@ -269,10 +269,10 @@ const ColoringGame: React.FC<ColoringGameProps> = ({ onGoHome, isSoundOn }) => {
                 ))}
             </div>
 
-            {/* Main Content */}
-            <div className="flex-1 flex flex-col lg:flex-row gap-4 p-4 overflow-hidden">
-                {/* Canvas */}
-                <div className="flex-1 flex items-center justify-center bg-white rounded-3xl shadow-2xl p-4 overflow-hidden border-4 border-purple-200">
+            {/* Main Content - Optimized for iPad Landscape */}
+            <div className="flex-1 flex flex-row gap-4 p-4 overflow-hidden">
+                {/* Canvas - Takes most of the space */}
+                <div className="flex-1 flex items-center justify-center bg-white rounded-3xl shadow-2xl p-6 overflow-hidden border-4 border-purple-200">
                     <canvas
                         ref={canvasRef}
                         onClick={handleCanvasClick}
@@ -281,8 +281,8 @@ const ColoringGame: React.FC<ColoringGameProps> = ({ onGoHome, isSoundOn }) => {
                     />
                 </div>
 
-                {/* Sidebar */}
-                <div className="lg:w-80 flex flex-col gap-4">
+                {/* Sidebar - Always visible on iPad landscape */}
+                <div className="w-72 xl:w-80 flex flex-col gap-4 flex-shrink-0">
                     {/* Tools */}
                     <div className="bg-white rounded-3xl shadow-2xl p-4 border-4 border-purple-200">
                         <h3 className="text-2xl font-black text-purple-600 mb-3 text-center">🛠️ Công Cụ</h3>
