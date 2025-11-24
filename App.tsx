@@ -29,7 +29,10 @@ import CartoonPlayer from './components/CartoonPlayer';
 import type { GameState, Sticker } from './types';
 import { imagePrompts } from './data/imagePrompts';
 import { preloadSounds, playSound, stopAllSounds } from './services/audioService';
+
 import { SpeakerOnIcon, SpeakerOffIcon } from './components/icons';
+import { useWakeLock } from './hooks/useWakeLock';
+import IOSInstallPrompt from './components/IOSInstallPrompt';
 
 // Import data sources for sticker aggregation
 import { supermarketItems } from './data/supermarketData';
@@ -135,14 +138,14 @@ const App: React.FC = () => {
     const [correctAnswersForBigReward, setCorrectAnswersForBigReward] = useState(0);
     const [showCartoon, setShowCartoon] = useState(false);
     const [isSoundOn, setIsSoundOn] = useState(true);
-    
+
     // Vẫn giữ logic unlock cho tính năng thưởng, nhưng StickerBook sẽ hiển thị tất cả
     const [unlockedStickers, setUnlockedStickers] = useState<Sticker[]>(() => {
         try {
             const savedStickersJson = localStorage.getItem('unlockedStickers');
             return savedStickersJson ? JSON.parse(savedStickersJson) : [];
         } catch (error) {
-            return []; 
+            return [];
         }
     });
 
@@ -152,11 +155,14 @@ const App: React.FC = () => {
         preloadSounds();
     }, []);
 
+    useWakeLock();
+
     useEffect(() => {
         try {
             localStorage.setItem('unlockedStickers', JSON.stringify(unlockedStickers));
         } catch (error) {
-          console.error("Failed to save unlocked stickers");        }
+            console.error("Failed to save unlocked stickers");
+        }
     }, [unlockedStickers]);
 
     const handleCorrectAnswer = () => {
@@ -180,7 +186,7 @@ const App: React.FC = () => {
                 setLastUnlockedSticker(randomSticker);
             }
         }
-        
+
         // --- Logic thưởng lớn (Hoạt hình) ---
         if (newBigRewardCount >= BIG_REWARD_THRESHOLD) {
             setShowCartoon(true);
@@ -196,91 +202,92 @@ const App: React.FC = () => {
         }
     };
 
-  const renderGame = () => {
-    const gameProps = {
-      onGoHome: () => {
-        playSound('click', isSoundOn);
-        stopAllSounds();
-        setGameState('home');
-      },
-      onCorrectAnswer: handleCorrectAnswer,
-      isSoundOn: isSoundOn,
+    const renderGame = () => {
+        const gameProps = {
+            onGoHome: () => {
+                playSound('click', isSoundOn);
+                stopAllSounds();
+                setGameState('home');
+            },
+            onCorrectAnswer: handleCorrectAnswer,
+            isSoundOn: isSoundOn,
+        };
+
+        switch (gameState) {
+            case 'math': return <MathGame {...gameProps} />;
+            case 'spelling': return <SpellingGame {...gameProps} />;
+            case 'memory': return <MemoryGame {...gameProps} />;
+            case 'english': return <EnglishGame {...gameProps} />;
+            case 'english_story': return <EnglishStoryGame {...gameProps} />;
+            case 'dice': return <DiceGame {...gameProps} />;
+            case 'fill_in_the_blank': return <FillInTheBlankGame {...gameProps} />;
+            case 'feeding': return <FeedingGame {...gameProps} />;
+            case 'spelling_robot': return <SpellingRobotGame {...gameProps} />;
+            case 'bakery': return <BakeryGame {...gameProps} />;
+            case 'princess_code': return <PrincessCodeGame {...gameProps} />;
+            case 'restaurant': return <RestaurantGame {...gameProps} />;
+            case 'street_food': return <StreetFoodGame {...gameProps} />;
+            case 'bunny_rescue': return <BunnyRescueGame {...gameProps} />;
+            case 'garden_memory': return <GardenMemoryGame {...gameProps} />;
+            case 'capybara_rescue': return <CapybaraRescueGame {...gameProps} />;
+            case 'time_adventure': return <TimeAdventureGame {...gameProps} />;
+            case 'online_shopping': return <OnlineShoppingGame {...gameProps} />;
+            case 'weather_explorer': return <WeatherExplorerGame {...gameProps} />;
+            case 'supermarket': return <SupermarketGame {...gameProps} />;
+            case 'catch_game': return <CatchGame {...gameProps} />;
+            case 'resource_generator':
+                return <ResourceGenerator onGoHome={gameProps.onGoHome} isSoundOn={isSoundOn} />;
+            case 'home':
+            default:
+                return <HomeScreen onSelectGame={(game) => setGameState(game)} isSoundOn={isSoundOn} />;
+        }
     };
 
-    switch (gameState) {
-      case 'math': return <MathGame {...gameProps} />;
-      case 'spelling': return <SpellingGame {...gameProps} />;
-      case 'memory': return <MemoryGame {...gameProps} />;
-      case 'english': return <EnglishGame {...gameProps} />;
-      case 'english_story': return <EnglishStoryGame {...gameProps} />;
-      case 'dice': return <DiceGame {...gameProps} />;
-      case 'fill_in_the_blank': return <FillInTheBlankGame {...gameProps} />;
-      case 'feeding': return <FeedingGame {...gameProps} />;
-      case 'spelling_robot': return <SpellingRobotGame {...gameProps} />;
-      case 'bakery': return <BakeryGame {...gameProps} />;
-      case 'princess_code': return <PrincessCodeGame {...gameProps} />;
-      case 'restaurant': return <RestaurantGame {...gameProps} />;
-      case 'street_food': return <StreetFoodGame {...gameProps} />;
-      case 'bunny_rescue': return <BunnyRescueGame {...gameProps} />;
-      case 'garden_memory': return <GardenMemoryGame {...gameProps} />;
-      case 'capybara_rescue': return <CapybaraRescueGame {...gameProps} />;
-      case 'time_adventure': return <TimeAdventureGame {...gameProps} />;
-      case 'online_shopping': return <OnlineShoppingGame {...gameProps} />;
-      case 'weather_explorer': return <WeatherExplorerGame {...gameProps} />;
-      case 'supermarket': return <SupermarketGame {...gameProps} />;
-      case 'catch_game': return <CatchGame {...gameProps} />;
-      case 'resource_generator':
-        return <ResourceGenerator onGoHome={gameProps.onGoHome} isSoundOn={isSoundOn} />;
-      case 'home':
-      default:
-        return <HomeScreen onSelectGame={(game) => setGameState(game)} isSoundOn={isSoundOn} />;
-    }
-  };
+    const showRewardProgress = !['home', 'resource_generator'].includes(gameState);
 
-  const showRewardProgress = !['home', 'resource_generator'].includes(gameState);
+    return (
+        <main className="fixed inset-0 h-[100dvh] w-full bg-gradient-to-br from-pink-200 via-purple-200 to-indigo-200 font-sans select-none">
+            <div className="w-full h-full overflow-y-auto pt-safe flex flex-col items-center justify-start p-4 sm:p-6 md:py-8 md:px-4 gap-4">
+                {showRewardProgress && (
+                    <RewardProgress current={correctAnswersForBigReward} goal={BIG_REWARD_THRESHOLD} />
+                )}
+                <div className="relative w-full flex flex-col items-center flex-grow">
+                    {renderGame()}
+                </div>
+            </div>
 
-  return (
-    <main className="fixed inset-0 h-[100dvh] w-full bg-gradient-to-br from-pink-200 via-purple-200 to-indigo-200 font-sans select-none">
-      <div className="w-full h-full overflow-y-auto pt-safe flex flex-col items-center justify-start p-4 sm:p-6 md:py-8 md:px-4 gap-4">
-        {showRewardProgress && (
-            <RewardProgress current={correctAnswersForBigReward} goal={BIG_REWARD_THRESHOLD} />
-        )}
-        <div className="relative w-full flex flex-col items-center flex-grow">
-          {renderGame()}
-        </div>
-      </div>
-
-      {lastUnlockedSticker && (
-        <StickerUnlockedPopup 
-            sticker={lastUnlockedSticker}
-            onClose={() => {
-                playSound('click', isSoundOn);
-                setLastUnlockedSticker(null);
-            }}
-            isSoundOn={isSoundOn}
-        />
-      )}
-      {showCartoon && (
-          <CartoonPlayer 
-            onClose={() => {
-              playSound('click', isSoundOn);
-              setShowCartoon(false);
-            }} 
-            isSoundOn={isSoundOn}
-          />
-      )}
-      <button 
-        onClick={toggleSound}
-        className="fixed bottom-6 right-6 bg-white p-4 rounded-full shadow-lg z-50 transform transition-transform hover:scale-110 active:scale-95"
-        aria-label={isSoundOn ? "Tắt âm thanh" : "Bật âm thanh"}
-      >
-        {isSoundOn 
-            ? <SpeakerOnIcon className="w-10 h-10 text-purple-600" /> 
-            : <SpeakerOffIcon className="w-10 h-10 text-gray-500" />
-        }
-      </button>
-    </main>
-  );
+            {lastUnlockedSticker && (
+                <StickerUnlockedPopup
+                    sticker={lastUnlockedSticker}
+                    onClose={() => {
+                        playSound('click', isSoundOn);
+                        setLastUnlockedSticker(null);
+                    }}
+                    isSoundOn={isSoundOn}
+                />
+            )}
+            {showCartoon && (
+                <CartoonPlayer
+                    onClose={() => {
+                        playSound('click', isSoundOn);
+                        setShowCartoon(false);
+                    }}
+                    isSoundOn={isSoundOn}
+                />
+            )}
+            <button
+                onClick={toggleSound}
+                className="fixed bottom-6 right-6 bg-white p-4 rounded-full shadow-lg z-50 transform transition-transform hover:scale-110 active:scale-95"
+                aria-label={isSoundOn ? "Tắt âm thanh" : "Bật âm thanh"}
+            >
+                {isSoundOn
+                    ? <SpeakerOnIcon className="w-10 h-10 text-purple-600" />
+                    : <SpeakerOffIcon className="w-10 h-10 text-gray-500" />
+                }
+            </button>
+            <IOSInstallPrompt />
+        </main>
+    );
 };
 
 export default App;
