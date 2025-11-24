@@ -25,6 +25,7 @@ const COLORS = [
 // Coloring book templates
 const TEMPLATES = [
     { id: 'flower', name: 'Hoa Cười 🌸', image: '/assets/images/coloring/flower.png' },
+    { id: 'bunny', name: 'Thỏ Con 🐰', image: '/assets/images/coloring/bunny.png' },
     // Bạn có thể thêm nhiều tranh tô màu khác vào đây
     // Ví dụ: { id: 'cat', name: 'Mèo Con 🐱', image: '/assets/images/coloring/cat.png' },
 ];
