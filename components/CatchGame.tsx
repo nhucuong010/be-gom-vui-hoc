@@ -17,7 +17,7 @@ interface CatchGameProps {
 interface FallingItem {
     uid: number;
     id: string;
-    type: 'target' | 'distractor' | 'bonus' | 'bad'; 
+    type: 'target' | 'distractor' | 'bonus' | 'bad';
     name: string;
     imageUrl: string;
     x: number; // % left (0-100)
@@ -56,11 +56,11 @@ interface FloatingText {
 // Expanded Quest Interface
 interface QuestData {
     type: 'find' | 'math' | 'spelling' | 'compare' | 'word_match';
-    textDisplay: string; 
-    imageDisplay?: string; 
-    targetIdPrefix?: string; 
-    targetValue?: string | number; 
-    speakText?: string; 
+    textDisplay: string;
+    imageDisplay?: string;
+    targetIdPrefix?: string;
+    targetValue?: string | number;
+    speakText?: string;
 }
 
 type GameMode = 'intro' | 'playing' | 'game_over';
@@ -71,22 +71,22 @@ const ASSET_BASE_URL = 'https://be-gom-vui-hoc.vercel.app';
 const CatchGame: React.FC<CatchGameProps> = ({ onGoHome, onCorrectAnswer, isSoundOn }) => {
     const [mode, setMode] = useState<GameMode>('intro');
     const [score, setScore] = useState(0);
-    const [lives, setLives] = useState(7); 
+    const [lives, setLives] = useState(7);
     const [items, setItems] = useState<FallingItem[]>([]);
     const [particles, setParticles] = useState<Particle[]>([]);
     const [floatingTexts, setFloatingTexts] = useState<FloatingText[]>([]);
-    
+
     // Quest State
     const [currentQuest, setCurrentQuest] = useState<QuestData | null>(null);
     const [levelTopic, setLevelTopic] = useState<LevelTopic>('numbers');
-    
-    const [playerX, setPlayerX] = useState(50); 
+
+    const [playerX, setPlayerX] = useState(50);
     const [playerDirection, setPlayerDirection] = useState<'left' | 'right' | 'idle'>('idle');
     const lastPlayerX = useRef(50);
 
     // Tilt Control State
     const [isTiltEnabled, setIsTiltEnabled] = useState(false);
-    const tiltRef = useRef(0); 
+    const tiltRef = useRef(0);
 
     // Game Loop Refs
     const requestRef = useRef<number>();
@@ -95,13 +95,13 @@ const CatchGame: React.FC<CatchGameProps> = ({ onGoHome, onCorrectAnswer, isSoun
     const scoreRef = useRef(0);
     const distractorCountRef = useRef(0); // Pity system counter
     const gameAreaRef = useRef<HTMLDivElement>(null);
-    
+
     // --- DATA POOLS ---
     const pools = useMemo(() => {
         const numbers = imagePrompts
             .filter(p => p.game === 'writing' && p.filename.startsWith('img_num'))
             .map(p => ({ id: p.filename, name: p.word, imageUrl: `${ASSET_BASE_URL}/assets/images/chucai/${p.filename}`, value: parseInt(p.filename.split('_').pop() || '0') }));
-        
+
         const mathSigns = imagePrompts
             .filter(p => p.game === 'writing' && p.filename.startsWith('math_'))
             .map(p => {
@@ -118,11 +118,11 @@ const CatchGame: React.FC<CatchGameProps> = ({ onGoHome, onCorrectAnswer, isSoun
             .map(p => {
                 const writingChar = WRITING_DATA.find(c => `img_${c.id.toLowerCase()}.png` === p.filename.toLowerCase());
                 const rawVal = p.filename.replace('img_char_', '').replace('.png', '').toUpperCase();
-                return { 
-                    id: p.filename, 
-                    name: p.word, 
-                    imageUrl: `${ASSET_BASE_URL}/assets/images/chucai/${p.filename}`, 
-                    value: writingChar ? writingChar.char : rawVal 
+                return {
+                    id: p.filename,
+                    name: p.word,
+                    imageUrl: `${ASSET_BASE_URL}/assets/images/chucai/${p.filename}`,
+                    value: writingChar ? writingChar.char : rawVal
                 };
             });
 
@@ -139,9 +139,9 @@ const CatchGame: React.FC<CatchGameProps> = ({ onGoHome, onCorrectAnswer, isSoun
             .map(p => ({
                 word: p.word,
                 firstChar: p.word.charAt(0).toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""),
-                image: p.game === 'writing' ? `${ASSET_BASE_URL}/assets/images/chucai/${p.filename}` : 
-                       p.game === 'weather_explorer' ? `${ASSET_BASE_URL}/assets/images/khampha/${p.filename}` :
-                       `${ASSET_BASE_URL}/assets/images/${p.filename}`
+                image: p.game === 'writing' ? `${ASSET_BASE_URL}/assets/images/chucai/${p.filename}` :
+                    p.game === 'weather_explorer' ? `${ASSET_BASE_URL}/assets/images/khampha/${p.filename}` :
+                        `${ASSET_BASE_URL}/assets/images/${p.filename}`
             }));
 
         return { numbers, mathSigns, letters, animals, food, nature, spellingVocab };
@@ -205,13 +205,13 @@ const CatchGame: React.FC<CatchGameProps> = ({ onGoHome, onCorrectAnswer, isSoun
         } else if (levelTopic === 'compare') {
             const num1 = Math.floor(Math.random() * 9) + 1;
             let num2 = Math.floor(Math.random() * 9) + 1;
-            while (num2 === num1) num2 = Math.floor(Math.random() * 9) + 1; 
+            while (num2 === num1) num2 = Math.floor(Math.random() * 9) + 1;
 
             let sign = '=';
             let speakSign = 'bằng';
             if (num1 > num2) { sign = '>'; speakSign = 'lớn hơn'; }
             if (num1 < num2) { sign = '<'; speakSign = 'bé hơn'; }
-            
+
             return {
                 type: 'compare',
                 textDisplay: `${num1} ... ${num2}`,
@@ -235,12 +235,12 @@ const CatchGame: React.FC<CatchGameProps> = ({ onGoHome, onCorrectAnswer, isSoun
 
             const randomCat = categories[Math.floor(Math.random() * categories.length)];
             const randomWord = randomCat.words[Math.floor(Math.random() * randomCat.words.length)];
-            
+
             const charIndexToHide = Math.floor(Math.random() * randomWord.charIds.length);
             const hiddenCharId = randomWord.charIds[charIndexToHide];
             const hiddenCharData = WRITING_DATA.find(c => c.id === hiddenCharId);
-            
-            if (!hiddenCharData) return generateNewQuest(); 
+
+            if (!hiddenCharData) return generateNewQuest();
 
             const displayText = randomWord.charIds.map((id, idx) => {
                 if (idx === charIndexToHide) return "_";
@@ -278,11 +278,11 @@ const CatchGame: React.FC<CatchGameProps> = ({ onGoHome, onCorrectAnswer, isSoun
 
     const startGame = (topic: LevelTopic) => {
         playSound('click', isSoundOn);
-        setLevelTopic(topic); 
+        setLevelTopic(topic);
         setMode('playing');
         setScore(0);
         scoreRef.current = 0;
-        setLives(7); 
+        setLives(7);
         setItems([]);
         setParticles([]);
         setFloatingTexts([]);
@@ -296,19 +296,19 @@ const CatchGame: React.FC<CatchGameProps> = ({ onGoHome, onCorrectAnswer, isSoun
         if (mode === 'playing' && !currentQuest) {
             const quest = generateNewQuest();
             setCurrentQuest(quest);
-            distractorCountRef.current = 0; 
+            distractorCountRef.current = 0;
             if (quest.speakText && levelTopic !== 'mixed') {
-                 playDynamicSentence(quest.speakText, 'vi', isSoundOn);
+                playDynamicSentence(quest.speakText, 'vi', isSoundOn);
             }
         }
     }, [mode, levelTopic, generateNewQuest, isSoundOn, currentQuest]);
 
     useEffect(() => {
         if (mode === 'playing' && currentQuest && levelTopic !== 'mixed') {
-             const timer = setTimeout(() => {
-                 if (currentQuest.speakText) playDynamicSentence(currentQuest.speakText, 'vi', isSoundOn);
-             }, 1000);
-             return () => clearTimeout(timer);
+            const timer = setTimeout(() => {
+                if (currentQuest.speakText) playDynamicSentence(currentQuest.speakText, 'vi', isSoundOn);
+            }, 1000);
+            return () => clearTimeout(timer);
         }
     }, [currentQuest, mode, isSoundOn, levelTopic]);
 
@@ -342,7 +342,7 @@ const CatchGame: React.FC<CatchGameProps> = ({ onGoHome, onCorrectAnswer, isSoun
     const processCatch = useCallback((item: FallingItem) => {
         if (item.isCaught) return false;
         item.isCaught = true; // Mark as caught immediately to prevent double processing
-        
+
         let isGood = false;
         let points = 0;
         let color = '#fff';
@@ -350,14 +350,14 @@ const CatchGame: React.FC<CatchGameProps> = ({ onGoHome, onCorrectAnswer, isSoun
 
         if (item.type === 'bonus') {
             isGood = true; points = 5; color = '#FFD700';
-            setLives(l => Math.min(7, l + 1)); 
+            setLives(l => Math.min(7, l + 1));
             playDynamicSentence('Ngôi sao may mắn!', 'vi', isSoundOn);
         } else if (item.type === 'bad') {
             isGood = false;
         } else if (item.type === 'target') {
             isGood = true; points = 1; color = '#4ADE80';
         } else {
-            isGood = false; 
+            isGood = false;
             feedbackText = 'Sai rồi!';
         }
 
@@ -368,8 +368,8 @@ const CatchGame: React.FC<CatchGameProps> = ({ onGoHome, onCorrectAnswer, isSoun
             onCorrectAnswer();
             spawnParticle(item.x, item.y, color);
             spawnFloatingText(item.x, item.y - 10, `+${points}`, color);
-            
-             if (item.type === 'target' && levelTopic !== 'mixed') {
+
+            if (item.type === 'target' && levelTopic !== 'mixed') {
                 setTimeout(() => {
                     const newQuest = generateNewQuest();
                     setCurrentQuest(newQuest);
@@ -377,13 +377,13 @@ const CatchGame: React.FC<CatchGameProps> = ({ onGoHome, onCorrectAnswer, isSoun
                 }, 200);
             }
 
-            return true; 
+            return true;
         } else {
             playSound('incorrect', isSoundOn);
             setLives(l => l - 1);
             spawnFloatingText(item.x, item.y - 10, feedbackText || 'Ôi không!', '#EF4444');
             spawnParticle(item.x, item.y, '#EF4444');
-            return true; 
+            return true;
         }
     }, [isSoundOn, onCorrectAnswer, levelTopic, generateNewQuest]);
 
@@ -416,7 +416,7 @@ const CatchGame: React.FC<CatchGameProps> = ({ onGoHome, onCorrectAnswer, isSoun
         if (isTiltEnabled) {
             const tilt = tiltRef.current;
             if (Math.abs(tilt) > 2) {
-                const moveAmount = tilt * 0.5; 
+                const moveAmount = tilt * 0.5;
                 setPlayerX(prev => {
                     const nextX = prev + moveAmount;
                     return Math.max(8, Math.min(92, nextX));
@@ -425,24 +425,24 @@ const CatchGame: React.FC<CatchGameProps> = ({ onGoHome, onCorrectAnswer, isSoun
         }
 
         const difficultyMultiplier = Math.min(2, 1 + scoreRef.current / 30);
-        const spawnRate = Math.max(1000, 2500 / difficultyMultiplier); 
-        
+        const spawnRate = Math.max(1000, 2500 / difficultyMultiplier);
+
         if (time - lastSpawnTime.current > spawnRate) {
             const rand = Math.random();
             let spawnType: 'target' | 'distractor' | 'bonus' | 'bad' = 'distractor';
             let template: any | undefined;
-            
+
             let spawnPool: any[] = [];
             if (levelTopic === 'math' || levelTopic === 'numbers') spawnPool = pools.numbers;
             else if (levelTopic === 'spelling' || levelTopic === 'letters' || levelTopic === 'word_match' || levelTopic === 'family') spawnPool = pools.letters;
             else if (levelTopic === 'compare') spawnPool = pools.mathSigns;
             else if (levelTopic === 'mixed') spawnPool = [...pools.numbers, ...pools.letters, ...pools.animals];
-            else spawnPool = pools.numbers; 
+            else spawnPool = pools.numbers;
 
             if (levelTopic === 'mixed') {
                 if (rand < 0.05) spawnType = 'bonus';
                 else if (rand < 0.15) spawnType = 'bad';
-                else spawnType = 'target'; 
+                else spawnType = 'target';
                 template = spawnPool[Math.floor(Math.random() * spawnPool.length)];
             } else {
                 // Pity System: Force target if 2 distractors have passed
@@ -452,7 +452,7 @@ const CatchGame: React.FC<CatchGameProps> = ({ onGoHome, onCorrectAnswer, isSoun
                 if ((rand < 0.60 || forceTarget) && currentQuest) {
                     spawnType = 'target';
                     distractorCountRef.current = 0; // Reset pity counter
-                    
+
                     if (currentQuest.type === 'math') {
                         template = pools.numbers.find(n => n.value === currentQuest.targetValue);
                     } else if (currentQuest.type === 'compare') {
@@ -467,15 +467,15 @@ const CatchGame: React.FC<CatchGameProps> = ({ onGoHome, onCorrectAnswer, isSoun
                 } else if (rand < 0.90) {
                     spawnType = 'distractor';
                     distractorCountRef.current += 1; // Increment pity counter
-                    
+
                     let candidates = spawnPool;
                     if (currentQuest?.targetValue) {
                         candidates = spawnPool.filter(i => i.value !== currentQuest.targetValue);
                     }
                     if (currentQuest?.targetIdPrefix) {
-                         candidates = candidates.filter(i => i.id !== currentQuest.targetIdPrefix);
+                        candidates = candidates.filter(i => i.id !== currentQuest.targetIdPrefix);
                     }
-                    
+
                     if (candidates.length > 0) {
                         template = candidates[Math.floor(Math.random() * candidates.length)];
                     } else {
@@ -491,7 +491,7 @@ const CatchGame: React.FC<CatchGameProps> = ({ onGoHome, onCorrectAnswer, isSoun
             let newItem: FallingItem;
             // Slower falling speed modifier
             const isThinkingGame = levelTopic === 'math' || levelTopic === 'compare' || levelTopic === 'word_match' || levelTopic === 'family';
-            const speedModifier = isThinkingGame ? 0.4 : 0.8; 
+            const speedModifier = isThinkingGame ? 0.4 : 0.8;
 
             if (spawnType === 'bonus') {
                 newItem = {
@@ -507,29 +507,29 @@ const CatchGame: React.FC<CatchGameProps> = ({ onGoHome, onCorrectAnswer, isSoun
                 };
             } else {
                 if (!template && spawnPool.length > 0) template = spawnPool[Math.floor(Math.random() * spawnPool.length)];
-                
+
                 if (template) {
                     const isSymbol = template.id.startsWith('img_num') || template.id.startsWith('img_char') || template.id.startsWith('math_');
-                    
+
                     newItem = {
-                        uid: uidCounter.current++, 
-                        id: template.id, 
-                        type: spawnType, 
+                        uid: uidCounter.current++,
+                        id: template.id,
+                        type: spawnType,
                         name: template.name,
                         imageUrl: template.imageUrl,
                         value: template.value,
-                        x: Math.random() * 80 + 10, 
+                        x: Math.random() * 80 + 10,
                         y: -15,
                         speed: ((Math.random() * 0.15 + 0.25) * difficultyMultiplier) * speedModifier,
-                        rotation: 0, 
-                        rotSpeed: isThinkingGame ? (Math.random() - 0.5) * 1 : (Math.random() - 0.5) * 3, 
+                        rotation: 0,
+                        rotSpeed: isThinkingGame ? (Math.random() - 0.5) * 1 : (Math.random() - 0.5) * 3,
                         scale: 1,
-                        shouldSpin: !isSymbol, 
-                        baseRotation: (Math.random() - 0.5) * 10 
+                        shouldSpin: !isSymbol,
+                        baseRotation: (Math.random() - 0.5) * 10
                     };
                 } else { return; }
             }
-            
+
             // @ts-ignore
             setItems(prev => [...prev, newItem]);
             lastSpawnTime.current = time;
@@ -537,41 +537,41 @@ const CatchGame: React.FC<CatchGameProps> = ({ onGoHome, onCorrectAnswer, isSoun
 
         setItems(prevItems => {
             const nextItems: FallingItem[] = [];
-            
+
             prevItems.forEach(item => {
                 item.y += item.speed;
-                
+
                 if (item.shouldSpin) {
                     item.rotation += item.rotSpeed;
                 } else {
-                    item.rotation = item.baseRotation + Math.sin(time * 0.005) * 15; 
+                    item.rotation = item.baseRotation + Math.sin(time * 0.005) * 15;
                 }
 
                 // Hitbox Logic (Player Catch)
-                const playerTop = 75; 
-                const playerBottom = 85; 
-                const playerLeft = playerX - 10; 
+                const playerTop = 75;
+                const playerBottom = 85;
+                const playerLeft = playerX - 10;
                 const playerRight = playerX + 10;
-                const itemBottom = item.y + 8; 
+                const itemBottom = item.y + 8;
                 const itemLeft = item.x - 4;
                 const itemRight = item.x + 4;
 
-                const isColliding = 
-                    itemBottom >= playerTop && 
-                    itemBottom <= playerBottom && 
-                    itemRight >= playerLeft && 
+                const isColliding =
+                    itemBottom >= playerTop &&
+                    itemBottom <= playerBottom &&
+                    itemRight >= playerLeft &&
                     itemLeft <= playerRight;
 
                 if (isColliding) {
                     const processedItem = { ...item };
-                    const wasProcessed = processCatch(processedItem); 
-                    if (wasProcessed) return; 
+                    const wasProcessed = processCatch(processedItem);
+                    if (wasProcessed) return;
                 }
 
                 if (item.y > 105) return;
                 nextItems.push(item);
             });
-            
+
             return nextItems;
         });
 
@@ -615,8 +615,8 @@ const CatchGame: React.FC<CatchGameProps> = ({ onGoHome, onCorrectAnswer, isSoun
     const handleTouchEnd = () => setPlayerDirection('idle');
 
     const MenuButton: React.FC<{ label: string, subLabel: string, icon: string, color: string, onClick: () => void }> = ({ label, subLabel, icon, color, onClick }) => (
-        <button 
-            onClick={onClick} 
+        <button
+            onClick={onClick}
             className={`group relative w-full p-4 rounded-2xl shadow-lg transform hover:scale-105 active:scale-95 transition-all flex items-center gap-4 border-4 border-white/50 overflow-hidden ${color}`}
         >
             <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-20 transition-opacity"></div>
@@ -631,8 +631,8 @@ const CatchGame: React.FC<CatchGameProps> = ({ onGoHome, onCorrectAnswer, isSoun
     );
 
     return (
-        <div 
-            className="fixed inset-0 z-[100] bg-gradient-to-b from-sky-300 via-sky-200 to-indigo-200 overflow-hidden touch-none select-none font-sans"
+        <div
+            className="relative w-full h-full z-0 bg-gradient-to-b from-sky-300 via-sky-200 to-indigo-200 overflow-hidden touch-none select-none font-sans"
             onPointerMove={handlePointerMove}
             onPointerLeave={handleTouchEnd}
             onTouchMove={handleTouchMove}
@@ -645,7 +645,7 @@ const CatchGame: React.FC<CatchGameProps> = ({ onGoHome, onCorrectAnswer, isSoun
                 <div className="absolute top-32 left-0 w-full h-32 bg-[url('https://www.transparenttextures.com/patterns/clouds.png')] opacity-40 animate-slide-slower"></div>
             </div>
             <div className="absolute bottom-0 w-full h-[12%] bg-[#4ade80] border-t-8 border-[#22c55e] shadow-inner">
-                 <div className="w-full h-full bg-[url('https://www.transparenttextures.com/patterns/grass.png')] opacity-30"></div>
+                <div className="w-full h-full bg-[url('https://www.transparenttextures.com/patterns/grass.png')] opacity-30"></div>
             </div>
 
             {/* Header */}
@@ -685,18 +685,18 @@ const CatchGame: React.FC<CatchGameProps> = ({ onGoHome, onCorrectAnswer, isSoun
                 <div key={p.id} className="absolute rounded-full pointer-events-none" style={{ left: `${p.x}%`, top: `${p.y}%`, width: `${p.size}px`, height: `${p.size}px`, backgroundColor: p.color, opacity: p.life, transform: 'translate(-50%, -50%)' }} />
             ))}
             {floatingTexts.map(t => (
-                <div key={t.id} className="absolute font-black text-3xl pointer-events-none drop-shadow-md whitespace-nowrap" style={{ left: `${t.x}%`, top: `${t.y}%`, color: t.color, opacity: t.life, transform: 'translate(-50%, -50%) scale(' + (1 + (1-t.life)) + ')', textShadow: '0px 2px 0px rgba(0,0,0,0.5), -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff' }}>{t.text}</div>
+                <div key={t.id} className="absolute font-black text-3xl pointer-events-none drop-shadow-md whitespace-nowrap" style={{ left: `${t.x}%`, top: `${t.y}%`, color: t.color, opacity: t.life, transform: 'translate(-50%, -50%) scale(' + (1 + (1 - t.life)) + ')', textShadow: '0px 2px 0px rgba(0,0,0,0.5), -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff' }}>{t.text}</div>
             ))}
-            
+
             {/* Items with Click Handler */}
             {items.map(item => (
-                <div 
-                    key={item.uid} 
-                    className="absolute w-24 h-24 sm:w-32 sm:h-32 will-change-transform cursor-pointer z-20" 
-                    style={{ 
-                        left: `${item.x}%`, 
-                        top: `${item.y}%`, 
-                        transform: `translateX(-50%) rotate(${item.rotation}deg) scale(${item.scale})` 
+                <div
+                    key={item.uid}
+                    className="absolute w-24 h-24 sm:w-32 sm:h-32 will-change-transform cursor-pointer z-20"
+                    style={{
+                        left: `${item.x}%`,
+                        top: `${item.y}%`,
+                        transform: `translateX(-50%) rotate(${item.rotation}deg) scale(${item.scale})`
                     }}
                     onPointerDown={(e) => handleItemClick(e, item.uid)}
                 >
@@ -720,21 +720,21 @@ const CatchGame: React.FC<CatchGameProps> = ({ onGoHome, onCorrectAnswer, isSoun
                 <div className="absolute inset-0 flex items-center justify-center z-50 bg-black/70 backdrop-blur-md p-4 overflow-y-auto">
                     <div className="bg-white p-6 md:p-8 rounded-[3rem] shadow-2xl max-w-3xl w-full text-center border-8 border-sky-400 animate-pop-in relative my-auto">
                         <div className="mb-2 flex justify-center">
-                             <img src={`${ASSET_BASE_URL}/assets/images/gom-sac.png`} className="w-24 h-24 md:w-32 md:h-32 object-contain animate-bounce" />
+                            <img src={`${ASSET_BASE_URL}/assets/images/gom-sac.png`} className="w-24 h-24 md:w-32 md:h-32 object-contain animate-bounce" />
                         </div>
                         <h2 className="text-3xl md:text-5xl font-black text-purple-600 mb-2">Hứng Đồ Vật</h2>
                         <p className="text-base md:text-lg text-gray-700 mb-6 font-bold">Chọn chủ đề bé thích nhé!</p>
 
                         {/* Tilt Control Button */}
                         {!isTiltEnabled && (
-                            <button 
+                            <button
                                 onClick={requestTiltPermission}
                                 className="mb-6 bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-3 px-6 rounded-full text-xl shadow-lg flex items-center justify-center gap-2 mx-auto animate-pulse"
                             >
                                 <span>📱</span> Bật chế độ nghiêng máy (iPad)
                             </button>
                         )}
-                        
+
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
                             <MenuButton label="Gia Đình" subLabel="Ghép tên Ba, Mẹ..." icon={`${ASSET_BASE_URL}/assets/images/ba-cuong.png`} color="bg-pink-500 hover:bg-pink-600" onClick={() => startGame('family')} />
                             <MenuButton label="Toán Học" subLabel="Cộng: 1 + 2 = 3" icon={`${ASSET_BASE_URL}/assets/images/writing/math_plus.png`} color="bg-blue-500 hover:bg-blue-600" onClick={() => startGame('math')} />

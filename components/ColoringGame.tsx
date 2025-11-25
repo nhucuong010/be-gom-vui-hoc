@@ -317,7 +317,7 @@ const ColoringGame: React.FC<ColoringGameProps> = ({ onGoHome, isSoundOn }) => {
     };
 
     return (
-        <div className="fixed inset-0 bg-gradient-to-br from-yellow-100 via-pink-100 to-purple-100 flex flex-col overflow-hidden">
+        <div className="relative w-full h-full bg-gradient-to-br from-yellow-100 via-pink-100 to-purple-100 flex flex-col overflow-hidden">
             {/* Header */}
             <div className="flex justify-between items-center p-3 md:p-4 bg-white/90 backdrop-blur shadow-lg z-10">
                 <button
@@ -388,8 +388,8 @@ const ColoringGame: React.FC<ColoringGameProps> = ({ onGoHome, isSoundOn }) => {
                                     if (isSoundOn) playSound('click', isSoundOn);
                                 }}
                                 className={`flex flex-col items-center gap-1 py-3 rounded-2xl font-bold transition-all ${toolMode === 'fill'
-                                        ? 'bg-gradient-to-br from-purple-500 to-pink-500 text-white shadow-2xl scale-105 ring-4 ring-purple-300'
-                                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200 shadow-md'
+                                    ? 'bg-gradient-to-br from-purple-500 to-pink-500 text-white shadow-2xl scale-105 ring-4 ring-purple-300'
+                                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200 shadow-md'
                                     }`}
                             >
                                 <span className="text-3xl">🪣</span>
@@ -401,8 +401,8 @@ const ColoringGame: React.FC<ColoringGameProps> = ({ onGoHome, isSoundOn }) => {
                                     if (isSoundOn) playSound('click', isSoundOn);
                                 }}
                                 className={`flex flex-col items-center gap-1 py-3 rounded-2xl font-bold transition-all ${toolMode === 'brush'
-                                        ? 'bg-gradient-to-br from-purple-500 to-pink-500 text-white shadow-2xl scale-105 ring-4 ring-purple-300'
-                                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200 shadow-md'
+                                    ? 'bg-gradient-to-br from-purple-500 to-pink-500 text-white shadow-2xl scale-105 ring-4 ring-purple-300'
+                                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200 shadow-md'
                                     }`}
                             >
                                 <span className="text-3xl">🖌️</span>
@@ -414,8 +414,8 @@ const ColoringGame: React.FC<ColoringGameProps> = ({ onGoHome, isSoundOn }) => {
                                     if (isSoundOn) playSound('click', isSoundOn);
                                 }}
                                 className={`flex flex-col items-center gap-1 py-3 rounded-2xl font-bold transition-all ${toolMode === 'eraser'
-                                        ? 'bg-gradient-to-br from-purple-500 to-pink-500 text-white shadow-2xl scale-105 ring-4 ring-purple-300'
-                                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200 shadow-md'
+                                    ? 'bg-gradient-to-br from-purple-500 to-pink-500 text-white shadow-2xl scale-105 ring-4 ring-purple-300'
+                                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200 shadow-md'
                                     }`}
                             >
                                 <span className="text-3xl">🧹</span>

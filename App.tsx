@@ -250,14 +250,17 @@ const App: React.FC = () => {
     const showRewardProgress = !['home', 'resource_generator'].includes(gameState);
 
     return (
-        <main className="fixed inset-0 h-[100dvh] w-full bg-gradient-to-br from-pink-200 via-purple-200 to-indigo-200 font-sans select-none">
-            <div className="w-full h-full overflow-y-auto pt-safe flex flex-col items-center justify-start p-4 sm:p-6 md:py-8 md:px-4 gap-4">
-                {showRewardProgress && (
+        <main className="fixed inset-0 h-[100dvh] w-full bg-gradient-to-br from-pink-200 via-purple-200 to-indigo-200 font-sans select-none overflow-hidden flex flex-col">
+            {/* Reward Progress - Fixed at top */}
+            {showRewardProgress && (
+                <div className="flex-shrink-0 w-full z-40 pt-safe px-4 py-2">
                     <RewardProgress current={correctAnswersForBigReward} goal={BIG_REWARD_THRESHOLD} />
-                )}
-                <div className="relative w-full flex flex-col items-center flex-grow">
-                    {renderGame()}
                 </div>
+            )}
+
+            {/* Game Container - Takes remaining space */}
+            <div className="flex-grow w-full relative overflow-hidden flex flex-col">
+                {renderGame()}
             </div>
 
             {lastUnlockedSticker && (

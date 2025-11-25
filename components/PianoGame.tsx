@@ -217,7 +217,7 @@ const PianoGame: React.FC<PianoGameProps> = ({ onGoHome, isSoundOn }) => {
     };
 
     return (
-        <div className="fixed inset-0 bg-[#1a1a2e] flex flex-col items-center justify-center overflow-hidden touch-none select-none">
+        <div className="relative w-full h-full bg-[#1a1a2e] flex flex-col items-center justify-center overflow-hidden touch-none select-none">
             {showConfetti && <Confetti />}
 
             {/* Header */}
