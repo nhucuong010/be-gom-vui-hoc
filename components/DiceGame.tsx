@@ -36,11 +36,11 @@ const Die: React.FC<{ value: number; isRolling: boolean }> = ({ value, isRolling
         5: <div className="flex justify-between w-full h-full p-2"><div className="flex flex-col justify-between"><Dot /><Dot /></div><div className="flex flex-col justify-center items-center"><Dot /></div><div className="flex flex-col justify-between"><Dot /><Dot /></div></div>,
         6: <div className="flex justify-between w-full h-full p-2"><div className="flex flex-col justify-between"><Dot /><Dot /><Dot /></div><div className="flex flex-col justify-between"><Dot /><Dot /><Dot /></div></div>,
     };
-    
+
     return (
         <div className="relative w-32 h-32 md:w-44 md:h-44 flex justify-center items-end">
             {/* Shadow Effect */}
-            <div 
+            <div
                 className={`absolute -bottom-8 w-full h-6 bg-black/20 rounded-[50%] blur-md transition-all duration-300`}
                 style={isRolling ? {
                     animation: 'shadowBounce 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards',
@@ -48,7 +48,7 @@ const Die: React.FC<{ value: number; isRolling: boolean }> = ({ value, isRolling
             />
 
             {/* The Die Block */}
-            <div 
+            <div
                 className={`relative w-full h-full bg-white rounded-2xl shadow-[inset_0_-4px_8px_rgba(0,0,0,0.1),0_4px_10px_rgba(0,0,0,0.15)] border-2 border-gray-100 p-2 md:p-4 z-10`}
                 style={isRolling ? {
                     animation: 'diceToss 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards',
@@ -109,7 +109,7 @@ const NumberPad: React.FC<{ onNumberClick: (num: string) => void, onClear: () =>
             {buttons.map(btn => {
                 const isClear = btn === '⌫';
                 return (
-                    <button 
+                    <button
                         key={btn}
                         onClick={() => (isClear ? onClear() : onNumberClick(btn))}
                         disabled={disabled}
@@ -128,9 +128,9 @@ const NumberPad: React.FC<{ onNumberClick: (num: string) => void, onClear: () =>
 // --- Main Game Component ---
 
 interface DiceGameProps {
-  onGoHome: () => void;
-  onCorrectAnswer: () => void;
-  isSoundOn: boolean;
+    onGoHome: () => void;
+    onCorrectAnswer: () => void;
+    isSoundOn: boolean;
 }
 
 const DiceGame: React.FC<DiceGameProps> = ({ onGoHome, onCorrectAnswer, isSoundOn }) => {
@@ -140,8 +140,8 @@ const DiceGame: React.FC<DiceGameProps> = ({ onGoHome, onCorrectAnswer, isSoundO
     const [isRolling, setIsRolling] = useState(false);
     const [showResult, setShowResult] = useState<{ message: string; isCorrect: boolean } | null>(null);
     const [gameState, setGameState] = useState<'start' | 'rolling' | 'rolled'>('start');
-    const [rollId, setRollId] = useState(0); 
-    
+    const [rollId, setRollId] = useState(0);
+
     const level = Math.floor(score / 5) + 1;
 
     const handleRoll = () => {
@@ -152,22 +152,22 @@ const DiceGame: React.FC<DiceGameProps> = ({ onGoHome, onCorrectAnswer, isSoundO
         setUserAnswer('');
         setShowResult(null);
         setRollId(prev => prev + 1); // Force re-mount dice for new animation
-        
+
         // 1. Determine result immediately
         // Rule: Sum must be <= 10.
-        
+
         // Dice 1: 1 to 6
         const num1 = Math.floor(Math.random() * 6) + 1;
-        
+
         // Dice 2: 
         // Must be <= 6 (dice limit)
         // AND num1 + num2 <= 10  =>  num2 <= 10 - num1
         const maxNum2 = Math.min(6, 10 - num1);
-        
+
         const num2 = Math.floor(Math.random() * maxNum2) + 1;
-        
+
         const newProblem = { num1, num2, answer: num1 + num2 };
-        
+
         setProblem(newProblem);
         setGameState('rolling');
 
@@ -175,13 +175,13 @@ const DiceGame: React.FC<DiceGameProps> = ({ onGoHome, onCorrectAnswer, isSoundO
         setTimeout(() => {
             setIsRolling(false);
             setGameState('rolled');
-            
+
             const questionText = getEquationText(`${newProblem.num1} + ${newProblem.num2}`, newProblem.answer, 'calculation', true);
             playDynamicSentence(questionText, 'vi', isSoundOn);
 
         }, 1800);
     };
-    
+
     useEffect(() => {
         const checkAnswer = async () => {
             if (gameState !== 'rolled' || !problem || showResult) return;
@@ -189,7 +189,7 @@ const DiceGame: React.FC<DiceGameProps> = ({ onGoHome, onCorrectAnswer, isSoundO
             const answerString = String(problem.answer);
             if (userAnswer.length === answerString.length) {
                 const isCorrect = userAnswer === answerString;
-                
+
                 const feedbackMessage = await playFeedback(isCorrect, isSoundOn);
                 setShowResult({ message: feedbackMessage, isCorrect });
 
@@ -201,7 +201,7 @@ const DiceGame: React.FC<DiceGameProps> = ({ onGoHome, onCorrectAnswer, isSoundO
                         setProblem(null);
                         setUserAnswer('');
                         setShowResult(null);
-                    }, 2500); 
+                    }, 2500);
                 } else {
                     setTimeout(() => {
                         setUserAnswer('');
@@ -222,50 +222,50 @@ const DiceGame: React.FC<DiceGameProps> = ({ onGoHome, onCorrectAnswer, isSoundO
         playSound('click', isSoundOn);
         setUserAnswer(prev => prev.slice(0, -1));
     };
-    
+
     const questionText = useMemo(() => problem ? getEquationText(`${problem.num1} + ${problem.num2}`, problem.answer, 'calculation', true) : '', [problem]);
 
     return (
-        <div className="w-full max-w-4xl mx-auto flex flex-col items-center p-4">
-            <div className="w-full bg-white bg-opacity-80 backdrop-blur-sm rounded-3xl shadow-xl p-8 relative min-h-[600px] flex flex-col">
-                <div className="absolute top-4 right-4 flex items-center bg-yellow-400 text-white font-bold py-2 px-4 rounded-full shadow-md z-20">
-                    <StarIcon className="w-8 h-8 mr-2" />
-                    <span className="text-3xl">{score}</span>
+        <div className="w-full h-full flex flex-col items-center justify-center p-2 md:p-4 overflow-hidden">
+            <div className="w-full max-w-4xl bg-white bg-opacity-80 backdrop-blur-sm rounded-3xl shadow-xl p-4 md:p-6 relative max-h-full flex flex-col overflow-y-auto">
+                <div className="absolute top-2 right-2 md:top-4 md:right-4 flex items-center bg-yellow-400 text-white font-bold py-1 px-3 md:py-2 md:px-4 rounded-full shadow-md z-20">
+                    <StarIcon className="w-6 h-6 md:w-8 md:h-8 mr-2" />
+                    <span className="text-2xl md:text-3xl">{score}</span>
                 </div>
-                <button onClick={onGoHome} className="absolute top-4 left-4 text-purple-500 hover:text-pink-500 transition-colors z-20">
-                    <HomeIcon className="w-12 h-12" />
+                <button onClick={onGoHome} className="absolute top-2 left-2 md:top-4 md:left-4 text-purple-500 hover:text-pink-500 transition-colors z-20">
+                    <HomeIcon className="w-10 h-10 md:w-12 md:h-12" />
                 </button>
 
-                <h2 className="text-6xl md:text-7xl font-bold text-center text-purple-700 mb-2 mt-12">Tung Xúc Xắc</h2>
-                <p className="text-center text-3xl md:text-4xl text-pink-500 mb-8 font-semibold">Cấp độ {level}</p>
+                <h2 className="text-4xl md:text-6xl font-bold text-center text-purple-700 mb-1 mt-8 md:mt-10 flex-shrink-0">Tung Xúc Xắc</h2>
+                <p className="text-center text-xl md:text-3xl text-pink-500 mb-4 font-semibold flex-shrink-0">Cấp độ {level}</p>
 
-                <div className="flex-grow flex flex-col justify-center items-center">
+                <div className="flex-grow flex flex-col justify-center items-center w-full">
                     {gameState === 'start' && (
                         <div className="text-center">
-                            <button onClick={handleRoll} disabled={isRolling} className="bg-green-500 text-white font-bold py-8 px-16 rounded-2xl text-5xl shadow-lg transform hover:scale-105 transition-transform disabled:opacity-50 animate-bounce-slow">
+                            <button onClick={handleRoll} disabled={isRolling} className="bg-green-500 text-white font-bold py-6 px-12 md:py-8 md:px-16 rounded-2xl text-3xl md:text-5xl shadow-lg transform hover:scale-105 transition-transform disabled:opacity-50 animate-bounce-slow">
                                 {isRolling ? 'Đang tung...' : 'Tung Xúc Xắc!'}
                             </button>
                         </div>
                     )}
 
                     {(gameState === 'rolling' || gameState === 'rolled') && problem && (
-                        <div className="flex flex-col items-center gap-6 w-full">
-                            <div className="flex justify-center items-end gap-6 pb-6 pt-32 h-64 w-full overflow-visible">
+                        <div className="flex flex-col items-center gap-4 w-full h-full justify-center">
+                            <div className="flex justify-center items-end gap-4 md:gap-6 pb-4 pt-10 md:pt-20 h-48 md:h-64 w-full overflow-visible flex-shrink-0">
                                 {/* Key ensures remount for animation restart */}
                                 <Die key={`die1-${rollId}`} value={problem.num1} isRolling={isRolling} />
-                                <span className="text-8xl font-bold text-gray-700 pb-8">+</span>
+                                <span className="text-6xl md:text-8xl font-bold text-gray-700 pb-6 md:pb-8">+</span>
                                 <Die key={`die2-${rollId}`} value={problem.num2} isRolling={isRolling} />
                             </div>
-                            
+
                             {!isRolling && (
-                                <div className="animate-fade-in w-full flex flex-col items-center">
-                                    <div className="flex items-center justify-center gap-2 mb-4">
-                                        <p className="text-5xl text-center text-purple-600 font-semibold">{problem.num1} + {problem.num2} = ?</p>
+                                <div className="animate-fade-in w-full flex flex-col items-center flex-grow justify-start">
+                                    <div className="flex items-center justify-center gap-2 mb-2 md:mb-4">
+                                        <p className="text-3xl md:text-5xl text-center text-purple-600 font-semibold">{problem.num1} + {problem.num2} = ?</p>
                                         <ReadAloudButton text={questionText} lang="vi" isSoundOn={isSoundOn} />
                                     </div>
 
-                                    <div className="w-full flex flex-col items-center gap-4">
-                                        <div className={`p-4 bg-white rounded-xl shadow-inner min-w-[200px] text-center text-8xl font-bold text-purple-800 transition-colors
+                                    <div className="w-full flex flex-col items-center gap-2 md:gap-4">
+                                        <div className={`p-2 md:p-4 bg-white rounded-xl shadow-inner min-w-[150px] md:min-w-[200px] text-center text-6xl md:text-8xl font-bold text-purple-800 transition-colors
                                             ${showResult?.isCorrect ? 'bg-green-200' : ''}
                                             ${showResult && !showResult.isCorrect ? 'bg-red-200' : ''}
                                         `}>
@@ -279,13 +279,13 @@ const DiceGame: React.FC<DiceGameProps> = ({ onGoHome, onCorrectAnswer, isSoundO
                     )}
                 </div>
             </div>
-             {showResult && showResult.isCorrect && (
+            {showResult && showResult.isCorrect && (
                 <>
                     <CorrectAnswerPopup message={showResult.message} />
                     <Confetti />
                 </>
             )}
-             <style>{`
+            <style>{`
                 .animate-bounce-slow {
                     animation: bounce 2s infinite;
                 }

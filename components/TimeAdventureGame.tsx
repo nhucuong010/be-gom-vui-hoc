@@ -9,9 +9,9 @@ import CorrectAnswerPopup from './CorrectAnswerPopup';
 import ReadAloudButton from './ReadAloudButton';
 
 interface TimeAdventureGameProps {
-  onGoHome: () => void;
-  onCorrectAnswer: () => void;
-  isSoundOn: boolean;
+    onGoHome: () => void;
+    onCorrectAnswer: () => void;
+    isSoundOn: boolean;
 }
 
 const TimeAdventureGame: React.FC<TimeAdventureGameProps> = ({ onGoHome, onCorrectAnswer, isSoundOn }) => {
@@ -95,66 +95,67 @@ const TimeAdventureGame: React.FC<TimeAdventureGameProps> = ({ onGoHome, onCorre
     }
 
     return (
-        <div className="w-full max-w-6xl mx-auto flex flex-col items-center p-2 md:p-4 min-h-screen">
-            <div className="w-full bg-teal-50/90 backdrop-blur-sm rounded-[2rem] shadow-2xl p-4 md:p-8 relative flex flex-col items-center border-4 border-teal-200">
-                
+    return (
+        <div className="w-full h-full flex flex-col items-center justify-center p-2 md:p-4 overflow-hidden">
+            <div className="w-full max-w-6xl bg-teal-50/90 backdrop-blur-sm rounded-[2rem] shadow-2xl p-4 relative flex flex-col items-center border-4 border-teal-200 max-h-full overflow-y-auto">
+
                 {/* Header */}
-                <div className="w-full flex justify-between items-center mb-6">
-                    <button onClick={() => { stopAllSounds(); onGoHome(); }} className="bg-white p-3 rounded-full shadow-md text-teal-600 hover:text-teal-800 transition-colors">
-                        <HomeIcon className="w-8 h-8" />
+                <div className="w-full flex justify-between items-center mb-2 flex-shrink-0">
+                    <button onClick={() => { stopAllSounds(); onGoHome(); }} className="bg-white p-2 md:p-3 rounded-full shadow-md text-teal-600 hover:text-teal-800 transition-colors">
+                        <HomeIcon className="w-6 h-6 md:w-8 md:h-8" />
                     </button>
-                    <div className="flex items-center bg-yellow-400 text-white px-6 py-2 rounded-full shadow-md">
-                        <StarIcon className="w-8 h-8 mr-2" />
-                        <span className="text-3xl font-bold">{score}</span>
+                    <div className="flex items-center bg-yellow-400 text-white px-4 py-1 md:px-6 md:py-2 rounded-full shadow-md">
+                        <StarIcon className="w-6 h-6 md:w-8 md:h-8 mr-2" />
+                        <span className="text-2xl md:text-3xl font-bold">{score}</span>
                     </div>
                 </div>
 
-                {/* Question Image - Changed to aspect-square and reduced max-width */}
-                <div className="relative w-full max-w-lg aspect-square bg-white rounded-3xl shadow-lg overflow-hidden mb-6 border-4 border-white">
+                {/* Question Image - Flexible height */}
+                <div className="relative w-full max-w-md aspect-square max-h-[30vh] bg-white rounded-3xl shadow-lg overflow-hidden mb-4 border-4 border-white flex-shrink-0">
                     <img src={currentQuestion.imageUrl} alt="Question Scene" className="w-full h-full object-cover" />
                 </div>
 
                 {/* Question Text */}
-                <div className="flex items-center justify-center gap-3 mb-8 bg-white/60 px-6 py-3 rounded-2xl shadow-sm">
-                    <h2 className="text-2xl md:text-4xl font-bold text-teal-800 text-center">{currentQuestion.questionText}</h2>
+                <div className="flex items-center justify-center gap-3 mb-4 bg-white/60 px-4 py-2 rounded-2xl shadow-sm flex-shrink-0">
+                    <h2 className="text-xl md:text-3xl font-bold text-teal-800 text-center">{currentQuestion.questionText}</h2>
                     <ReadAloudButton text={currentQuestion.questionText} lang="vi" isSoundOn={isSoundOn} game="time_adventure" />
                 </div>
 
                 {/* Options */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full max-w-4xl">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full max-w-4xl overflow-y-auto p-1">
                     {currentQuestion.options.map((option, idx) => (
                         <div
                             key={idx}
                             role="button"
                             onClick={() => !feedback && handleAnswer(option.isCorrect)}
-                            className={`flex flex-col items-center justify-center bg-white p-4 rounded-2xl shadow-md transform transition-all hover:scale-105 hover:shadow-xl active:scale-95 border-b-8 ${feedback ? 'cursor-not-allowed opacity-80' : 'cursor-pointer border-teal-200'}`}
+                            className={`flex flex-col items-center justify-center bg-white p-3 md:p-4 rounded-2xl shadow-md transform transition-all hover:scale-105 hover:shadow-xl active:scale-95 border-b-8 ${feedback ? 'cursor-not-allowed opacity-80' : 'cursor-pointer border-teal-200'}`}
                         >
                             {option.imageUrl && (
-                                <img src={option.imageUrl} alt={option.text} className="w-24 h-24 object-contain mb-2" />
+                                <img src={option.imageUrl} alt={option.text} className="w-16 h-16 md:w-20 md:h-20 object-contain mb-2" />
                             )}
-                            
+
                             {/* Vietnamese Text + Read Aloud Button */}
                             <div className="flex items-center gap-2 mb-1">
-                                <span className="text-xl md:text-2xl font-bold text-gray-800">{option.text}</span>
-                                <div 
-                                    onClick={(e) => e.stopPropagation()} 
+                                <span className="text-lg md:text-xl font-bold text-gray-800">{option.text}</span>
+                                <div
+                                    onClick={(e) => e.stopPropagation()}
                                     className="p-1 hover:bg-gray-100 rounded-full transition-colors"
                                 >
-                                    <ReadAloudButton 
-                                        text={option.text} 
-                                        lang="vi" 
-                                        isSoundOn={isSoundOn} 
-                                        game="time_adventure" 
-                                        className="w-8 h-8 text-teal-500"
+                                    <ReadAloudButton
+                                        text={option.text}
+                                        lang="vi"
+                                        isSoundOn={isSoundOn}
+                                        game="time_adventure"
+                                        className="w-6 h-6 text-teal-500"
                                     />
                                 </div>
                             </div>
-                            
+
                             {/* English & IPA Display */}
                             {option.english && (
                                 <div className="flex flex-col items-center border-t border-teal-100 pt-2 w-full mt-1">
-                                    <span className="text-lg font-semibold text-pink-500">{option.english}</span>
-                                    {option.ipa && <span className="text-sm text-gray-500 font-serif italic">[{option.ipa}]</span>}
+                                    <span className="text-base font-semibold text-pink-500">{option.english}</span>
+                                    {option.ipa && <span className="text-xs text-gray-500 font-serif italic">[{option.ipa}]</span>}
                                 </div>
                             )}
                         </div>
