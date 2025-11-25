@@ -40,46 +40,27 @@ const SONGS = [
     {
         id: 'happy_birthday',
         name: 'Happy Birthday 🎂',
-        notes: [
-            'C4', 'C4', 'D4', 'C4', 'F4', 'E4',
-            'C4', 'C4', 'D4', 'C4', 'G4', 'F4',
-            'C4', 'C4', 'C5', 'A4', 'F4', 'E4', 'D4',
-            'A#4', 'A#4', 'A4', 'F4', 'G4', 'F4'
-        ]
+        notes: ['C4', 'C4', 'D4', 'C4', 'F4', 'E4', 'C4', 'C4', 'D4', 'C4', 'G4', 'F4']
     },
     {
         id: 'twinkle',
         name: 'Twinkle Star 🌟',
-        notes: [
-            'C4', 'C4', 'G4', 'G4', 'A4', 'A4', 'G4',
-            'F4', 'F4', 'E4', 'E4', 'D4', 'D4', 'C4',
-            'G4', 'G4', 'F4', 'F4', 'E4', 'E4', 'D4',
-            'G4', 'G4', 'F4', 'F4', 'E4', 'E4', 'D4',
-            'C4', 'C4', 'G4', 'G4', 'A4', 'A4', 'G4',
-            'F4', 'F4', 'E4', 'E4', 'D4', 'D4', 'C4'
-        ]
+        notes: ['C4', 'C4', 'G4', 'G4', 'A4', 'A4', 'G4', 'F4', 'F4', 'E4', 'E4', 'D4', 'D4', 'C4']
     },
     {
         id: 'jingle_bells',
         name: 'Jingle Bells 🎄',
-        notes: [
-            'E4', 'E4', 'E4',
-            'E4', 'E4', 'E4',
-            'E4', 'G4', 'C4', 'D4', 'E4',
-            'F4', 'F4', 'F4', 'F4',
-            'F4', 'E4', 'E4', 'E4', 'E4',
-            'G4', 'G4', 'F4', 'D4', 'C4'
-        ]
+        notes: ['E4', 'E4', 'E4', 'E4', 'E4', 'E4', 'E4', 'G4', 'C4', 'D4', 'E4', 'F4', 'F4', 'F4', 'F4', 'F4', 'E4', 'E4', 'E4', 'E4', 'D4', 'D4', 'E4', 'D4', 'G4']
+    },
+    {
+        id: 'mary_lamb',
+        name: 'Mary Had a Little Lamb 🐑',
+        notes: ['E4', 'D4', 'C4', 'D4', 'E4', 'E4', 'E4', 'D4', 'D4', 'D4', 'E4', 'G4', 'G4', 'E4', 'D4', 'C4', 'D4', 'E4', 'E4', 'E4', 'E4', 'D4', 'D4', 'E4', 'D4', 'C4']
     },
     {
         id: 'baby_shark',
         name: 'Baby Shark 🦈',
-        notes: [
-            'D4', 'E4', 'G4', 'G4', 'G4', 'G4', 'G4', 'G4', 'G4',
-            'D4', 'E4', 'G4', 'G4', 'G4', 'G4', 'G4', 'G4', 'G4',
-            'D4', 'E4', 'G4', 'G4', 'G4', 'G4', 'G4', 'G4', 'G4',
-            'G4', 'G4', 'F#4'
-        ]
+        notes: ['D4', 'E4', 'G4', 'G4', 'G4', 'G4', 'G4', 'G4', 'D4', 'E4', 'G4', 'G4', 'G4', 'G4', 'G4', 'G4', 'D4', 'E4', 'G4', 'G4', 'G4', 'G4', 'G4', 'G4', 'G4', 'G4', 'F#4']
     },
     {
         id: 'mot_con_vit',
@@ -99,7 +80,7 @@ const SONGS = [
             'C4', 'C4', 'G4', 'G4', 'A4', 'G4', 'F4', 'E4',
             'D4', 'D4', 'E4', 'E4', 'F4', 'F4', 'E4', 'D4', 'C4'
         ]
-    },
+    }
 ];
 
 const PianoGame: React.FC<PianoGameProps> = ({ onGoHome, isSoundOn }) => {

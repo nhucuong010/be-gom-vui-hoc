@@ -264,9 +264,12 @@ const onlineShoppingAudioTexts = new Set([
 // --- Piano Audio ---
 const pianoAudioTexts = new Set([
     "Bé hãy đánh bài Happy Birthday 🎂 nhé!",
-    "Bé hãy đánh bài Twinkle Star 🌟 nhé!",
-    "Bé hãy đánh bài Jingle Bells 🎄 nhé!",
+    "Bé hãy đánh bài Twinkle Twinkle ✨ nhé!",
+    "Bé hãy đánh bài Jingle Bells 🔔 nhé!",
+    "Bé hãy đánh bài Mary Had a Little Lamb 🐑 nhé!",
     "Bé hãy đánh bài Baby Shark 🦈 nhé!",
+    "Tuyệt vời! Bé đã hoàn thành bài nhạc!",
+    "Cố lên bé ơi, thử lại nốt này nhé!",
     "Bé hãy đánh bài Một Con Vịt 🦆 nhé!",
     "Bé hãy đánh bài Con Cò 🐦 nhé!",
     "Hoan hô! Bé giỏi quá!"
