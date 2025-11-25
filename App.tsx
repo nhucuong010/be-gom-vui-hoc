@@ -26,7 +26,7 @@ import PianoGame from './components/PianoGame';
 import ColoringGame from './components/ColoringGame';
 import ResourceGenerator from './components/ResourceGenerator';
 import StickerUnlockedPopup from './components/StickerUnlockedPopup';
-import RewardProgress from './components/RewardProgress';
+
 import CartoonPlayer from './components/CartoonPlayer';
 import type { GameState, Sticker } from './types';
 import { imagePrompts } from './data/imagePrompts';
@@ -247,16 +247,8 @@ const App: React.FC = () => {
         }
     };
 
-    const showRewardProgress = !['home', 'resource_generator'].includes(gameState);
-
     return (
         <main className="fixed inset-0 h-[100dvh] w-full bg-gradient-to-br from-pink-200 via-purple-200 to-indigo-200 font-sans select-none overflow-hidden flex flex-col">
-            {/* Reward Progress - Fixed at top */}
-            {showRewardProgress && (
-                <div className="flex-shrink-0 w-full z-40 pt-safe px-4 py-2">
-                    <RewardProgress current={correctAnswersForBigReward} goal={BIG_REWARD_THRESHOLD} />
-                </div>
-            )}
 
             {/* Game Container - Takes remaining space */}
             <div className="flex-grow w-full relative overflow-hidden flex flex-col">
