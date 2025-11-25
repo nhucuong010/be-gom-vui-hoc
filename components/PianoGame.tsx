@@ -248,7 +248,7 @@ const PianoGame: React.FC<PianoGameProps> = ({ onGoHome, isSoundOn }) => {
     };
 
     return (
-        <div className="relative w-full h-full bg-[#1a1a2e] flex flex-col items-center justify-center overflow-hidden touch-none select-none">
+        <div className="relative w-full h-full bg-[#1a1a2e] flex flex-col items-center overflow-hidden touch-none select-none">
             {!isAudioReady && (
                 <div
                     className="absolute inset-0 z-[100] bg-black/80 flex flex-col items-center justify-center cursor-pointer"
@@ -264,30 +264,35 @@ const PianoGame: React.FC<PianoGameProps> = ({ onGoHome, isSoundOn }) => {
             )}
             {showConfetti && <Confetti />}
 
-            {/* Header */}
-            <div className="absolute top-4 left-4 right-4 flex justify-between items-start z-50">
-                <button onClick={() => { stopAllSounds(); onGoHome(); }} className="bg-white p-3 rounded-full shadow-lg hover:scale-110 transition-transform">
-                    <HomeIcon className="w-8 h-8 text-purple-600" />
+            {/* Header - Compact on landscape */}
+            <div className="w-full flex justify-between items-start p-4 z-50 flex-shrink-0">
+                <button onClick={() => { stopAllSounds(); onGoHome(); }} className="bg-white p-2 md:p-3 rounded-full shadow-lg hover:scale-110 transition-transform">
+                    <HomeIcon className="w-6 h-6 md:w-8 md:h-8 text-purple-600" />
                 </button>
 
+                {/* Title - Hidden on very small landscape screens to save space */}
+                <h2 className="hidden md:block text-2xl md:text-5xl font-black text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.5)] text-center absolute left-1/2 -translate-x-1/2 top-4 pointer-events-none">
+                    {mode === 'tutorial' ? currentSong.name : 'Bé Làm Nhạc Sĩ'}
+                </h2>
+
                 <div className="flex flex-col items-end gap-2">
-                    <div className="flex gap-4">
+                    <div className="flex gap-2 md:gap-4">
                         <button
                             onClick={() => { setMode('free'); setTutorialIndex(0); setShowConfetti(false); }}
-                            className={`px-4 py-2 md:px-6 md:py-2 rounded-full font-bold text-lg md:text-xl shadow-lg transition-all ${mode === 'free' ? 'bg-pink-500 text-white scale-105 ring-4 ring-pink-300' : 'bg-white text-gray-600'}`}
+                            className={`px-3 py-1 md:px-6 md:py-2 rounded-full font-bold text-sm md:text-xl shadow-lg transition-all ${mode === 'free' ? 'bg-pink-500 text-white scale-105 ring-2 md:ring-4 ring-pink-300' : 'bg-white text-gray-600'}`}
                         >
                             Tự Do
                         </button>
                         <button
                             onClick={() => { setMode('tutorial'); setTutorialIndex(0); setShowConfetti(false); }}
-                            className={`px-4 py-2 md:px-6 md:py-2 rounded-full font-bold text-lg md:text-xl shadow-lg transition-all ${mode === 'tutorial' ? 'bg-blue-500 text-white scale-105 ring-4 ring-blue-300' : 'bg-white text-gray-600'}`}
+                            className={`px-3 py-1 md:px-6 md:py-2 rounded-full font-bold text-sm md:text-xl shadow-lg transition-all ${mode === 'tutorial' ? 'bg-blue-500 text-white scale-105 ring-2 md:ring-4 ring-blue-300' : 'bg-white text-gray-600'}`}
                         >
                             Học Đàn
                         </button>
                     </div>
 
                     {mode === 'tutorial' && (
-                        <div className="bg-white/90 backdrop-blur rounded-xl p-2 shadow-xl border-2 border-blue-200">
+                        <div className="bg-white/90 backdrop-blur rounded-xl p-1 md:p-2 shadow-xl border-2 border-blue-200 max-w-[200px] md:max-w-none">
                             <select
                                 value={currentSongIndex}
                                 onChange={(e) => {
@@ -295,7 +300,7 @@ const PianoGame: React.FC<PianoGameProps> = ({ onGoHome, isSoundOn }) => {
                                     setTutorialIndex(0);
                                     setShowConfetti(false);
                                 }}
-                                className="bg-transparent text-blue-900 font-bold text-lg outline-none cursor-pointer"
+                                className="bg-transparent text-blue-900 font-bold text-sm md:text-lg outline-none cursor-pointer w-full"
                             >
                                 {SONGS.map((song, idx) => (
                                     <option key={song.id} value={idx}>{song.name}</option>
@@ -306,14 +311,14 @@ const PianoGame: React.FC<PianoGameProps> = ({ onGoHome, isSoundOn }) => {
                 </div>
             </div>
 
-            {/* Title */}
-            <h2 className="text-3xl md:text-5xl font-black text-white mb-4 mt-20 drop-shadow-[0_0_10px_rgba(255,255,255,0.5)] text-center px-4">
+            {/* Mobile Landscape Title (Small) */}
+            <div className="md:hidden text-white font-bold text-lg mb-1 opacity-80">
                 {mode === 'tutorial' ? currentSong.name : 'Bé Làm Nhạc Sĩ'}
-            </h2>
+            </div>
 
-            {/* Piano Container */}
-            <div className="relative flex items-start justify-center h-60 md:h-80 px-4 pb-10 w-full max-w-5xl overflow-x-auto no-scrollbar">
-                <div className="relative flex h-full shadow-2xl rounded-b-xl overflow-hidden bg-gray-900 border-t-8 border-gray-800 p-1">
+            {/* Piano Container - Flex Grow to fill space */}
+            <div className="relative flex-grow w-full flex items-end justify-center pb-2 md:pb-10 overflow-x-auto no-scrollbar px-4">
+                <div className="relative flex h-full max-h-[300px] md:max-h-[400px] shadow-2xl rounded-b-xl overflow-hidden bg-gray-900 border-t-4 md:border-t-8 border-gray-800 p-1">
                     {NOTES.map((n, idx) => {
                         const isBlack = n.type === 'black';
                         const isActive = activeKeys.has(n.note);
@@ -347,7 +352,7 @@ const PianoGame: React.FC<PianoGameProps> = ({ onGoHome, isSoundOn }) => {
                                     onTouchStart={(e) => handleTouchStart(e, n.note, n.freq)}
                                     onTouchEnd={(e) => handleTouchEnd(e, n.note)}
                                     className={`
-                                        w-10 md:w-16 h-full border border-gray-300 rounded-b-lg active:bg-gray-200 transition-colors
+                                        w-12 sm:w-14 md:w-20 h-full border border-gray-300 rounded-b-lg active:bg-gray-200 transition-colors
                                         ${isActive ? 'bg-yellow-200' : 'bg-white'}
                                         ${isTarget ? 'animate-pulse bg-yellow-100 ring-4 ring-yellow-400 z-10' : ''}
                                     `}
@@ -371,7 +376,7 @@ const PianoGame: React.FC<PianoGameProps> = ({ onGoHome, isSoundOn }) => {
                                         onTouchStart={(e) => handleTouchStart(e, nextNote.note, nextNote.freq)}
                                         onTouchEnd={(e) => handleTouchEnd(e, nextNote.note)}
                                         className={`
-                                            absolute top-0 -right-3 md:-right-5 w-6 md:w-10 h-[60%] z-20 rounded-b-lg border-x border-b border-gray-800
+                                            absolute top-0 -right-4 md:-right-6 w-8 md:w-12 h-[60%] z-20 rounded-b-lg border-x border-b border-gray-800
                                             ${activeKeys.has(nextNote.note) ? 'bg-gray-700' : 'bg-black'}
                                             ${mode === 'tutorial' && currentSong.notes[tutorialIndex] === nextNote.note ? 'animate-pulse bg-gray-600 ring-2 ring-yellow-400' : ''}
                                         `}
@@ -385,7 +390,7 @@ const PianoGame: React.FC<PianoGameProps> = ({ onGoHome, isSoundOn }) => {
             </div>
 
             {mode === 'tutorial' && (
-                <div className="mt-4 text-white text-xl font-bold animate-bounce bg-blue-600/50 px-6 py-2 rounded-full backdrop-blur">
+                <div className="absolute bottom-20 md:bottom-32 pointer-events-none text-white text-xl font-bold animate-bounce bg-blue-600/50 px-6 py-2 rounded-full backdrop-blur z-40">
                     Nốt tiếp theo: {currentSong.notes[tutorialIndex].replace(/\d/, '')}
                 </div>
             )}
