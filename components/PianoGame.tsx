@@ -108,6 +108,7 @@ const PianoGame: React.FC<PianoGameProps> = ({ onGoHome, isSoundOn }) => {
     const [tutorialIndex, setTutorialIndex] = useState(0);
     const [showConfetti, setShowConfetti] = useState(false);
     const [activeKeys, setActiveKeys] = useState<Set<string>>(new Set());
+    const [isAudioReady, setIsAudioReady] = useState(false);
 
     const audioContextRef = useRef<AudioContext | null>(null);
     const oscillatorsRef = useRef<Map<string, OscillatorNode>>(new Map());
@@ -116,11 +117,8 @@ const PianoGame: React.FC<PianoGameProps> = ({ onGoHome, isSoundOn }) => {
     const currentSong = SONGS[currentSongIndex];
 
     useEffect(() => {
-        // Initialize AudioContext
-        const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
-        if (AudioContextClass) {
-            audioContextRef.current = new AudioContextClass();
-        }
+        // AudioContext will be initialized in unlockAudio
+
 
         if (mode === 'tutorial') {
             playDynamicSentence(`Bé hãy đánh bài ${currentSong.name} nhé!`, 'vi', isSoundOn);
@@ -216,8 +214,48 @@ const PianoGame: React.FC<PianoGameProps> = ({ onGoHome, isSoundOn }) => {
         }, 100);
     };
 
+    const unlockAudio = async () => {
+        if (!audioContextRef.current) {
+            const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+            if (AudioContextClass) {
+                audioContextRef.current = new AudioContextClass();
+            }
+        }
+
+        if (audioContextRef.current) {
+            try {
+                if (audioContextRef.current.state === 'suspended') {
+                    await audioContextRef.current.resume();
+                }
+
+                // Play a silent sound to fully unlock iOS audio
+                const buffer = audioContextRef.current.createBuffer(1, 1, 22050);
+                const source = audioContextRef.current.createBufferSource();
+                source.buffer = buffer;
+                source.connect(audioContextRef.current.destination);
+                source.start(0);
+
+                setIsAudioReady(true);
+            } catch (e) {
+                console.error("Audio unlock failed", e);
+            }
+        }
+    };
+
     return (
         <div className="relative w-full h-full bg-[#1a1a2e] flex flex-col items-center justify-center overflow-hidden touch-none select-none">
+            {!isAudioReady && (
+                <div
+                    className="absolute inset-0 z-[100] bg-black/80 flex flex-col items-center justify-center cursor-pointer"
+                    onClick={unlockAudio}
+                    onTouchStart={unlockAudio}
+                >
+                    <div className="bg-white p-8 rounded-3xl animate-bounce flex flex-col items-center">
+                        <span className="text-6xl mb-4">🎹</span>
+                        <span className="text-2xl font-bold text-purple-600">Chạm để bắt đầu!</span>
+                    </div>
+                </div>
+            )}
             {showConfetti && <Confetti />}
 
             {/* Header */}
