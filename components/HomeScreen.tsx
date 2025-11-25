@@ -11,7 +11,7 @@ interface HomeScreenProps {
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ onSelectGame, isSoundOn }) => {
   return (
-    <div className="w-full max-w-7xl mx-auto flex flex-col items-center justify-center p-4">
+    <div className="w-full max-w-7xl mx-auto flex flex-col items-center justify-start p-4 min-h-full">
       <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-pink-500 mb-4 text-center leading-none" style={{ fontFamily: "'Nunito', sans-serif" }}>
         Bé Gốm Vui Học
       </h1>

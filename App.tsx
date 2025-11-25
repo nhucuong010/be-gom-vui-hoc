@@ -251,7 +251,10 @@ const App: React.FC = () => {
         <main className="fixed inset-0 h-[100dvh] w-full bg-gradient-to-br from-pink-200 via-purple-200 to-indigo-200 font-sans select-none overflow-hidden flex flex-col">
 
             {/* Game Container - Takes remaining space */}
-            <div className="flex-grow w-full relative overflow-hidden flex flex-col">
+            <div
+                className={`flex-grow w-full relative flex flex-col ${gameState === 'home' ? 'overflow-y-auto' : 'overflow-hidden'}`}
+                style={{ WebkitOverflowScrolling: 'touch' }}
+            >
                 {renderGame()}
             </div>
 
