@@ -23,6 +23,7 @@ import WeatherExplorerGame from './components/WeatherExplorerGame';
 import SupermarketGame from './components/SupermarketGame';
 import CatchGame from './components/CatchGame';
 import PianoGame from './components/PianoGame';
+import BubblePopGame from './components/BubblePopGame';
 import ColoringGame from './components/ColoringGame';
 import ResourceGenerator from './components/ResourceGenerator';
 import StickerUnlockedPopup from './components/StickerUnlockedPopup';
@@ -238,6 +239,8 @@ const App: React.FC = () => {
             case 'supermarket': return <SupermarketGame {...gameProps} />;
             case 'catch_game': return <CatchGame {...gameProps} />;
             case 'piano': return <PianoGame onGoHome={gameProps.onGoHome} isSoundOn={isSoundOn} />;
+            case 'bubble_pop':
+                return <BubblePopGame onGoHome={gameProps.onGoHome} isSoundOn={isSoundOn} />;
             case 'coloring': return <ColoringGame onGoHome={gameProps.onGoHome} isSoundOn={isSoundOn} />;
             case 'resource_generator':
                 return <ResourceGenerator onGoHome={gameProps.onGoHome} isSoundOn={isSoundOn} />;
