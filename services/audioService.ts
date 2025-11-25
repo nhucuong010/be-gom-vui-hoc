@@ -13,7 +13,7 @@ export const soundData = uiSoundData;
 
 
 // --- Audio Context and Buffer Management ---
-const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+export const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
 const audioBuffers: Partial<Record<SoundName, AudioBuffer>> = {};
 const sentenceAudioCache: Record<string, AudioBuffer> = {};
 
@@ -116,7 +116,7 @@ export const preloadSounds = async () => {
             for (let i = 0; i < len; i++) {
                 bytes[i] = binaryString.charCodeAt(i);
             }
-            
+
             const decodedBuffer = await audioContext.decodeAudioData(bytes.buffer);
             audioBuffers[name] = decodedBuffer;
         } catch (error) {
@@ -134,7 +134,7 @@ export const playSound = (name: SoundName, isSoundOn: boolean) => {
         playAudioBuffer(buffer);
     } else {
         console.warn(`Sound "${name}" not preloaded or failed to load.`);
-        preloadSounds(); 
+        preloadSounds();
     }
 };
 
@@ -176,10 +176,10 @@ export const speakSentence = async (text: string, lang: 'vi' | 'en', isSoundOn: 
         const base64Audio = await generateSpeech(text, lang);
         const pcmBytes = decodeBase64(base64Audio);
         const audioBuffer = await decodePcmAudioData(pcmBytes);
-        
+
         // Cache the result
         sentenceAudioCache[cacheKey] = audioBuffer;
-        
+
         playAudioBuffer(audioBuffer);
     } catch (error) {
         console.error(`Failed to generate or play speech for sentence: "${text}"`, error);
@@ -195,74 +195,74 @@ export const speakSentence = async (text: string, lang: 'vi' | 'en', isSoundOn: 
  * @param isSoundOn A boolean to conditionally play the sound.
  */
 export const playDynamicSentence = (text: string, lang: 'vi' | 'en', isSoundOn: boolean, game?: 'restaurant' | 'street_food' | 'garden_memory' | 'bunny_rescue' | 'english_story' | 'capybara_rescue' | 'time_adventure' | 'english' | 'online_shopping' | 'weather_explorer' | 'supermarket' | 'writing_practice'): Promise<void> => {
-  return new Promise((resolve) => {
-    if (!isSoundOn || !text) {
-      resolve();
-      return;
-    }
+    return new Promise((resolve) => {
+        if (!isSoundOn || !text) {
+            resolve();
+            return;
+        }
 
-    const filename = sanitizeFilename(text, 'wav');
-    let subfolder = '';
-    if (game === 'restaurant') {
-        subfolder = 'nhahang/';
-    } else if (game === 'street_food') {
-        subfolder = 'nauan/';
-    } else if (game === 'garden_memory') {
-        subfolder = 'khuvuon/';
-    } else if (game === 'bunny_rescue') {
-        subfolder = 'bantho/';
-    } else if (game === 'english_story') {
-        subfolder = 'giadinhgom/';
-    } else if (game === 'capybara_rescue') {
-        subfolder = 'bongbay/';
-    } else if (game === 'time_adventure') {
-        subfolder = 'thoitiet/';
-    } else if (game === 'english') {
-        subfolder = 'english/';
-    } else if (game === 'online_shopping') {
-        subfolder = 'muasam/';
-    } else if (game === 'weather_explorer') {
-        subfolder = 'khampha/';
-    } else if (game === 'supermarket') {
-        subfolder = 'sieuthi/';
-    } else if (game === 'writing_practice') {
-        subfolder = 'chucai/';
-    }
-
-
-    const audioSrc = `${ASSET_BASE_URL}/assets/audio/${subfolder}${filename}`;
-    
-    const audio = new Audio(audioSrc);
-
-    // Track the source
-    activeSources.add(audio);
-
-    const cleanupAndResolve = () => {
-        activeSources.delete(audio);
-        // Ensure listeners are removed to prevent calls on stopped elements
-        audio.onended = null;
-        audio.onerror = null;
-        resolve();
-    };
+        const filename = sanitizeFilename(text, 'wav');
+        let subfolder = '';
+        if (game === 'restaurant') {
+            subfolder = 'nhahang/';
+        } else if (game === 'street_food') {
+            subfolder = 'nauan/';
+        } else if (game === 'garden_memory') {
+            subfolder = 'khuvuon/';
+        } else if (game === 'bunny_rescue') {
+            subfolder = 'bantho/';
+        } else if (game === 'english_story') {
+            subfolder = 'giadinhgom/';
+        } else if (game === 'capybara_rescue') {
+            subfolder = 'bongbay/';
+        } else if (game === 'time_adventure') {
+            subfolder = 'thoitiet/';
+        } else if (game === 'english') {
+            subfolder = 'english/';
+        } else if (game === 'online_shopping') {
+            subfolder = 'muasam/';
+        } else if (game === 'weather_explorer') {
+            subfolder = 'khampha/';
+        } else if (game === 'supermarket') {
+            subfolder = 'sieuthi/';
+        } else if (game === 'writing_practice') {
+            subfolder = 'chucai/';
+        }
 
 
-    const onAudioError = () => {
-      activeSources.delete(audio); // Untrack the failed audio element
-      
-      // If the file is missing, we just log it and resolve the promise so the game continues.
-      console.warn(`Audio file missing (TTS disabled for performance): ${audioSrc}`);
-      resolve(); 
-    };
+        const audioSrc = `${ASSET_BASE_URL}/assets/audio/${subfolder}${filename}`;
 
-    audio.onended = cleanupAndResolve;
-    audio.onerror = onAudioError;
+        const audio = new Audio(audioSrc);
 
-    // Attempt to play the pre-generated file.
-    audio.play().catch(error => {
-      // If the initial play() call is rejected (e.g., file not found), fallback.
-      onAudioError();
+        // Track the source
+        activeSources.add(audio);
+
+        const cleanupAndResolve = () => {
+            activeSources.delete(audio);
+            // Ensure listeners are removed to prevent calls on stopped elements
+            audio.onended = null;
+            audio.onerror = null;
+            resolve();
+        };
+
+
+        const onAudioError = () => {
+            activeSources.delete(audio); // Untrack the failed audio element
+
+            // If the file is missing, we just log it and resolve the promise so the game continues.
+            console.warn(`Audio file missing (TTS disabled for performance): ${audioSrc}`);
+            resolve();
+        };
+
+        audio.onended = cleanupAndResolve;
+        audio.onerror = onAudioError;
+
+        // Attempt to play the pre-generated file.
+        audio.play().catch(error => {
+            // If the initial play() call is rejected (e.g., file not found), fallback.
+            onAudioError();
+        });
     });
-  });
 };
 
 
@@ -285,7 +285,7 @@ export const speak = (text: string, lang: 'vi' | 'en', isSoundOn: boolean): Prom
             const filename = sanitizeFilename(String(text), 'wav');
             const audioSrc = `${ASSET_BASE_URL}/assets/audio/${filename}`;
             const audio = new Audio(audioSrc);
-            
+
             // Track the source
             activeSources.add(audio);
 
@@ -296,11 +296,11 @@ export const speak = (text: string, lang: 'vi' | 'en', isSoundOn: boolean): Prom
                 audio.onerror = null;
                 resolve();
             };
-            
+
             audio.onended = cleanupAndResolve;
             audio.onerror = (e) => {
-                 console.error(`Could not play audio file: ${audioSrc}`, e);
-                 cleanupAndResolve(); // Resolve even on error to not break sequence
+                console.error(`Could not play audio file: ${audioSrc}`, e);
+                cleanupAndResolve(); // Resolve even on error to not break sequence
             };
             audio.play().catch(error => {
                 console.error(`Error initiating play for: ${audioSrc}`, error);

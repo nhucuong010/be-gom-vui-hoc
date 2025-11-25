@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { HomeIcon, StarIcon, ArrowUturnLeftIcon } from './icons';
-import { playSound, stopAllSounds, playDynamicSentence } from '../services/audioService';
+import { playSound, stopAllSounds, playDynamicSentence, audioContext } from '../services/audioService';
 import Confetti from './Confetti';
 
 interface PianoGameProps {
@@ -99,7 +99,7 @@ const SONGS = [
             'C4', 'C4', 'G4', 'G4', 'A4', 'G4', 'F4', 'E4',
             'D4', 'D4', 'E4', 'E4', 'F4', 'F4', 'E4', 'D4', 'C4'
         ]
-    }
+    },
 ];
 
 const PianoGame: React.FC<PianoGameProps> = ({ onGoHome, isSoundOn }) => {
@@ -110,46 +110,45 @@ const PianoGame: React.FC<PianoGameProps> = ({ onGoHome, isSoundOn }) => {
     const [activeKeys, setActiveKeys] = useState<Set<string>>(new Set());
     const [isAudioReady, setIsAudioReady] = useState(false);
 
-    const audioContextRef = useRef<AudioContext | null>(null);
+    // Use shared audioContext from service
     const oscillatorsRef = useRef<Map<string, OscillatorNode>>(new Map());
     const gainNodesRef = useRef<Map<string, GainNode>>(new Map());
 
     const currentSong = SONGS[currentSongIndex];
 
     useEffect(() => {
-        // AudioContext will be initialized in unlockAudio
-
+        // Check if audio is already ready (context running)
+        if (audioContext.state === 'running') {
+            setIsAudioReady(true);
+        }
 
         if (mode === 'tutorial') {
             playDynamicSentence(`Bé hãy đánh bài ${currentSong.name} nhé!`, 'vi', isSoundOn);
         }
 
         return () => {
-            if (audioContextRef.current) {
-                audioContextRef.current.close();
-            }
+            // Do NOT close the shared audioContext
         };
     }, [mode, currentSongIndex, isSoundOn]);
 
     const playNote = (note: string, freq: number) => {
-        if (!audioContextRef.current) return;
-        if (audioContextRef.current.state === 'suspended') {
-            audioContextRef.current.resume();
+        if (audioContext.state === 'suspended') {
+            audioContext.resume();
         }
 
         stopNote(note);
 
-        const osc = audioContextRef.current.createOscillator();
-        const gain = audioContextRef.current.createGain();
+        const osc = audioContext.createOscillator();
+        const gain = audioContext.createGain();
 
         osc.type = 'triangle';
-        osc.frequency.setValueAtTime(freq, audioContextRef.current.currentTime);
+        osc.frequency.setValueAtTime(freq, audioContext.currentTime);
 
-        gain.gain.setValueAtTime(0.5, audioContextRef.current.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioContextRef.current.currentTime + 1.5);
+        gain.gain.setValueAtTime(0.5, audioContext.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 1.5);
 
         osc.connect(gain);
-        gain.connect(audioContextRef.current.destination);
+        gain.connect(audioContext.destination);
 
         osc.start();
 
@@ -180,12 +179,12 @@ const PianoGame: React.FC<PianoGameProps> = ({ onGoHome, isSoundOn }) => {
         const osc = oscillatorsRef.current.get(note);
         const gain = gainNodesRef.current.get(note);
 
-        if (osc && gain && audioContextRef.current) {
+        if (osc && gain) {
             try {
-                gain.gain.cancelScheduledValues(audioContextRef.current.currentTime);
-                gain.gain.setValueAtTime(gain.gain.value, audioContextRef.current.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioContextRef.current.currentTime + 0.1);
-                osc.stop(audioContextRef.current.currentTime + 0.1);
+                gain.gain.cancelScheduledValues(audioContext.currentTime);
+                gain.gain.setValueAtTime(gain.gain.value, audioContext.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.1);
+                osc.stop(audioContext.currentTime + 0.1);
             } catch (e) { }
         }
 
@@ -215,30 +214,21 @@ const PianoGame: React.FC<PianoGameProps> = ({ onGoHome, isSoundOn }) => {
     };
 
     const unlockAudio = async () => {
-        if (!audioContextRef.current) {
-            const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
-            if (AudioContextClass) {
-                audioContextRef.current = new AudioContextClass();
+        try {
+            if (audioContext.state === 'suspended') {
+                await audioContext.resume();
             }
-        }
 
-        if (audioContextRef.current) {
-            try {
-                if (audioContextRef.current.state === 'suspended') {
-                    await audioContextRef.current.resume();
-                }
+            // Play a silent sound to fully unlock iOS audio
+            const buffer = audioContext.createBuffer(1, 1, 22050);
+            const source = audioContext.createBufferSource();
+            source.buffer = buffer;
+            source.connect(audioContext.destination);
+            source.start(0);
 
-                // Play a silent sound to fully unlock iOS audio
-                const buffer = audioContextRef.current.createBuffer(1, 1, 22050);
-                const source = audioContextRef.current.createBufferSource();
-                source.buffer = buffer;
-                source.connect(audioContextRef.current.destination);
-                source.start(0);
-
-                setIsAudioReady(true);
-            } catch (e) {
-                console.error("Audio unlock failed", e);
-            }
+            setIsAudioReady(true);
+        } catch (e) {
+            console.error("Audio unlock failed", e);
         }
     };
 

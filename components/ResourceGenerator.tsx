@@ -94,7 +94,10 @@ type GameCategoryKey =
     | 'audio_online_shopping'
     | 'audio_weather_explorer'
     | 'audio_writing_game'
-    | 'audio_catch_game' // NEW
+    | 'audio_writing_game'
+    | 'audio_catch_game'
+    | 'audio_bubble_pop'
+    | 'audio_piano' // NEW
     | 'audio_common_feedback'
     | 'audio_common_effects';
 
@@ -259,6 +262,36 @@ const onlineShoppingAudioTexts = new Set([
     "Mũ Điệu Đà", "Giày Búp Bê", "Gối Ôm Mềm", "Đàn Đồ Chơi"
 ]);
 
+// --- Bubble Pop Audio ---
+const bubblePopAudioTexts = new Set([
+    "Chào bé! Hãy chạm vào bong bóng để bắt đầu!",
+    "Bé hãy tìm chữ", "Bé hãy tìm số", "Bé hãy ghép chữ",
+    "Chưa đúng bé ơi!", "Giỏi lắm!", "Giỏi quá!",
+    // Letters
+    ..."ABCDEGHIKLMNOPQRSTUVXY".split('').map(l => `Bé hãy tìm chữ ${l}`),
+    // Numbers
+    ..."0123456789".split('').map(n => `Bé hãy tìm số ${n}`),
+    // Words
+    "MÈO", "CHÓ", "GÀ", "BÒ", "VỊT",
+    "Bé hãy ghép chữ MÈO", "Bé hãy ghép chữ CHÓ", "Bé hãy ghép chữ GÀ", "Bé hãy ghép chữ BÒ", "Bé hãy ghép chữ VỊT",
+    "Giỏi quá! Bé đã ghép được chữ MÈO!", "Giỏi quá! Bé đã ghép được chữ CHÓ!",
+    "Giỏi quá! Bé đã ghép được chữ GÀ!", "Giỏi quá! Bé đã ghép được chữ BÒ!",
+    "Giỏi quá! Bé đã ghép được chữ VỊT!",
+    // Single letters for spelling feedback
+    ..."ABCDEGHIKLMNOPQRSTUVXY".split(''),
+    ..."0123456789".split('')
+]);
+
+// --- Piano Audio ---
+const pianoAudioTexts = new Set([
+    "Bé hãy đánh bài Happy Birthday 🎂 nhé!",
+    "Bé hãy đánh bài Twinkle Star 🌟 nhé!",
+    "Bé hãy đánh bài Jingle Bells 🎄 nhé!",
+    "Bé hãy đánh bài Baby Shark 🦈 nhé!",
+    "Bé hãy đánh bài Một Con Vịt 🦆 nhé!",
+    "Bé hãy đánh bài Con Cò 🐦 nhé!",
+    "Hoan hô! Bé giỏi quá!"
+]);
 
 const initializeAssets = (): Record<string, AssetItem> => {
     const initialAssets: Record<string, AssetItem> = {};
@@ -305,7 +338,9 @@ const initializeAssets = (): Record<string, AssetItem> => {
         { lang: 'vi', texts: onlineShoppingAudioTexts },
         { lang: 'vi', texts: weatherExplorerAudioTexts },
         { lang: 'vi', texts: writingGameAudioTexts },
-        { lang: 'vi', texts: catchGameAudioTexts }, // Added catch game texts
+        { lang: 'vi', texts: catchGameAudioTexts },
+        { lang: 'vi', texts: bubblePopAudioTexts },
+        { lang: 'vi', texts: pianoAudioTexts }, // Added Piano texts
         { lang: 'en', texts: englishAudioTexts },
     ];
 
@@ -326,7 +361,9 @@ const initializeAssets = (): Record<string, AssetItem> => {
         else if (newEnglishAudioTexts.has(name)) subfolder = 'english';
         else if (weatherExplorerAudioTexts.has(name)) subfolder = 'khampha';
         else if (writingGameAudioTexts.has(name)) subfolder = 'chucai';
-        else if (catchGameAudioTexts.has(name)) subfolder = 'chucai'; // Reusing chucai folder for CatchGame assets
+        else if (catchGameAudioTexts.has(name)) subfolder = 'chucai';
+        else if (bubblePopAudioTexts.has(name)) subfolder = 'bubble_pop';
+        else if (pianoAudioTexts.has(name)) subfolder = 'piano'; // New subfolder
 
         const key = `audio_${language}_${name.replace(/\s/g, '_')}`;
         initialAssets[key] = {
@@ -387,7 +424,9 @@ const categorizeAssets = (assetList: AssetItem[]): Record<GameCategoryKey, { tit
         audio_online_shopping: { title: 'Game Mua Sắm Online (Âm thanh)', assets: [] },
         audio_weather_explorer: { title: 'Game Bé Khám Phá Thời Tiết (Âm thanh)', assets: [] },
         audio_writing_game: { title: 'Game Bé Tập Viết (Âm thanh /chucai/)', assets: [] },
-        audio_catch_game: { title: 'Game Hứng Chữ Số (Âm thanh /chucai/)', assets: [] }, // NEW CATEGORY
+        audio_catch_game: { title: 'Game Hứng Chữ Số (Âm thanh /chucai/)', assets: [] },
+        audio_bubble_pop: { title: 'Game Bong Bóng (Âm thanh /bubble_pop/)', assets: [] },
+        audio_piano: { title: 'Game Đàn Piano (Âm thanh /piano/)', assets: [] }, // NEW CATEGORY
         audio_common_feedback: { title: 'Âm thanh Phản hồi Chung', assets: [] },
         audio_common_effects: { title: 'Âm thanh Hiệu ứng (UI)', assets: [] },
     };
@@ -432,6 +471,12 @@ const categorizeAssets = (assetList: AssetItem[]): Record<GameCategoryKey, { tit
                     } else {
                         categories.audio_writing_game.assets.push(asset);
                     }
+                    return;
+                case 'bubble_pop':
+                    categories.audio_bubble_pop.assets.push(asset);
+                    return;
+                case 'piano':
+                    categories.audio_piano.assets.push(asset);
                     return;
             }
             if (englishAudioTexts.has(asset.name)) categories.audio_english_words.assets.push(asset);
