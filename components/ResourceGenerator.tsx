@@ -272,6 +272,9 @@ const pianoAudioTexts = new Set([
     "Cố lên bé ơi, thử lại nốt này nhé!",
     "Bé hãy đánh bài Một Con Vịt 🦆 nhé!",
     "Bé hãy đánh bài Con Cò 🐦 nhé!",
+    "Bé hãy đánh bài Kìa Con Bướm Vàng 🦋 nhé!",
+    "Bé hãy đánh bài Chèo Thuyền 🚣 nhé!",
+    "Bé hãy đánh bài Cầu Luân Đôn 🌉 nhé!",
     "Hoan hô! Bé giỏi quá!"
 ]);
 
