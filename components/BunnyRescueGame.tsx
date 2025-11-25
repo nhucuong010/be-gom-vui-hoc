@@ -8,9 +8,9 @@ import Confetti from './Confetti';
 
 // --- Interfaces & Types ---
 interface BunnyRescueGameProps {
-  onGoHome: () => void;
-  onCorrectAnswer: () => void;
-  isSoundOn: boolean;
+    onGoHome: () => void;
+    onCorrectAnswer: () => void;
+    isSoundOn: boolean;
 }
 type GamePhase = 'operation_select' | 'playing' | 'help' | 'level_complete';
 type OperationType = 'add' | 'subtract' | 'mixed';
@@ -122,9 +122,9 @@ const SpeechBubble: React.FC<{ text: string; position: 'left' | 'right' }> = ({ 
 );
 
 const VisualHelp: React.FC<{
-  problem: BunnyRescueStep;
-  onClose: () => void;
-  isSoundOn: boolean;
+    problem: BunnyRescueStep;
+    onClose: () => void;
+    isSoundOn: boolean;
 }> = ({ problem, onClose, isSoundOn }) => {
     const { operation, num1, num2 } = problem;
 
@@ -139,10 +139,10 @@ const VisualHelp: React.FC<{
                 <div className="flex flex-col items-center gap-6 p-6 bg-purple-50 rounded-2xl border-2 border-purple-100">
                     <div className="flex flex-wrap gap-3 justify-center">
                         {Array.from({ length: num1 }).map((_, i) => (
-                            <img 
-                                key={`num1-${i}`} 
-                                src={`${ASSET_BASE_URL}/${operation === 'subtract' && i >= num1 - num2 ? 'br_dot_crossed.png' : 'br_dot_blue.png'}`} 
-                                alt="dot" 
+                            <img
+                                key={`num1-${i}`}
+                                src={`${ASSET_BASE_URL}/${operation === 'subtract' && i >= num1 - num2 ? 'br_dot_crossed.png' : 'br_dot_blue.png'}`}
+                                alt="dot"
                                 className="w-10 h-10 drop-shadow-sm"
                             />
                         ))}
@@ -176,8 +176,8 @@ const GameTypeButton: React.FC<{ title: string; onClick: () => void; imageUrl: s
         className="bg-white p-6 rounded-3xl shadow-xl hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300 ease-in-out flex flex-col items-center gap-4 group border-4 border-transparent hover:border-purple-200"
     >
         <div className="w-32 h-32 relative">
-             <div className="absolute inset-0 bg-purple-100 rounded-full scale-0 group-hover:scale-100 transition-transform duration-300"></div>
-             <img src={imageUrl} alt={title} className="absolute inset-0 w-full h-full object-contain z-10" />
+            <div className="absolute inset-0 bg-purple-100 rounded-full scale-0 group-hover:scale-100 transition-transform duration-300"></div>
+            <img src={imageUrl} alt={title} className="absolute inset-0 w-full h-full object-contain z-10" />
         </div>
         <span className="text-2xl md:text-3xl font-bold text-purple-700 group-hover:text-pink-600 transition-colors">{title}</span>
     </button>
@@ -192,15 +192,15 @@ const BunnyRescueGame: React.FC<BunnyRescueGameProps> = ({ onGoHome, onCorrectAn
     const [isMoving, setIsMoving] = useState(false);
     const [feedback, setFeedback] = useState<'correct' | 'incorrect' | null>(null);
     const [pathVisible, setPathVisible] = useState<boolean[]>([false, false, false, false, false]);
-    const [ripples, setRipples] = useState<number | null>(null); 
+    const [ripples, setRipples] = useState<number | null>(null);
     const [currentScene, setCurrentScene] = useState(SCENES.river);
 
     // Randomize scene on mount or reset
     useEffect(() => {
         if (phase === 'operation_select') {
-             const sceneKeys = Object.keys(SCENES);
-             const randomKey = sceneKeys[Math.floor(Math.random() * sceneKeys.length)];
-             setCurrentScene(SCENES[randomKey]);
+            const sceneKeys = Object.keys(SCENES);
+            const randomKey = sceneKeys[Math.floor(Math.random() * sceneKeys.length)];
+            setCurrentScene(SCENES[randomKey]);
         }
     }, [phase]);
 
@@ -210,13 +210,13 @@ const BunnyRescueGame: React.FC<BunnyRescueGameProps> = ({ onGoHome, onCorrectAn
         setGomPosition(START_POS);
         setCurrentStepIndex(0);
         setRipples(null);
-        
+
         const allProblems = bunnyRescueLevels.flatMap(l => l.steps);
         let filteredProblems = opType === 'mixed' ? allProblems : allProblems.filter(p => p.operation === opType);
-        
+
         const levelProblems = filteredProblems.sort(() => 0.5 - Math.random()).slice(0, 5);
         setCurrentLevelData({ level: 1, steps: levelProblems });
-        
+
         setPhase('playing');
         // Updated intro with dynamic friend name
         const introText = `Bạn ${currentScene.friendName} đang đợi ở cuối đường. Gốm ơi cứu tớ với!`;
@@ -225,7 +225,7 @@ const BunnyRescueGame: React.FC<BunnyRescueGameProps> = ({ onGoHome, onCorrectAn
 
     const handleAnswer = (answer: number) => {
         if (feedback || isMoving || !currentLevelData) return;
-        
+
         playSound('click', isSoundOn);
         const correct = answer === currentLevelData.steps[currentStepIndex].answer;
 
@@ -246,18 +246,18 @@ const BunnyRescueGame: React.FC<BunnyRescueGameProps> = ({ onGoHome, onCorrectAn
             setTimeout(() => {
                 setIsMoving(true);
                 if (currentScene.movementType === 'jump') {
-                     playSound('jump', isSoundOn); 
+                    playSound('jump', isSoundOn);
                 } else {
                     // Could add a splashing/rowing sound here
                 }
-                
+
                 setGomPosition(PATH_COORDS[currentStepIndex]);
-                
+
                 // 3. Kết thúc di chuyển
                 setTimeout(() => {
                     setIsMoving(false);
                     setFeedback(null);
-                    
+
                     if (currentStepIndex >= 4) {
                         setPhase('level_complete');
                         // Move Gom to final position (bunny's side) for the hug
@@ -297,7 +297,7 @@ const BunnyRescueGame: React.FC<BunnyRescueGameProps> = ({ onGoHome, onCorrectAn
                     <button onClick={onGoHome} className="absolute top-6 left-6 text-purple-400 hover:text-pink-500 transition-colors">
                         <HomeIcon className="w-12 h-12" />
                     </button>
-                    
+
                     <div className="text-center mb-12">
                         <h2 className="text-5xl md:text-6xl font-black text-purple-700 mb-4 tracking-tight">Vượt Sông Cứu Bạn</h2>
                         <p className="text-2xl text-pink-500 font-bold">Gốm ơi, hãy giải toán để tạo lối đi cứu bạn nhé!</p>
@@ -315,16 +315,16 @@ const BunnyRescueGame: React.FC<BunnyRescueGameProps> = ({ onGoHome, onCorrectAn
 
     const currentProblem = currentLevelData?.steps[currentStepIndex];
     const isWin = phase === 'level_complete';
-    
+
     // Animation class based on movement type
     const animationClass = currentScene.movementType === 'jump' ? 'animate-jump-arc' : 'animate-row-slide';
 
     return (
-        <div className="w-full max-w-7xl mx-auto flex flex-col items-center p-2 md:p-6 min-h-screen justify-start">
-            <div className="w-full bg-white/90 backdrop-blur-sm rounded-[2.5rem] shadow-2xl p-4 md:p-6 relative overflow-hidden flex flex-col gap-6">
+        <div className="w-full max-w-7xl mx-auto flex flex-col items-center p-2 md:p-6 h-full justify-start">
+            <div className="w-full bg-white/90 backdrop-blur-sm rounded-[2.5rem] shadow-2xl p-4 md:p-6 relative flex flex-col gap-6 max-h-full overflow-y-auto">
                 {/* Header Controls */}
                 <div className="flex justify-between items-center px-2">
-                     <button onClick={onGoHome} className="text-purple-500 hover:text-pink-500 transition-colors bg-white p-2 rounded-full shadow-sm">
+                    <button onClick={onGoHome} className="text-purple-500 hover:text-pink-500 transition-colors bg-white p-2 rounded-full shadow-sm">
                         <HomeIcon className="w-10 h-10" />
                     </button>
                     <button onClick={() => setPhase('operation_select')} className="bg-purple-100 text-purple-700 font-bold px-6 py-2 rounded-full hover:bg-purple-200 transition-colors">
@@ -333,17 +333,17 @@ const BunnyRescueGame: React.FC<BunnyRescueGameProps> = ({ onGoHome, onCorrectAn
                 </div>
 
                 {/* --- GAME SCENE --- */}
-                <div className="relative w-full aspect-[16/9] md:aspect-[21/9] bg-cover bg-center rounded-3xl shadow-inner overflow-hidden border-4 border-white" 
-                     style={{ backgroundImage: `url(${ASSET_BASE_URL}/${currentScene.bg})` }}>
-                    
+                <div className="relative w-full aspect-[16/9] md:aspect-[21/9] bg-cover bg-center rounded-3xl shadow-inner overflow-hidden border-4 border-white"
+                    style={{ backgroundImage: `url(${ASSET_BASE_URL}/${currentScene.bg})` }}>
+
                     {/* Đích đến (Bạn Thỏ/Labunu) - Ẩn khi thắng để hiện hình ôm nhau */}
                     <div className="absolute transition-all duration-500 z-10" style={{ top: `${END_POS.top}%`, left: `${END_POS.left}%`, transform: 'translate(-50%, -50%)' }}>
                         {!isWin && (
                             <div className="relative">
                                 <SpeechBubble text="Cứu tớ với!" position="right" />
-                                <img 
-                                    src={`${ASSET_BASE_URL}/${currentScene.friendWait}`} 
-                                    alt="Friend" 
+                                <img
+                                    src={`${ASSET_BASE_URL}/${currentScene.friendWait}`}
+                                    alt="Friend"
                                     className="w-24 md:w-32 lg:w-40 drop-shadow-md animate-bounce-slow"
                                     style={{ mixBlendMode: 'multiply' }}
                                 />
@@ -353,42 +353,42 @@ const BunnyRescueGame: React.FC<BunnyRescueGameProps> = ({ onGoHome, onCorrectAn
 
                     {/* Con đường (Lá sen / Nấm / Đá) */}
                     {PATH_COORDS.map((coord, index) => (
-                         <div key={index} className="absolute" style={{ top: `${coord.top}%`, left: `${coord.left}%`, transform: 'translate(-10%, -10%)' }}>
-                             {/* Ripple Effect */}
-                             {ripples === index && (
-                                 <div className="absolute inset-0 border-4 border-white/60 rounded-full animate-ripple" />
-                             )}
-                            <img 
-                                src={`${ASSET_BASE_URL}/${currentScene.item}`} 
-                                alt="step" 
-                                className={`w-24 md:w-36 object-contain transition-all duration-500 ${pathVisible[index] ? 'scale-100 opacity-100 animate-elastic-appear' : 'scale-0 opacity-0'}`} 
+                        <div key={index} className="absolute" style={{ top: `${coord.top}%`, left: `${coord.left}%`, transform: 'translate(-10%, -10%)' }}>
+                            {/* Ripple Effect */}
+                            {ripples === index && (
+                                <div className="absolute inset-0 border-4 border-white/60 rounded-full animate-ripple" />
+                            )}
+                            <img
+                                src={`${ASSET_BASE_URL}/${currentScene.item}`}
+                                alt="step"
+                                className={`w-24 md:w-36 object-contain transition-all duration-500 ${pathVisible[index] ? 'scale-100 opacity-100 animate-elastic-appear' : 'scale-0 opacity-0'}`}
                                 style={{ mixBlendMode: 'multiply' }}
                             />
                         </div>
                     ))}
 
                     {/* Nhân vật chính (Gốm) */}
-                    <div 
+                    <div
                         className="absolute z-20 transition-all duration-1000 ease-in-out will-change-transform"
-                        style={{ 
+                        style={{
                             // Khi thắng: Đưa về chính giữa màn hình (50%, 50%). Khi chơi: Theo tọa độ.
-                            top: isWin ? '50%' : `${gomPosition.top}%`, 
-                            left: isWin ? '50%' : `${gomPosition.left}%`, 
+                            top: isWin ? '50%' : `${gomPosition.top}%`,
+                            left: isWin ? '50%' : `${gomPosition.left}%`,
                             // Transform:
                             // - Chơi: translate(-60%, -100%) -> Đẩy lên cao và lùi sang trái để đứng lên nấm/lá sen.
                             // - Thắng: translate(-50%, -50%) -> Căn giữa hoàn hảo cho hình to.
-                            transform: isWin ? 'translate(-50%, -50%)' : 'translate(-60%, -100%)' 
+                            transform: isWin ? 'translate(-50%, -50%)' : 'translate(-60%, -100%)'
                         }}
                     >
                         <div className={`relative ${isMoving ? animationClass : ''}`}>
-                             {phase === 'help' && <SpeechBubble text="Khó quá..." position="left" />}
-                             {isWin && <SpeechBubble text="Yeahhh!" position="left" />}
-                             <img 
-                                src={`${ASSET_BASE_URL}/${isWin ? currentScene.victoryImage : (phase === 'help' ? 'br_gom_thinking.png' : currentScene.player)}`} 
-                                alt="Gốm" 
+                            {phase === 'help' && <SpeechBubble text="Khó quá..." position="left" />}
+                            {isWin && <SpeechBubble text="Yeahhh!" position="left" />}
+                            <img
+                                src={`${ASSET_BASE_URL}/${isWin ? currentScene.victoryImage : (phase === 'help' ? 'br_gom_thinking.png' : currentScene.player)}`}
+                                alt="Gốm"
                                 // Khi thắng: Ảnh rất to (w-64 md:w-96). Khi chơi: Ảnh vừa.
                                 className={`object-contain drop-shadow-xl transition-all duration-1000 ${isWin ? 'w-64 md:w-96' : 'w-28 md:w-36'}`}
-                                // Remove mixBlendMode for character to ensure correct colors
+                            // Remove mixBlendMode for character to ensure correct colors
                             />
                         </div>
                     </div>
@@ -411,7 +411,7 @@ const BunnyRescueGame: React.FC<BunnyRescueGameProps> = ({ onGoHome, onCorrectAn
                             <div className="relative">
                                 <div className={`absolute -inset-4 bg-gradient-to-r ${currentScene.themeColor === 'text-teal-600' || currentScene.themeColor === 'text-cyan-600' ? 'from-teal-200 to-cyan-200' : 'from-blue-200 to-teal-200'} rounded-full blur opacity-50`}></div>
                                 <div className="relative bg-white px-10 py-4 rounded-full shadow-md border-2 border-blue-100">
-                                     <p className={`text-5xl md:text-6xl font-black ${currentScene.themeColor}`}>
+                                    <p className={`text-5xl md:text-6xl font-black ${currentScene.themeColor}`}>
                                         {currentProblem.problem} = ?
                                     </p>
                                 </div>
@@ -425,10 +425,10 @@ const BunnyRescueGame: React.FC<BunnyRescueGameProps> = ({ onGoHome, onCorrectAn
                                         onClick={() => handleAnswer(opt)}
                                         disabled={!!feedback || isMoving}
                                         className="group relative w-28 h-28 md:w-36 md:h-36 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed transform transition-transform active:scale-90 hover:scale-110"
-                                    >   
-                                        <img 
-                                            src={`${ASSET_BASE_URL}/${currentScene.item}`} 
-                                            alt="btn bg" 
+                                    >
+                                        <img
+                                            src={`${ASSET_BASE_URL}/${currentScene.item}`}
+                                            alt="btn bg"
                                             className="absolute inset-0 w-full h-full object-contain drop-shadow-lg group-hover:drop-shadow-xl transition-all"
                                             style={{ mixBlendMode: 'multiply' }}
                                         />
@@ -444,8 +444,8 @@ const BunnyRescueGame: React.FC<BunnyRescueGameProps> = ({ onGoHome, onCorrectAn
             </div>
 
             {phase === 'help' && currentProblem && (
-                <VisualHelp 
-                    problem={currentProblem} 
+                <VisualHelp
+                    problem={currentProblem}
                     onClose={() => { playSound('click', isSoundOn); setPhase('playing'); }}
                     isSoundOn={isSoundOn}
                 />

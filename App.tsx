@@ -34,7 +34,7 @@ import { preloadSounds, playSound, stopAllSounds } from './services/audioService
 
 import { SpeakerOnIcon, SpeakerOffIcon } from './components/icons';
 import { useWakeLock } from './hooks/useWakeLock';
-import IOSInstallPrompt from './components/IOSInstallPrompt';
+
 
 // Import data sources for sticker aggregation
 import { supermarketItems } from './data/supermarketData';
@@ -284,7 +284,7 @@ const App: React.FC = () => {
                     : <SpeakerOffIcon className="w-10 h-10 text-gray-500" />
                 }
             </button>
-            <IOSInstallPrompt />
+
         </main>
     );
 };
