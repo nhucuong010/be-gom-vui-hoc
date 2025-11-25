@@ -131,9 +131,33 @@ const PianoGame: React.FC<PianoGameProps> = ({ onGoHome, isSoundOn }) => {
         };
     }, [mode, currentSongIndex, isSoundOn]);
 
+    const unlockAudio = async () => {
+        try {
+            if (audioContext.state === 'suspended') {
+                await audioContext.resume();
+            }
+
+            // Play a silent sound to fully unlock iOS audio
+            const buffer = audioContext.createBuffer(1, 1, 22050);
+            const source = audioContext.createBufferSource();
+            source.buffer = buffer;
+            source.connect(audioContext.destination);
+            source.start(0);
+
+            // NEW: Play a dummy HTML5 audio to force iOS Audio Session to "Playback" (ignores mute switch)
+            const silentAudio = new Audio("data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA");
+            silentAudio.play().catch(e => console.log("Silent play failed", e));
+
+            setIsAudioReady(true);
+        } catch (e) {
+            console.error("Audio unlock failed", e);
+        }
+    };
+
     const playNote = (note: string, freq: number) => {
+        // Always try to resume if suspended (iOS requirement)
         if (audioContext.state === 'suspended') {
-            audioContext.resume();
+            audioContext.resume().catch(e => console.error("Resume failed", e));
         }
 
         stopNote(note);
@@ -141,13 +165,23 @@ const PianoGame: React.FC<PianoGameProps> = ({ onGoHome, isSoundOn }) => {
         const osc = audioContext.createOscillator();
         const gain = audioContext.createGain();
 
-        osc.type = 'triangle';
+        // Use 'sawtooth' for a richer, louder sound that cuts through better on mobile speakers
+        osc.type = 'sawtooth';
         osc.frequency.setValueAtTime(freq, audioContext.currentTime);
 
-        gain.gain.setValueAtTime(0.5, audioContext.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 1.5);
+        // Louder initial attack
+        gain.gain.setValueAtTime(0.001, audioContext.currentTime);
+        gain.gain.linearRampToValueAtTime(0.8, audioContext.currentTime + 0.02); // Quick attack
+        gain.gain.linearRampToValueAtTime(0.3, audioContext.currentTime + 0.3); // Decay
+        gain.gain.linearRampToValueAtTime(0.001, audioContext.currentTime + 1.5); // Release
 
-        osc.connect(gain);
+        // Add a lowpass filter to soften the sawtooth harshness
+        const filter = audioContext.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(2000, audioContext.currentTime);
+
+        osc.connect(filter);
+        filter.connect(gain);
         gain.connect(audioContext.destination);
 
         osc.start();
@@ -213,25 +247,6 @@ const PianoGame: React.FC<PianoGameProps> = ({ onGoHome, isSoundOn }) => {
         }, 100);
     };
 
-    const unlockAudio = async () => {
-        try {
-            if (audioContext.state === 'suspended') {
-                await audioContext.resume();
-            }
-
-            // Play a silent sound to fully unlock iOS audio
-            const buffer = audioContext.createBuffer(1, 1, 22050);
-            const source = audioContext.createBufferSource();
-            source.buffer = buffer;
-            source.connect(audioContext.destination);
-            source.start(0);
-
-            setIsAudioReady(true);
-        } catch (e) {
-            console.error("Audio unlock failed", e);
-        }
-    };
-
     return (
         <div className="relative w-full h-full bg-[#1a1a2e] flex flex-col items-center justify-center overflow-hidden touch-none select-none">
             {!isAudioReady && (
@@ -240,9 +255,10 @@ const PianoGame: React.FC<PianoGameProps> = ({ onGoHome, isSoundOn }) => {
                     onClick={unlockAudio}
                     onTouchStart={unlockAudio}
                 >
-                    <div className="bg-white p-8 rounded-3xl animate-bounce flex flex-col items-center">
+                    <div className="bg-white p-8 rounded-3xl animate-bounce flex flex-col items-center max-w-md text-center mx-4">
                         <span className="text-6xl mb-4">🎹</span>
-                        <span className="text-2xl font-bold text-purple-600">Chạm để bắt đầu!</span>
+                        <span className="text-2xl font-bold text-purple-600 mb-2">Chạm để bắt đầu!</span>
+                        <span className="text-sm text-gray-500">(Nếu không nghe tiếng, hãy tắt chế độ im lặng trên iPad/iPhone)</span>
                     </div>
                 </div>
             )}

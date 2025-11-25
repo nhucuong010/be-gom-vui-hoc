@@ -252,7 +252,7 @@ export interface SupermarketItem {
 }
 
 
-export type GameState = 'home' | 'math' | 'spelling' | 'memory' | 'english' | 'english_story' | 'dice' | 'fill_in_the_blank' | 'feeding' | 'spelling_robot' | 'bakery' | 'princess_code' | 'restaurant' | 'street_food' | 'bunny_rescue' | 'garden_memory' | 'capybara_rescue' | 'time_adventure' | 'online_shopping' | 'weather_explorer' | 'supermarket' | 'catch_game' | 'resource_generator' | 'piano' | 'coloring' | 'bubble_pop' | 'writing_practice';
+export type GameState = 'home' | 'math' | 'spelling' | 'memory' | 'english' | 'english_story' | 'dice' | 'fill_in_the_blank' | 'feeding' | 'spelling_robot' | 'bakery' | 'princess_code' | 'restaurant' | 'street_food' | 'bunny_rescue' | 'garden_memory' | 'capybara_rescue' | 'time_adventure' | 'online_shopping' | 'weather_explorer' | 'supermarket' | 'catch_game' | 'resource_generator' | 'piano' | 'coloring' | 'writing_practice';
 
 // ADD: Add sound types here to break circular dependency
 export const SOUNDS = ['click', 'correct', 'incorrect', 'dice-roll', 'card-flip', 'sticker-unlock', 'win', 'jump'] as const;

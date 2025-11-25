@@ -74,13 +74,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onSelectGame, isSoundOn }) => {
           isNew
         />
         <GameButton
-          title="Bong Bóng Vui Nhộn"
-          imageUrl="https://be-gom-vui-hoc.vercel.app/assets/images/covers/bubble_pop_cover.png"
-          onClick={() => onSelectGame('bubble_pop')}
-          isSoundOn={isSoundOn}
-          isNew
-        />
-        <GameButton
           title="Tung Xúc Xắc"
           imageUrl="https://be-gom-vui-hoc.vercel.app/assets/images/covers/dice_game_cover.jpeg"
           onClick={() => onSelectGame('dice')}
