@@ -206,7 +206,7 @@ const MathGame: React.FC<MathGameProps> = ({ onGoHome, onCorrectAnswer, isSoundO
 
   if (!gameType) {
     return (
-    return (
+
       <div className="w-full h-full flex flex-col items-center justify-center p-4 overflow-hidden">
         <div className="w-full max-w-4xl bg-white bg-opacity-80 backdrop-blur-sm rounded-3xl shadow-xl p-6 relative flex flex-col items-center max-h-full overflow-y-auto">
           <button onClick={onGoHome} className="absolute top-4 left-4 text-purple-500 hover:text-pink-500 transition-colors">
@@ -222,12 +222,11 @@ const MathGame: React.FC<MathGameProps> = ({ onGoHome, onCorrectAnswer, isSoundO
         </div>
       </div>
     );
-    );
   }
 
-return (
-  <div className="w-full h-full flex flex-col items-center justify-center p-2 sm:p-4 overflow-hidden">
-    <style>{`
+  return (
+    <div className="w-full h-full flex flex-col items-center justify-center p-2 sm:p-4 overflow-hidden">
+      <style>{`
           @keyframes pop-in {
               0% { transform: scale(0.5); opacity: 0; }
               100% { transform: scale(1); opacity: 1; }
@@ -236,58 +235,58 @@ return (
               animation: pop-in 0.3s ease-out forwards;
           }
       `}</style>
-    <div className="w-full max-w-5xl bg-white bg-opacity-80 backdrop-blur-sm rounded-3xl shadow-xl p-4 relative flex flex-col max-h-full overflow-y-auto">
-      <div className="absolute top-2 right-2 sm:top-4 sm:right-4 flex items-center bg-yellow-400 text-white font-bold py-1 px-3 rounded-full shadow-md z-10">
-        <StarIcon className="w-6 h-6 sm:w-8 sm:h-8 mr-1 sm:mr-2" />
-        <span className="text-2xl sm:text-3xl">{score}</span>
-      </div>
-      <button onClick={() => { playSound('click', isSoundOn); stopAllSounds(); setGameType(null); }} className="absolute top-2 left-2 sm:top-4 sm:left-4 text-purple-500 hover:text-pink-500 transition-colors z-10">
-        <ArrowLeftIcon className="w-8 h-8 sm:w-10 sm:h-10" />
-      </button>
-
-      <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center text-purple-700 mb-1 mt-8 sm:mt-10">Bé Học Toán</h2>
-      <p className="text-center text-lg sm:text-xl text-pink-500 mb-2 sm:mb-4 font-semibold">Cấp độ {level}</p>
-
-      {isLoading && !problem && <div className="text-center p-16"><div className="animate-spin rounded-full h-16 w-16 border-b-4 border-pink-500 mx-auto"></div><p className="mt-4 text-purple-600">Đang tải câu hỏi...</p></div>}
-
-      {problem && (
-        <div className="text-center transition-opacity duration-500 flex flex-col flex-grow justify-center">
-          <div className="mb-2 sm:mb-4 min-h-[100px] sm:min-h-[120px] flex flex-col items-center justify-center p-2 bg-purple-50 rounded-xl shadow-inner">
-            <EquationVisualizer problem={problem} revealedAnswer={revealedAnswer} />
-          </div>
-
-          {problem.type === 'calculation' && <VisualCalculation problem={problem} />}
-
-          <div className="flex items-center justify-center gap-4 mb-2 sm:mb-4">
-            <ReadAloudButton text={questionText} lang="vi" isSoundOn={isSoundOn} />
-          </div>
-
-          <div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-6">
-            {options.map(opt => (
-              <button
-                key={String(opt)}
-                onClick={() => handleAnswer(opt)}
-                className="bg-sky-400 hover:bg-sky-500 text-white font-bold text-3xl sm:text-4xl md:text-6xl py-4 sm:py-6 md:py-8 rounded-2xl shadow-lg transform transition-transform duration-200 hover:scale-110 active:scale-95 disabled:opacity-50"
-                disabled={!!feedback}
-              >
-                {String(opt)}
-              </button>
-            ))}
-          </div>
+      <div className="w-full max-w-5xl bg-white bg-opacity-80 backdrop-blur-sm rounded-3xl shadow-xl p-4 relative flex flex-col max-h-full overflow-y-auto">
+        <div className="absolute top-2 right-2 sm:top-4 sm:right-4 flex items-center bg-yellow-400 text-white font-bold py-1 px-3 rounded-full shadow-md z-10">
+          <StarIcon className="w-6 h-6 sm:w-8 sm:h-8 mr-1 sm:mr-2" />
+          <span className="text-2xl sm:text-3xl">{score}</span>
         </div>
+        <button onClick={() => { playSound('click', isSoundOn); stopAllSounds(); setGameType(null); }} className="absolute top-2 left-2 sm:top-4 sm:left-4 text-purple-500 hover:text-pink-500 transition-colors z-10">
+          <ArrowLeftIcon className="w-8 h-8 sm:w-10 sm:h-10" />
+        </button>
+
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center text-purple-700 mb-1 mt-8 sm:mt-10">Bé Học Toán</h2>
+        <p className="text-center text-lg sm:text-xl text-pink-500 mb-2 sm:mb-4 font-semibold">Cấp độ {level}</p>
+
+        {isLoading && !problem && <div className="text-center p-16"><div className="animate-spin rounded-full h-16 w-16 border-b-4 border-pink-500 mx-auto"></div><p className="mt-4 text-purple-600">Đang tải câu hỏi...</p></div>}
+
+        {problem && (
+          <div className="text-center transition-opacity duration-500 flex flex-col flex-grow justify-center">
+            <div className="mb-2 sm:mb-4 min-h-[100px] sm:min-h-[120px] flex flex-col items-center justify-center p-2 bg-purple-50 rounded-xl shadow-inner">
+              <EquationVisualizer problem={problem} revealedAnswer={revealedAnswer} />
+            </div>
+
+            {problem.type === 'calculation' && <VisualCalculation problem={problem} />}
+
+            <div className="flex items-center justify-center gap-4 mb-2 sm:mb-4">
+              <ReadAloudButton text={questionText} lang="vi" isSoundOn={isSoundOn} />
+            </div>
+
+            <div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-6">
+              {options.map(opt => (
+                <button
+                  key={String(opt)}
+                  onClick={() => handleAnswer(opt)}
+                  className="bg-sky-400 hover:bg-sky-500 text-white font-bold text-3xl sm:text-4xl md:text-6xl py-4 sm:py-6 md:py-8 rounded-2xl shadow-lg transform transition-transform duration-200 hover:scale-110 active:scale-95 disabled:opacity-50"
+                  disabled={!!feedback}
+                >
+                  {String(opt)}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+      {feedback && feedback.isCorrect && (
+        <>
+          <CorrectAnswerPopup message={feedback.message} />
+          <Confetti />
+        </>
+      )}
+      {feedback && !feedback.isCorrect && (
+        <IncorrectFeedbackPopup message={feedback.message} />
       )}
     </div>
-    {feedback && feedback.isCorrect && (
-      <>
-        <CorrectAnswerPopup message={feedback.message} />
-        <Confetti />
-      </>
-    )}
-    {feedback && !feedback.isCorrect && (
-      <IncorrectFeedbackPopup message={feedback.message} />
-    )}
-  </div>
-);
+  );
 };
 
 export default MathGame;

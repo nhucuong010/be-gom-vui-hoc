@@ -95,7 +95,7 @@ const TimeAdventureGame: React.FC<TimeAdventureGameProps> = ({ onGoHome, onCorre
     }
 
     return (
-    return (
+
         <div className="w-full h-full flex flex-col items-center justify-center p-2 md:p-4 overflow-hidden">
             <div className="w-full max-w-6xl bg-teal-50/90 backdrop-blur-sm rounded-[2rem] shadow-2xl p-4 relative flex flex-col items-center border-4 border-teal-200 max-h-full overflow-y-auto">
 
